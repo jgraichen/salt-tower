@@ -25,6 +25,10 @@ ext_pillar:
 
 The tower file is similar to the usual `top.sls` with some important differences.
 
+##### Ordered matchers
+
+Pillar top items are ordered and processed in order of appearance. You can therefore define identical matchers multiple times.
+
 ```yaml
 base:
   - '*':
@@ -34,14 +38,18 @@ base:
       - second
 ```
 
-Pillar top items are ordered and processed in order of appearance. You can therefore define identical matchers multiple times.
+##### Common includes
+
+You do not need to define a matcher at all, the files will be included for all minions. You also can use globs to match multiple files, e.g. include all files from `common/`.
 
 ```yaml
 base:
   - common/*
 ```
 
-You do not need to define a matcher at all, the files will be included for all minions. You also can use globs to match multiple files, e.g. include all files from `common/`.
+##### Grains
+
+The top file itself is rendered using the default renderer (`yaml|jinja`). Therefore you can use e.g. `grains` to include specific files.
 
 ```yaml
 base:
@@ -49,7 +57,9 @@ base:
   - dist/{{ grains['oscodename'] }}
 ```
 
-The top file itself is rendered using the default renderer (`yaml|jinja`). Therefore you can use e.g. `grains` to include specific files.
+##### Embedded data
+
+You can directly include pillar data into the top file simply be defining a `dict` item.
 
 ```yaml
 base:
@@ -59,7 +69,9 @@ base:
           name: A Site
 ```
 
-You can directly include pillar data into the top file simply be defining a `dict` item.
+##### Iterative pillar processing
+
+All matchers are compound matchers by default. As items are processes in order of appearance, later items can patch on previously defined pillar values. The above example includes `application.sls` for any minion matching `*.a.example.org` simply because it defines a `site` pillar value.
 
 ```yaml
 base:
@@ -70,7 +82,9 @@ base:
       - applications
 ```
 
-All matchers are compound matchers by default. As items are processes in order of appearance, later items can patch on previously defined pillar values. The above example includes `application.sls` for any minion matching `*.a.example.org` simply because it defines a `site` pillar value.
+##### Late-bound variable replacement
+
+File includes are pre-processed by a string formatter to late-bind pillar values.
 
 ```yaml
 base:
@@ -86,7 +100,7 @@ base:
       - site/{site.id}/{site.staging}/*
 ```
 
-File includes are pre-processed by a string formatter to late-bind pillar values. In the above example a minion `node0.a-staging.example.org` will include the following files:
+In the above example a minion `node0.a-staging.example.org` will include the following files:
 
 ```
 site/default
@@ -94,7 +108,9 @@ site/a
 site/a/staging/*
 ```
 
-Includes will be matches to files and directories, e.g. when including `path/to/file` the first existing match will be used:
+##### File lookup
+
+File names will be matches to files and directories, e.g. when including `path/to/file` the first existing match will be used:
 
 ```
 path/to/file
@@ -110,7 +126,7 @@ The injected `pillar` objects can be used to access previously defined values. T
 
 ```yaml
 application:
-  title: Site of {{ pilar.get('tenant:name') }}
+  title: Site of {{ pillar.get('tenant:name') }}
 ```
 
 File are merged following the rules and configuration options of [pillarstack](https://github.com/bbinet/pillarstack#merging-strategies).
