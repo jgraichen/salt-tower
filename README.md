@@ -118,6 +118,8 @@ File are merged following the rules and configuration options of [pillarstack](h
 Tower data files can be any supported template including python files:
 
 ```py
+#!py
+
 def run():
     ret = {'database': []
 
@@ -134,6 +136,8 @@ The same merging rules apply.
 Note: The `__pillar__` object in Python templates is different to other template engines. It is a dict and does not allow to traverse using `get`.
 
 ```py
+#!py
+
 def run():
     return {
         'wrong': __pilar__.get('tenant:name'),
@@ -149,6 +153,8 @@ The above example demonstrates different usages. The first example will only wor
 The passed pillar object is the actual mutable dict reference used to process and merge the data. It is possible to modify this dict e.g. in a python template without returning anything:
 
 ```py
+#!py
+
 def run():
   databases = __pillar__['databases']
   defaults = databases.pop('default') # Deletes from actual pillar
