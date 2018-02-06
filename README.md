@@ -70,7 +70,7 @@ base:
       - applications
 ```
 
-All matchers are compound matchers by default. As items are processes in order of appearance, later items can patch on previously defined pillar values. The above example includes `application.sls` for any minion matching *.a.example.org` simply because it defines a `site` pillar value.
+All matchers are compound matchers by default. As items are processes in order of appearance, later items can patch on previously defined pillar values. The above example includes `application.sls` for any minion matching `*.a.example.org` simply because it defines a `site` pillar value.
 
 ```yaml
 base:
