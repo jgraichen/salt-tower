@@ -133,7 +133,7 @@ The same merging rules apply.
 
 Note: The `__pillar__` object in Python templates is different to other template engines. It is a dict and does not allow to traverse using `get`.
 
-```
+```py
 def run():
     return {
         'wrong': __pilar__.get('tenant:name'),
@@ -143,3 +143,19 @@ def run():
 ```
 
 The above example demonstrates different usages. The first example will only work if the pillar contains an actual `tenant:name` top-level key. The second example is idiomatic-python but will raise an error if the keys do not exist. The third example uses the additional `tower` helper to traverse the pillar data.
+
+### Advanced usage (very dangerous)
+
+The passed pillar object is the actual mutable dict reference used to process and merge the data. It is possible to modify this dict e.g. in a python template without returning anything:
+
+```py
+def run():
+  databases = __pillar__['databases']
+  defaults = databases.pop('default') # Deletes from actual pillar
+
+  for database in databases:
+    # Merges defaults in references dict in pillar
+    tower.merge(database, defaults, strategy='merge-first')
+
+  return None
+```
