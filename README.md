@@ -137,10 +137,10 @@ Tower data files can be any supported template including python files:
 #!py
 
 def run():
-    ret = {'database': []
+    ret = {'databases': []}
 
     for app in __pillar__['application']:
-        ret['database'].append({
+        ret['databases'].append({
             'name': '{0}-{1}'.format(app['name'], app['env'])
         })
 
