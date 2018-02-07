@@ -129,6 +129,8 @@ application:
   title: Site of {{ pillar.get('tenant:name') }}
 ```
 
+**Note:** Using `salt['pillar.get']()` will *not* work.
+
 File are merged following the rules and configuration options of [pillarstack](https://github.com/bbinet/pillarstack#merging-strategies).
 
 Tower data files can be any supported template including python files:
@@ -149,7 +151,7 @@ def run():
 
 The same merging rules apply.
 
-Note: The `__pillar__` object in Python templates is different to other template engines. It is a dict and does not allow to traverse using `get`.
+**Note:** The `__pillar__` object in Python templates is different to other template engines. It is a dict and does not allow to traverse using `get`.
 
 ```py
 #!py
@@ -162,7 +164,7 @@ def run():
     }
 ```
 
-The above example demonstrates different usages. The first example will only work if the pillar contains an actual `tenant:name` top-level key. The second example is idiomatic-python but will raise an error if the keys do not exist. The third example uses the additional `tower` helper to traverse the pillar data.
+The above example demonstrates different usages. The first example will only work if the pillar contains an actual `tenant:name` top-level key. The second example is idiomatic-python but will raise an error if the keys do not exist. The third example uses the additional `tower` helper module to traverse the pillar data.
 
 ### Advanced usage (very dangerous)
 
