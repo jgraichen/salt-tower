@@ -2,6 +2,7 @@ language: python
 dist: xenial
 python:
 - '2.7'
+- '3.6'
 env:
 - SALT_VERSION=2017.7.4
 - SALT_VERSION=2016.11.2
@@ -11,3 +12,9 @@ install:
 - pip install -q pytest
 script:
 - py.test
+matrix:
+  exclude:
+  - python: '3.6'
+    env: SALT_VERSION=2016.11.2
+  - python: '3.6'
+    env: SALT_VERSION=2015.8.8
