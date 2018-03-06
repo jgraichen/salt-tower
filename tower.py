@@ -8,6 +8,7 @@ import os
 import string
 
 from glob import glob
+from functools import partial
 
 log = logging.getLogger(__name__)
 
@@ -34,7 +35,7 @@ def ext_pillar(minion_id, pillar, *args, **kwargs):
         tower.run(top)
 
 
-    return tower.pillar
+    return tower.format(tower.pillar)
 
 
 class Tower(object):
@@ -83,6 +84,17 @@ class Tower(object):
         except Exception as e:
             log.exception(e)
             return False
+
+    def format(self, obj, *args, **kwargs):
+        if isinstance(obj, dict):
+            return {k: self.format(v, *args, **kwargs) for k, v in six.iteritems(obj)}
+        elif isinstance(obj, list):
+            return [self.format(i, *args, **kwargs) for i in obj]
+        elif isinstance(obj, str):
+            return self._formatter.format(obj, *args, **kwargs)
+        else:
+            return obj
+
 
     def _load_top(self, top):
         data = self._compile(top)
@@ -144,6 +156,7 @@ class Tower(object):
 
         kwargs['tower'] = Helper(self)
         kwargs['minion_id'] = self.minion_id
+        kwargs['resolve'] = partial(os.path.join, os.path.dirname(template))
 
         return salt.template.compile_template(
                 template=template,
@@ -160,8 +173,15 @@ class Formatter(string.Formatter):
         self._tower = tower
 
     def get_field(self, key, args, kwargs):
-        value = self._tower.traverse(key, delimiter='.', **kwargs)
-        return (str(value), None)
+        if key in kwargs:
+            return (kwargs[key], None)
+
+        value = self._tower.traverse(key, delimiter='.')
+
+        if value is None:
+            return ('{' + key + '}', None)
+
+        return (value, None)
 
 
 class Pillar(dict):
@@ -178,6 +198,9 @@ class Helper(object):
 
     def merge(self, *args, **kwargs):
         return _merge(*args, **kwargs)
+
+    def format(self, *args, **kwargs):
+        return self._tower.format(*args, **kwargs)
 
     def get(self, *args, **kwargs):
         return self._tower.traverse(*args, **kwargs)
@@ -215,7 +238,7 @@ def _merge(target, *sources, **kwargs):
         if not isinstance(source, dict):
             continue
 
-        _merge_dict(target, source, **kwargs)
+        target = _merge_dict(target, source, **kwargs)
 
     return target
 
