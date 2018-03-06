@@ -1,8 +1,12 @@
 language: python
 python:
 - '2.7'
+env:
+- SALT_VERSION=2017.7.4
+- SALT_VERSION=2016.11.2
+- SALT_VERSION=2015.8.8
 install:
-- pip install salt
-- pip install pytest
+- pip install -q salt==${SALT_VERSION}
+- pip install -q pytest
 script:
 - py.test
