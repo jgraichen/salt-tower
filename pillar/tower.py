@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
+'''
 
+'''
 from __future__ import absolute_import
 
 import copy
@@ -10,13 +12,13 @@ import string
 from glob import glob
 from functools import partial
 
-log = logging.getLogger(__name__)
-
 import salt.loader
 import salt.minion
 import salt.template
-
 import salt.ext.six as six
+
+
+log = logging.getLogger(__name__)
 
 
 def ext_pillar(minion_id, pillar, *args, **kwargs):

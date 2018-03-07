@@ -1,50 +1,47 @@
 # -*- coding: utf-8 -*-
 
+from __future__ import absolute_import
+
 import os
 import pytest
 import shutil
 import tempfile
 
-root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+import salt.utils
+import salt.template
+
+from test.salt import __renderers__
 
 
-import salt.config
-import salt.loader
-
-__opts__ = salt.config.master_config(os.path.join('tests/minion.yml'))
-__opts__['extension_modules'] = root
-__opts__['log_level'] = 'debug'
-__opts__['id'] = 'test_master'
-
-__grains__ = salt.loader.grains(__opts__)
-__opts__['grains'] = __grains__
-__utils__ = salt.loader.utils(__opts__)
-__salt__ = salt.loader.minion_mods(__opts__, utils=__utils__)
-
-
-__renderers__ = salt.loader.render(__opts__, __salt__)
-
-
-@pytest.fixture()
+@pytest.fixture
 def tmpdir():
     tmpdir = tempfile.mkdtemp()
     yield tmpdir
     shutil.rmtree(tmpdir)
 
-class TestRenderer(object):
-    @pytest.fixture(autouse=True)
-    def setup(self, request, tmpdir):
+
+@pytest.fixture
+def env(tmpdir):
+    return Environment(tmpdir)
+
+
+class Environment(object):
+    def __init__(self, tmpdir):
         self.tmpdir = tmpdir
 
-        if hasattr(self, 'template'):
-            self.write(self.template)
+    def write(self, name, str):
+        template = os.path.join(self.tmpdir, name)
 
-    def write(self, content, path='template.sls'):
-        with salt.utils.fopen(os.path.join(self.tmpdir, path), 'w') as f:
-            f.write(content)
+        with salt.utils.fopen(template, 'w') as f:
+            f.write(str)
 
-    def render(self, template='template.sls'):
+    def compile_template(self, template, default='yaml|jinja', **kwargs):
         template = os.path.join(self.tmpdir, template)
 
         return salt.template.compile_template(
-            template, __renderers__, self.default_renderer, '', '')
+            template=template,
+            renderers=__renderers__,
+            default=default,
+            blacklist=None,
+            whitelist=None,
+            **kwargs)

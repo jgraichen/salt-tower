@@ -15,12 +15,14 @@ from __future__ import absolute_import
 import io
 import logging
 import os
+import six
 import warnings
+
 from yaml.constructor import ConstructorError
 from yaml.nodes import ScalarNode, MappingNode
 
-
 import salt.loader
+
 from salt.utils.yamlloader import SaltYamlSafeLoader, load
 from salt.utils.odict import OrderedDict
 from salt.ext.six import string_types
@@ -79,7 +81,7 @@ class YamletLoader(SaltYamlSafeLoader):
             whitelist='',
             **kwargs)
 
-        if isinstance(ret, io.IOBase):
+        if isinstance(ret, (six.StringIO, six.BytesIO, io.IOBase)):
             ret = ret.read()
 
         return ret

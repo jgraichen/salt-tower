@@ -43,13 +43,12 @@ This will return the following python dict:
     {'path': {'to': {'blob': 'A short text message'}}}
 
 '''
-
 import logging
 
-log = logging.getLogger(__name__)
-
-
 from salt.ext.six import string_types
+
+
+log = logging.getLogger(__name__)
 
 
 def render(blob, saltenv='', sls='', argline=None, key=None, **kwargs):
