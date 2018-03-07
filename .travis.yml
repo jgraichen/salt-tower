@@ -9,10 +9,10 @@ env:
 - SALT_VERSION=2016.11.2
 - SALT_VERSION=2015.8.8
 install:
-- pip install -q salt==${SALT_VERSION}
-- pip install -q pytest
+- pip install salt==${SALT_VERSION}
+- pip install pytest
 script:
-- py.test
+- py.test -v
 matrix:
   allow_failures:
   - python: '3.6'
