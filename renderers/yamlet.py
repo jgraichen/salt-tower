@@ -22,6 +22,7 @@ from yaml.constructor import ConstructorError
 from yaml.nodes import ScalarNode, MappingNode
 
 import salt.loader
+import salt.template
 
 from salt.utils.yamlloader import SaltYamlSafeLoader, load
 from salt.utils.odict import OrderedDict
@@ -33,10 +34,12 @@ log = logging.getLogger(__name__)
 
 
 class YamletLoader(SaltYamlSafeLoader):
-    def __init__(self, stream, **kwargs):
+    def __init__(self, stream, renderers, context={}, tmplpath=None, **kwargs):
         SaltYamlSafeLoader.__init__(self, stream, dictclass=OrderedDict)
 
-        self.kwargs = kwargs
+        self.context = context
+        self.tmplpath = tmplpath
+        self.renderers = renderers
         self.add_constructor(u'!read', type(self)._yamlet_read)
         self.add_constructor(u'!include', type(self)._yamlet_include)
 
@@ -61,25 +64,17 @@ class YamletLoader(SaltYamlSafeLoader):
         with salt.utils.fopen(source, 'rb') as f:
             return f.read()
 
-    def _compile(self, source, default='jinja|yamlet', context=None):
+    def _compile(self, source, default='jinja|yamlet', context={}):
         source = self._resolve(source)
-
-        kwargs = {}
-        kwargs.update(self.kwargs)
-        kwargs['context'] = {}
-
-        if 'context' in self.kwargs:
-            kwargs['context'].update(self.kwargs['context'])
-
-        if context:
-            kwargs['context'].update(context)
+        context = dict(self.context, **context)
 
         ret = salt.template.compile_template(
             template=source,
+            renderers=self.renderers,
             default=default,
-            blacklist='',
-            whitelist='',
-            **kwargs)
+            blacklist=None,
+            whitelist=None,
+            context=context)
 
         if isinstance(ret, (six.StringIO, six.BytesIO, io.IOBase)):
             ret = ret.read()
@@ -87,12 +82,10 @@ class YamletLoader(SaltYamlSafeLoader):
         return ret
 
     def _resolve(self, path):
-        if 'tmplpath' in self.kwargs:
-            base = os.path.dirname(self.kwargs['tmplpath'])
+        if self.tmplpath:
+            base = os.path.dirname(self.tmplpath)
 
             return os.path.realpath(os.path.join(base, path))
-
-        log.warn(self.kwargs['tmplpath'])
 
         return path
 
@@ -106,8 +99,8 @@ class YamletLoader(SaltYamlSafeLoader):
 
 
 def get_yaml_loader(**kwargs):
-    def yaml_loader(*args):
-        return YamletLoader(*args, **kwargs)
+    def yaml_loader(stream):
+        return YamletLoader(stream, **kwargs)
 
     return yaml_loader
 
