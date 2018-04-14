@@ -15,6 +15,7 @@ __opts__ = salt.config.master_config('/dev/null')
 __opts__['extension_modules'] = __root__
 __opts__['log_level'] = 'debug'
 __opts__['id'] = 'test_master'
+__opts__['cachedir'] = 'tmp/cache'
 
 __grains__ = salt.loader.grains(__opts__)
 __opts__['grains'] = __grains__
