@@ -52,8 +52,8 @@ class Tower(object):
         self._renderers = salt.loader.render(opts, __salt__)
         self._formatter = Formatter(self)
 
-    def traverse(self, key, **kwargs):
-        return salt.utils.traverse_dict_and_list(self.pillar, key, **kwargs)
+    def traverse(self, key, default=None, **kwargs):
+        return salt.utils.traverse_dict_and_list(self.pillar, key, default, **kwargs)
 
     def run(self, top):
         log.debug("Process tower top file `{0}'".format(top))
