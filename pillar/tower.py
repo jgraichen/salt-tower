@@ -151,8 +151,6 @@ class Tower(object):
         return {}
 
     def _compile(self, template, default='jinja|yaml', blacklist=None, whitelist=None, context={}, **kwargs):
-        log.debug('compile template: {0}'.format(file))
-
         context['minion_id'] = self.minion_id
         context['pillar'] = Pillar(self.pillar)
 
