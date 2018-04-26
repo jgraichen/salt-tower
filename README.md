@@ -1,5 +1,7 @@
 # Salt Tower
 
+[![Build Status](https://travis-ci.org/jgraichen/salt-tower.svg?branch=master)](https://travis-ci.org/jgraichen/salt-tower)
+
 Advanced and flexible `ext_pillar` that gives access to pillar values while processing, provides merge functionality and utilizes salts own template engines.
 
 Salt tower is inspired by [pillarstack](https://github.com/bbinet/pillarstack) and uses its merging implementation. It reuses the concept of a top file and utilizes salt renderers. Therefore Salt Tower supports all engines including YAML, Jinja and Python, as well as chaining engines together.
