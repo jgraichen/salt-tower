@@ -61,7 +61,7 @@ class Tower(object):
         base = os.path.dirname(top)
 
         for item in self._load_top(top):
-            if isinstance(item, str):
+            if isinstance(item, six.string_types):
                 self._load_item(base, item)
 
             elif isinstance(item, dict):
@@ -92,7 +92,7 @@ class Tower(object):
             return {k: self.format(v, *args, **kwargs) for k, v in six.iteritems(obj)}
         elif isinstance(obj, list):
             return [self.format(i, *args, **kwargs) for i in obj]
-        elif isinstance(obj, str):
+        elif isinstance(obj, six.string_types):
             return self._formatter.format(obj, *args, **kwargs)
         else:
             return obj
@@ -122,7 +122,7 @@ class Tower(object):
         if isinstance(item, dict):
             _merge(self.pillar, item)
 
-        elif isinstance(item, str):
+        elif isinstance(item, six.string_types):
             self._load_file(base, item)
 
     def _load_file(self, base, item):
