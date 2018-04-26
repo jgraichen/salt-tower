@@ -5,6 +5,7 @@ from __future__ import absolute_import
 import os
 import pytest
 import shutil
+import six
 import tempfile
 import textwrap
 
@@ -45,7 +46,7 @@ class Environment(object):
         self.tmpdir = tmpdir
 
     def setup(self, files):
-        for k, v in files.iteritems():
+        for k, v in six.iteritems(files):
             self.write(k, textwrap.dedent(v).strip())
 
     def write(self, name, str):
