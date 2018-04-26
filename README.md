@@ -10,7 +10,7 @@ Salt Tower is designed to completely replace the usual pillar repository.
 
 ## Installation
 
-Install Salt Tower by dropping the `tower.py` in the `<extension_modules>/pillar` directory.
+Install Salt Tower by dropping the `tower.py` in the `<extension_modules>/pillar` directory. It is recommended to install the extra renderers to `<extension_modules>/renderers` too.
 
 ## Configuration
 
