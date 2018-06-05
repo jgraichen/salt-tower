@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import os
 import pytest
 import textwrap
 
@@ -8,8 +9,8 @@ from salt.utils.odict import OrderedDict
 
 @pytest.fixture
 def result(env):
-    def fn():
-        return env.compile_template('init.sls', default='yamlet')
+    def fn(**kwargs):
+        return env.compile_template('init.sls', default='yamlet', **kwargs)
 
     return fn
 
@@ -120,3 +121,49 @@ def test_include_shebang(env, result):
         ''').strip())
 
     assert result() == {'key': '#!jinja\nval: str'}
+
+
+def test_include_tmplpath(env, result, tmpdir):
+    '''
+    The !include tag passes ``tmplpath`` and ``tmpldir`` to the template
+    renderer to allow relative includes via ``tmpldir + '/file'``.
+    '''
+    env.write('init.sls',
+        '''
+        key: !include template.sls
+        ''')
+
+    env.write('template.sls', textwrap.dedent(
+        '''
+        #!jinja|yaml
+        tmplpath: {{ tmplpath }}
+        tmpldir: {{ tmpldir }}
+        ''').strip())
+
+    assert result() == {
+            'key': {
+                'tmplpath': os.path.join(tmpdir, 'template.sls'),
+                'tmpldir': tmpdir
+            }
+        }
+
+
+def test_include_inherit_context(env, result):
+    '''
+    The !include tag passes given ``context`` to downstream renderers.
+    '''
+    env.write('init.sls',
+        '''
+        key: !include template.sls
+        ''')
+
+    env.write('template.sls', textwrap.dedent(
+        '''
+        #!jinja|text
+        {{ fuubar() }}
+        ''').strip())
+
+    def fuubar():
+        return 'fuubar'
+
+    assert result(context={'fuubar': fuubar}) == {'key': 'fuubar'}
