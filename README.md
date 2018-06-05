@@ -168,7 +168,7 @@ def run():
 
 The above example demonstrates different usages. The first example will only work if the pillar contains an actual `tenant:name` top-level key. The second example is idiomatic-python but will raise an error if the keys do not exist. The third example uses the additional `tower` helper module to traverse the pillar data.
 
-### Includes
+##### Includes
 
 Pillar data files can include other pillar files similar to how states can be included:
 
@@ -181,9 +181,66 @@ data: more
 
 Included files cannot be used in the pillar data file template itself but are merge in the pillar before the new pillar data.
 
+### Yamlet renderer
+
+The Yamlet renderer is an improved YAML renderer that supports loading other files and rendering templates:
+
+```yaml
+ssh_private_key: !read id_rsa
+ssh_public_key: !read id_rsa.pub
+```
+
+This reads a file from the pillar directory in plain text or binary and embeds it into the pillar. This eases shipping private files to minions.
+
+Using the `!include` tag files can be pushed through salts rendering pipeline on the server:
+
+```yaml
+nginx:
+  sites:
+    my-app: !include ../files/site.conf
+```
+
+```
+#!jinja | text strip
+server {
+  listen {{ pillar.get('my-app:ip') }}:80;
+  root /var/www/my-app;
+}
+```
+
+The pillar will return the following:
+
+```yaml
+nginx:
+  sites:
+    my-app: |
+      server {
+        listen 127.0.0.1:80;
+        root /var/www/my-app;
+      }
+```
+
+### Text renderer
+
+The text renderer (used above) renders a file as plain text. It stripes the shebang and can optionally strip whitespace from the beginning and end.
+
+```
+#!text strip
+
+Hello World
+```
+
+This will return:
+
+```
+Hello World
+```
+
+The text renderer usually is used for embedding rendered configuration files into a Yamlet template.
+
 ### Advanced usage (very dangerous)
 
-The passed pillar object is the actual mutable dict reference used to process and merge the data. It is possible to modify this dict e.g. in a python template without returning anything:
+The pillar object passed to the python template engine is the actual mutable dict reference used to process and merge the data. It is possible to modify this dict e.g. in a python template without returning anything:
 
 ```py
 #!py
