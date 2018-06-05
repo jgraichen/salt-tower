@@ -67,10 +67,9 @@ class YamletLoader(SaltYamlSafeLoader):
     def _compile(self, source, default='jinja|yamlet', context={}):
         source = self._resolve(source)
 
-        context = dict(self.context, **context, **{
-            'tmplpath': source,
-            'tmpldir': os.path.dirname(source)
-        })
+        context = dict(self.context, **context)
+        context['tmplpath'] = source
+        context['tmpldir'] = os.path.dirname(source)
 
         ret = salt.template.compile_template(
             template=source,
