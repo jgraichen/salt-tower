@@ -128,6 +128,41 @@ def test_late_bind(env):
         }
 
 
+def test_late_bind_not_matching(env):
+    env.setup({
+        'tower.sls':
+            '''
+            base:
+                - '*':
+                    - late_bind: '{fuubar}'
+            '''
+    })
+
+    assert env.ext_pillar() == {
+            'late_bind': '{fuubar}'
+        }
+
+
+def test_late_bind_invalid(env):
+    env.setup({
+        'tower.sls':
+            '''
+            base:
+                - '*':
+                    - late_bind: |
+                        worker_processes auto;
+
+                        server {
+                          listen 8080;
+                        }
+            '''
+    })
+
+    assert env.ext_pillar() == {
+            'late_bind': 'worker_processes auto;\n\nserver {\n  listen 8080;\n}'
+        }
+
+
 def test_default_renderers(env):
     env.setup({
         'tower.sls':
