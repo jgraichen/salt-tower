@@ -168,6 +168,19 @@ def run():
 
 The above example demonstrates different usages. The first example will only work if the pillar contains an actual `tenant:name` top-level key. The second example is idiomatic-python but will raise an error if the keys do not exist. The third example uses the additional `tower` helper module to traverse the pillar data.
 
+### Includes
+
+Pillar data files can include other pillar files similar to how states can be included:
+
+```yaml
+include:
+  - another/pillar
+
+data: more
+```
+
+Included files cannot be used in the pillar data file template itself but are merge in the pillar before the new pillar data.
+
 ### Advanced usage (very dangerous)
 
 The passed pillar object is the actual mutable dict reference used to process and merge the data. It is possible to modify this dict e.g. in a python template without returning anything:
