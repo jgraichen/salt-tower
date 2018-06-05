@@ -51,6 +51,7 @@ class Tower(object):
 
         self._renderers = salt.loader.render(opts, __salt__)
         self._formatter = Formatter(self)
+        self._included = []
 
     def traverse(self, key, default=None, **kwargs):
         return salt.utils.traverse_dict_and_list(self.pillar, key, default, **kwargs)
@@ -97,7 +98,6 @@ class Tower(object):
         else:
             return obj
 
-
     def _load_top(self, top):
         data = self._compile(top)
 
@@ -123,32 +123,73 @@ class Tower(object):
             _merge(self.pillar, item)
 
         elif isinstance(item, six.string_types):
-            self._load_file(base, item)
+            self.load(item, base)
 
-    def _load_file(self, base, item):
-        file = self._formatter.format(item)
-
-        matches = glob(os.path.join(base, file))
-
-        if matches:
-            for match in matches:
-                _merge(self.pillar, self._load_data(base, match))
+    def lookup(self, item, base=None):
+        if base:
+            path = os.path.join(base, self.format(item))
         else:
-            _merge(self.pillar, self._load_data(base, file))
+            path = self.format(item)
 
-    def _load_data(self, base, file):
-        for name in [
-                file,
-                "{0}.sls".format(file),
-                "{0}/init.sls".format(file)]:
+        match = glob(path)
 
-            if os.path.isfile(os.path.join(base, name)):
-                return self._compile(os.path.join(base, name))
+        if match:
+            match = [i for i in match if os.path.isfile(i)]
 
-        log.warn('No tower data file found matching "{0}", skipping.'
-            .format(file))
+        if match:
+            log.debug('Found glob match: {}'.format(match))
+            return sorted(match)
 
-        return {}
+        for match in [path, '{}.sls'.format(path), '{}/init.sls'.format(path)]:
+            if os.path.isfile(match):
+                log.debug('Found file match: {}'.format(match))
+                return [match]
+
+        return []
+
+    def load(self, item, base=None):
+        for file in self.lookup(item, base):
+            self._load_file(file, base)
+
+    def _load_file(self, file, base=None):
+        """
+        Try to load fully qualified file path as a tower data file.
+
+        It will first check if the file has already been loaded and, if not,
+        if it exist in the filesystem.
+
+        The file will be compiled and run as a salt template and is expected
+        to return a dict.
+
+        If the dict includes an `include` item or list, these includes will
+        loaded before the loaded data is merged into the current pillar.
+        """
+        if file in self._included:
+            log.warning('Skipping already included file: {}'.format(file))
+            return
+
+        if not os.path.isfile(file):
+            log.warning('Skipping non-existing file: {}'.format(file))
+            return
+
+        self._included.append(file)
+
+        data = self._compile(file, context={'base': base})
+
+        if not isinstance(data, dict):
+            log.warning('Loading {} did not return dict, but {}'.format(file, type(data)))
+            return
+
+        if 'include' in data:
+            includes = data.pop('include')
+
+            if not isinstance(includes, list):
+                includes = [includes]
+
+            for include in includes:
+                self.load(include, base)
+
+        _merge(self.pillar, data)
 
     def _compile(self, template, default='jinja|yaml', blacklist=None, whitelist=None, context={}, **kwargs):
         context['minion_id'] = self.minion_id

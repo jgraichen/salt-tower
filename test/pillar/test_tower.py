@@ -197,3 +197,46 @@ def test_renderers_shebang_py(env):
     })
 
     assert env.ext_pillar() == {'py': 'yes'}
+
+
+def test_include(env):
+    env.setup({
+        'tower.sls':
+            '''
+            base:
+                - common
+            ''',
+        'common.sls':
+            '''
+            include:
+                - else.sls
+            ''',
+        'else.sls':
+            '''
+            else: True
+            '''
+    })
+
+    assert env.ext_pillar() == {'else': True}
+
+
+def test_include_recursive(env):
+    env.setup({
+        'tower.sls':
+            '''
+            base:
+                - common
+            ''',
+        'common.sls':
+            '''
+            include: [else.sls]
+            order: [1]
+            ''',
+        'else.sls':
+            '''
+            include: [common.sls]
+            order: [2]
+            '''
+    })
+
+    assert env.ext_pillar() == {'order': [2, 1]}
