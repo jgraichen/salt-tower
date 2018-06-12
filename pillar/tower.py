@@ -53,6 +53,12 @@ class Tower(object):
         self._formatter = Formatter(self)
         self._included = []
 
+        if 'yamlet' in self._renderers:
+            self._default_renderers = 'jinja|yamlet'
+        else:
+            log.warning('Yamlet renderer not available. Tower functionality will be limited.')
+            self._default_renderers = 'jinja|yaml'
+
     def traverse(self, key, default=None, **kwargs):
         return salt.utils.traverse_dict_and_list(self.pillar, key, default, **kwargs)
 
@@ -191,7 +197,10 @@ class Tower(object):
 
         _merge(self.pillar, data)
 
-    def _compile(self, template, default='jinja|yaml', blacklist=None, whitelist=None, context={}, **kwargs):
+    def _compile(self, template, default=None, blacklist=None, whitelist=None, context={}, **kwargs):
+        if default is None:
+            default = self._default_renderers
+
         context['minion_id'] = self.minion_id
         context['pillar'] = Pillar(self.pillar)
 
