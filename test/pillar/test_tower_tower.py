@@ -1,0 +1,106 @@
+# -*- coding: utf-8 -*-
+
+import pytest
+import inspect
+
+from test.conftest import __pillars__
+
+
+@pytest.fixture
+def mod():
+    return inspect.getmodule(__pillars__['tower'])
+
+
+@pytest.fixture
+def tower(mod):
+    return mod.Tower('minion-id', 'base', {
+        'pillar': {
+            'key': 'value',
+            'list': [1, 2]
+        }
+    })
+
+
+def test_get_traverse(tower):
+    assert tower.get('pillar:key') == 'value'
+
+def test_get_default(tower):
+    assert tower.get('pillar:none') == None
+
+def test_get_default_value(tower):
+    assert tower.get('pillar:none', default=5) == 5
+
+
+def test_update(tower):
+    tower.update({
+        'pillar': {
+            'key': 'new_value',
+            'list': [3]
+        }
+    })
+
+    assert tower == {
+        'pillar': {
+            'key': 'new_value',
+            'list': [1, 2, 3]
+        }
+    }
+
+def test_update_override(tower):
+    '''
+    Merging different types will override
+    '''
+    tower.update({'pillar': {'list': 'fake'}})
+
+    assert tower['pillar']['list'] == 'fake'
+
+
+def test_merge(tower):
+    tgt = {'a': True, 'b': [1]}
+    ret = tower.merge(tgt, {'b': [2]})
+
+    assert ret is tgt
+    assert ret == {'a': True, 'b': [1, 2]}
+
+
+def test_merge_copy(tower):
+    tgt = {}
+    mod = {'a': {'b': 2}}
+
+    tower.merge(tgt, mod)
+
+    assert tgt == {'a': {'b': 2}}
+    assert tgt['a'] is not mod['a']
+
+
+def test_merge_copy_list(tower):
+    tgt = [{'a': 1}]
+    mod = [{'b': 2}]
+
+    tower.merge(tgt, mod)
+
+    assert tgt == [{'a': 1}, {'b': 2}]
+    assert tgt[1] is not mod[0]
+
+
+def test_format(tower):
+    tower.update({'app': {'name': 'MyApp'}})
+
+    assert tower.format('X{app.name}X') == 'XMyAppX'
+
+
+def test_format_dict(tower):
+    tower.update({'ports': [80, 443]})
+
+    assert tower.format({'bind': '0.0.0.0:{ports.0}'}) \
+        == {'bind': '0.0.0.0:80'}
+
+
+def test_format_list(tower):
+    tower.update({'ports': [80, 443]})
+
+    assert tower.format(['{ports.0}', '{ports.1}']) == ['80', '443']
+
+
+def test_format_arg(tower):
+    assert tower.format({'app': '{name}'}, name='APP') == {'app': 'APP'}

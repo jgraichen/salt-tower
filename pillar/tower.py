@@ -4,6 +4,7 @@
 '''
 from __future__ import absolute_import
 
+import collections
 import copy
 import logging
 import os
@@ -27,7 +28,7 @@ def ext_pillar(minion_id, pillar, *args, **kwargs):
     if env is None:
         env = 'base'
 
-    tower = Tower(minion_id, pillar, env)
+    tower = Tower(minion_id, env, pillar)
 
     for top in list(args):
         if not os.path.exists(top):
@@ -36,18 +37,18 @@ def ext_pillar(minion_id, pillar, *args, **kwargs):
 
         tower.run(top)
 
+    return tower.format(tower)
 
-    return tower.format(tower.pillar)
 
+class Tower(dict):
+    def __init__(self, minion_id, env, pillar):
+        super(Tower, self).__init__(pillar)
 
-class Tower(object):
-    def __init__(self, minion_id, pillar, env, *args, **kwargs):
         self.env = env
-        self.pillar = pillar
         self.minion_id = minion_id
 
         opts = copy.copy(__opts__)
-        opts['pillar'] = self.pillar
+        opts['pillar'] = self
 
         self._renderers = salt.loader.render(opts, __salt__)
         self._formatter = Formatter(self)
@@ -59,8 +60,27 @@ class Tower(object):
             log.warning('Yamlet renderer not available. Tower functionality will be limited.')
             self._default_renderers = 'jinja|yaml'
 
-    def traverse(self, key, default=None, **kwargs):
-        return salt.utils.traverse_dict_and_list(self.pillar, key, default, **kwargs)
+    def get(self, key, default=None, **kwargs):
+        return salt.utils.traverse_dict_and_list(self, key, default, **kwargs)
+
+    def update(self, obj, merge=True, **kwargs):
+        if merge:
+            return self.merge(self, obj, **kwargs)
+        else:
+            super(Tower, self).update(obj)
+
+    def merge(self, *args, **kwargs):
+        return _merge(*args, **kwargs)
+
+    def format(self, obj, *args, **kwargs):
+        if isinstance(obj, collections.Mapping):
+            return {k: self.format(v, *args, **kwargs) for k, v in six.iteritems(obj)}
+        elif isinstance(obj, list):
+            return [self.format(i, *args, **kwargs) for i in obj]
+        elif isinstance(obj, six.string_types):
+            return self._formatter.format(obj, *args, **kwargs)
+        else:
+            return obj
 
     def run(self, top):
         log.debug("Process tower top file `{0}'".format(top))
@@ -71,7 +91,7 @@ class Tower(object):
             if isinstance(item, six.string_types):
                 self._load_item(base, item)
 
-            elif isinstance(item, dict):
+            elif isinstance(item, collections.Mapping):
                 for tgt, items in six.iteritems(item):
                     if not self._match_minion(tgt):
                         continue
@@ -82,7 +102,7 @@ class Tower(object):
     def _match_minion(self, tgt):
         opts = {
             'grains': __grains__,
-            'pillar': self.pillar,
+            'pillar': self,
             'id': self.minion_id
         }
 
@@ -94,20 +114,10 @@ class Tower(object):
             log.exception(e)
             return False
 
-    def format(self, obj, *args, **kwargs):
-        if isinstance(obj, dict):
-            return {k: self.format(v, *args, **kwargs) for k, v in six.iteritems(obj)}
-        elif isinstance(obj, list):
-            return [self.format(i, *args, **kwargs) for i in obj]
-        elif isinstance(obj, six.string_types):
-            return self._formatter.format(obj, *args, **kwargs)
-        else:
-            return obj
-
     def _load_top(self, top):
         data = self._compile(top)
 
-        if not isinstance(data, dict):
+        if not isinstance(data, collections.Mapping):
             log.critical("Tower top must be a dict, but is {0}."
                 .format(type(data)))
             return []
@@ -125,8 +135,8 @@ class Tower(object):
         return data[self.env]
 
     def _load_item(self, base, item):
-        if isinstance(item, dict):
-            _merge(self.pillar, item)
+        if isinstance(item, collections.Mapping):
+            self.update(item, merge=True)
 
         elif isinstance(item, six.string_types):
             self.load(item, base)
@@ -182,7 +192,7 @@ class Tower(object):
 
         data = self._compile(file, context={'base': base})
 
-        if not isinstance(data, dict):
+        if not isinstance(data, collections.Mapping):
             log.warning('Loading {} did not return dict, but {}'.format(file, type(data)))
             return
 
@@ -195,18 +205,20 @@ class Tower(object):
             for include in includes:
                 self.load(include, base)
 
-        _merge(self.pillar, data)
+        self.update(data, merge=True)
 
     def _compile(self, template, default=None, blacklist=None, whitelist=None, context={}, **kwargs):
         if default is None:
             default = self._default_renderers
 
+        context['tmplpath'] = template
+        context['tmpldir'] = os.path.dirname(template)
         context['minion_id'] = self.minion_id
-        context['pillar'] = Pillar(self.pillar)
+        context['pillar'] = self
+        context['tower'] = self
 
-        kwargs['tower'] = Helper(self)
-        kwargs['minion_id'] = self.minion_id
-        kwargs['resolve'] = partial(os.path.join, os.path.dirname(template))
+        kwargs['tower'] = context['tower']
+        kwargs['minion_id'] = context['minion_id']
 
         return salt.template.compile_template(
                 template=template,
@@ -226,7 +238,7 @@ class Formatter(string.Formatter):
         if key in kwargs:
             return (kwargs[key], None)
 
-        value = self._tower.traverse(key, delimiter='.')
+        value = self._tower.get(key, delimiter='.')
 
         if value is None:
             return ('{' + key + '}', None)
@@ -234,114 +246,42 @@ class Formatter(string.Formatter):
         return (value, None)
 
 
-class Pillar(dict):
-    def get(self, key, default=None, **kwargs):
-        return salt.utils.traverse_dict_and_list(self, key, default, **kwargs)
+def _merge(tgt, *objects):
+    for obj in objects:
+        if isinstance(tgt, collections.Mapping):
+            tgt = _merge_dict(tgt, obj)
+        elif isinstance(tgt, list):
+            tgt = _merge_list(tgt, obj)
+        else:
+            raise TypeError('Cannot merge {}'.format(type(tgt)))
+
+    return tgt
 
 
-class Helper(object):
-    def __init__(self, tower):
-        self._tower = tower
+def _merge_dict(tgt, obj):
+    if not isinstance(obj, collections.Mapping):
+        raise TypeError(
+            'Cannot merge non-dict type, but is {}'.format(type(obj)))
 
-    def traverse(self, *args, **kwargs):
-        return salt.utils.traverse_dict_and_list(*args, **kwargs)
-
-    def merge(self, *args, **kwargs):
-        return _merge(*args, **kwargs)
-
-    def format(self, *args, **kwargs):
-        return self._tower.format(*args, **kwargs)
-
-    def get(self, *args, **kwargs):
-        return self._tower.traverse(*args, **kwargs)
-
-    def __len__(self):
-        return len(self._tower.pillar)
-
-    def __iter__(self):
-        return iter(self._tower.pillar)
-
-    def __getitem__(self, key):
-        return self._tower.pillar[key]
-
-    def iteritems(self):
-        return self._tower.pillar.iteritems()
-
-
-def _cleanup(obj):
-    if obj:
-        if isinstance(obj, dict):
-            obj.pop('__', None)
-            for k, v in six.iteritems(obj):
-                obj[k] = _cleanup(v)
-        elif isinstance(obj, list) and isinstance(obj[0], dict) \
-                and '__' in obj[0]:
-            del obj[0]
-    return obj
-
-
-strategies = ('overwrite', 'merge-first', 'merge-last', 'remove')
-
-
-def _merge(target, *sources, **kwargs):
-    for source in sources:
-        if not isinstance(source, dict):
-            continue
-
-        target = _merge_dict(target, source, **kwargs)
-
-    return target
-
-
-def _merge_dict(stack, obj, strategy='merge-last'):
-    strategy = obj.pop('__', strategy)
-    if strategy not in strategies:
-        raise Exception('Unknown strategy "{0}", should be one of {1}'.format(
-            strategy, strategies))
-
-    if strategy == 'overwrite':
-        return _cleanup(obj)
-    else:
-        for k, v in six.iteritems(obj):
-            if strategy == 'remove':
-                stack.pop(k, None)
-                continue
-            if k in stack:
-                if strategy == 'merge-first':
-                    # merge-first is same as merge-last but the other way round
-                    # so let's switch stack[k] and v
-                    stack_k = stack[k]
-                    stack[k] = _cleanup(v)
-                    v = stack_k
-                if isinstance(stack[k], dict) and isinstance(v, dict):
-                    stack[k] = _merge_dict(stack[k], v)
-                elif isinstance(stack[k], list) and isinstance(v, list):
-                    stack[k] = _merge_list(stack[k], v)
-                elif type(stack[k]) != type(v):
-                    log.debug('Force overwrite, types differ: '
-                              '\'{0}\' != \'{1}\''.format(type(stack[k]), type(v)))
-                    stack[k] = _cleanup(v)
-                else:
-                    stack[k] = v
+    for k, v in six.iteritems(obj):
+        if k in tgt:
+            if isinstance(tgt[k], collections.Mapping) \
+                    and isinstance(v, collections.Mapping):
+                _merge(tgt[k], v)
+            elif isinstance(tgt[k], list) and isinstance(v, list):
+                _merge_list(tgt[k], v)
             else:
-                stack[k] = _cleanup(v)
-        return stack
+                tgt[k] = copy.deepcopy(v)
+        else:
+            tgt[k] = copy.deepcopy(v)
+
+    return tgt
 
 
-def _merge_list(stack, obj):
-    strategy = 'merge-last'
-    if obj and isinstance(obj[0], dict) and '__' in obj[0]:
-        strategy = obj[0]['__']
-        del obj[0]
-    if strategy not in strategies:
-        raise Exception('Unknown strategy "{0}", should be one of {1}'.format(
-            strategy, strategies))
-    if strategy == 'overwrite':
-        return obj
-    elif strategy == 'remove':
-        return [item for item in stack if item not in obj]
-    elif strategy == 'merge-first':
-        return obj + stack
-    else:
-        return stack + obj
+def _merge_list(tgt, ls):
+    if not isinstance(ls, list):
+        raise TypeError(
+            'Cannot merge non-list type, but is {}'.format(type(obj)))
 
+    tgt.extend(copy.deepcopy(ls))
+    return tgt

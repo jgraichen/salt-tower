@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import os
 import pytest
 
 from test.conftest import __opts__
@@ -240,3 +241,39 @@ def test_include_recursive(env):
     })
 
     assert env.ext_pillar() == {'order': [2, 1]}
+
+
+def test_context_tmpl(env, tmpdir):
+    env.setup({
+        'tower.sls':
+            '''
+            base:
+                - template.sls
+            ''',
+        'template.sls':
+            '''
+            tmplpath: {{ tmplpath }}
+            tmpldir: {{ tmpldir }}
+            '''
+    })
+
+    assert env.ext_pillar() == {
+            'tmplpath': os.path.join(tmpdir, 'template.sls'),
+            'tmpldir': tmpdir
+        }
+
+
+def test_context_minion_id(env):
+    env.setup({
+        'tower.sls':
+            '''
+            base:
+                - template.sls
+            ''',
+        'template.sls':
+            '''
+            minion_id: {{ minion_id }}
+            '''
+    })
+
+    assert env.ext_pillar() == {'minion_id': 'test_master'}

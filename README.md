@@ -4,9 +4,9 @@
 
 Advanced and flexible `ext_pillar` that gives access to pillar values while processing, provides merge functionality and utilizes salts own template engines.
 
-Salt tower is inspired by [pillarstack](https://github.com/bbinet/pillarstack) and uses its merging implementation. It reuses the concept of a top file and utilizes salt renderers. Therefore Salt Tower supports all engines including YAML, Jinja and Python, as well as chaining engines together.
+Salt tower is inspired by [pillarstack](https://github.com/bbinet/pillarstack). It reuses the concept of a top file and utilizes salt renderers. Therefore Salt Tower supports all engines including YAML, Jinja and Python, as well as chaining engines together.
 
-Each tower data file is passed the current processed pillars. Their can therefore access previously defined values.
+Each tower data file is passed the current processed pillars. They can therefore access previously defined values.
 
 Salt Tower is designed to completely replace the usual pillar repository.
 
@@ -133,8 +133,6 @@ application:
 
 **Note:** Using `salt['pillar.get']()` will *not* work.
 
-File are merged following the rules and configuration options of [pillarstack](https://github.com/bbinet/pillarstack#merging-strategies).
-
 Tower data files can be any supported template including python files:
 
 ```py
@@ -150,8 +148,6 @@ def run():
 
     return ret
 ```
-
-The same merging rules apply.
 
 **Note:** The `__pillar__` object in Python templates is different to other template engines. It is a dict and does not allow to traverse using `get`.
 
@@ -242,16 +238,93 @@ The text renderer usually is used for embedding rendered configuration files int
 
 The pillar object passed to the python template engine is the actual mutable dict reference used to process and merge the data. It is possible to modify this dict e.g. in a python template without returning anything:
 
-```py
+```python
+#!py
+
+import copy
+
+def run():
+    databases = __pillar__['databases']
+    default = databases.pop('default') # Deletes from actual pillar
+
+    for name, config in databases.items():
+        databases[name] = dict(default, **config)
+
+    return None
+```
+
+##### tower.get(key, default=None)
+
+Get a pillar value by given traverse path:
+
+```python
+tower.get('my:pillar:key')
+```
+
+##### tower.update(dict)
+
+Merges given dict into the pillar data.
+
+```python
+tower.update({'my': {'pillar': 'data'}})
+
+assert tower.get('my:pillar') == 'data'
+```
+
+##### tower.merge(tgt, *objects)
+
+Merges given dicts or lists into the first one.
+
+Note: The first given dict or list is *mutated* and returned.
+
+```python
+tgt = {}
+
+ret = tower.merge(tgt, {'a': 1})
+
+assert ret is tgt
+assert tgt['a'] == 1
+```
+
+##### tower.format(obj, *args, **kwargs)
+
+Performs recursive late-bind string formatting using tower pillar and given arguments ad keywords for resolving. Uses `string.Formatter` internally.
+
+The full pillar is formatted before the `ext_pillar` returns.
+
+```python
+tower.update({
+    'database': {
+        'password': 'secret'
+    }
+})
+
+ret = tower.format('postgres://user@{database.password}/db')
+
+assert ret == 'postgres://user@secret/db'
+```
+
+Format accept dictionaries and list as well an can therefore be used to format full or partial pillar data, this can be used to e.g. format defaults with extra variables:
+
+```python
 #!py
 
 def run():
-  databases = __pillar__['databases']
-  defaults = databases.pop('default') # Deletes from actual pillar
+    returns = {}
+    defaults = __pillar__['default_app_config']
+    # e.g. {
+    #        'database': 'sqlite:///opt/{name}.sqlite'
+    #        'listen': '0.0.0.0:{app.port}'
+    # }
 
-  for database in databases:
-    # Merges defaults in references dict in pillar
-    tower.merge(database, defaults, strategy='merge-first')
+    for name, conf in __pillar__['applications'].items():
+        # Merge defaults with conf into new dictionary
+        conf = tower.merge({}, defaults, conf)
 
-  return None
+        # Format late-bind defaults with application config
+        conf = tower.format(conf, name=name, app=conf)
+
+        returns[name] = conf
+
+    return {'applications': returns}
 ```
