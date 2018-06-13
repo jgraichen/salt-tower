@@ -253,6 +253,8 @@ def run():
     return None
 ```
 
+The `tower` pillar object itself is available in all rendering engines and can be used for low-level interaction with the ext_pillar engine. Some available functions are:
+
 ##### tower.get(key, default=None)
 
 Get a pillar value by given traverse path:
@@ -263,7 +265,7 @@ tower.get('my:pillar:key')
 
 ##### tower.update(dict)
 
-Merges given dict into the pillar data.
+Merges given dictionary into the pillar data.
 
 ```python
 tower.update({'my': {'pillar': 'data'}})
@@ -273,9 +275,9 @@ assert tower.get('my:pillar') == 'data'
 
 ##### tower.merge(tgt, *objects)
 
-Merges given dicts or lists into the first one.
+Merges given dictionaries or lists into the first one.
 
-Note: The first given dict or list is *mutated* and returned.
+Note: The first given dictionary or list is *mutated* and returned.
 
 ```python
 tgt = {}
