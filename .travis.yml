@@ -15,8 +15,6 @@ install:
 script:
 - py.test -v
 matrix:
-  allow_failures:
-  - python: '3.6'
   exclude:
   - python: '3.6'
     env: SALT_VERSION=2016.11.9
