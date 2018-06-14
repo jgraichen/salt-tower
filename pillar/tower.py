@@ -217,6 +217,17 @@ class Tower(dict):
         context['pillar'] = self
         context['tower'] = self
 
+        def render(tmpl, renderer='text'):
+            file = os.path.join(context.get('base'), tmpl)
+            file = os.path.abspath(file)
+
+            if not os.path.isfile(file):
+                raise FileNotFoundError(errno.ENOENT, os.strerror(errno.ENOENT), file)
+
+            return self._compile(file, renderer, None, None, context)
+
+        context['render'] = render
+
         kwargs['tower'] = context['tower']
         kwargs['minion_id'] = context['minion_id']
 
