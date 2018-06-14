@@ -289,10 +289,28 @@ def _merge_dict(tgt, obj):
     return tgt
 
 
-def _merge_list(tgt, ls):
+def _merge_list(tgt, ls, strategy='merge-last'):
     if not isinstance(ls, list):
         raise TypeError(
             'Cannot merge non-list type, but is {}'.format(type(obj)))
 
-    tgt.extend(copy.deepcopy(ls))
+    if len(ls) > 0 \
+            and isinstance(ls[0], dict) \
+            and len(ls[0]) == 1 \
+            and '__' in ls[0]:
+        strategy = ls.pop(0)['__']
+
+    if strategy == 'remove':
+        for v in ls: tgt.remove(v)
+    elif strategy == 'merge-last':
+        tgt.extend(copy.deepcopy(ls))
+    elif strategy == 'merge-first':
+        for val in ls:
+            tgt.insert(0, copy.deepcopy(val))
+    elif strategy == 'overwrite':
+        del tgt[:]
+        tgt.extend(copy.deepcopy(ls))
+    else:
+        raise ValueError('Unknown strategy: {}'.format(strategy))
+
     return tgt

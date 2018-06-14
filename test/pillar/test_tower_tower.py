@@ -83,6 +83,33 @@ def test_merge_copy_list(tower):
     assert tgt[1] is not mod[0]
 
 
+def test_merge_list_strategy_remove(tower):
+    tgt = ['a', 'b']
+    mod = [{'__': 'remove'}, 'a']
+
+    tower.merge(tgt, mod)
+
+    assert tgt == ['b']
+
+
+def test_merge_list_strategy_merge_first(tower):
+    tgt = ['a', 'b']
+    mod = [{'__': 'merge-first'}, 'c']
+
+    tower.merge(tgt, mod)
+
+    assert tgt == ['c', 'a', 'b']
+
+
+def test_merge_list_strategy_merge_overwrite(tower):
+    tgt = ['a', 'b']
+    mod = [{'__': 'overwrite'}, 'c']
+
+    tower.merge(tgt, mod)
+
+    assert tgt == ['c']
+
+
 def test_format(tower):
     tower.update({'app': {'name': 'MyApp'}})
 
