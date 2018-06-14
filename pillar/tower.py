@@ -78,7 +78,10 @@ class Tower(dict):
         elif isinstance(obj, list):
             return [self.format(i, *args, **kwargs) for i in obj]
         elif isinstance(obj, six.string_types):
-            return self._formatter.format(obj, *args, **kwargs)
+            try:
+                return self._formatter.format(obj, *args, **kwargs)
+            except ValueError:
+                return obj
         else:
             return obj
 

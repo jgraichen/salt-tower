@@ -150,17 +150,12 @@ def test_late_bind_invalid(env):
             '''
             base:
                 - '*':
-                    - late_bind: |
-                        worker_processes auto;
-
-                        server {
-                          listen 8080;
-                        }
+                    - late_bind: "{^$://DJF$$}"
             '''
     })
 
     assert env.ext_pillar() == {
-            'late_bind': 'worker_processes auto;\n\nserver {\n  listen 8080;\n}'
+            'late_bind': '{^$://DJF$$}'
         }
 
 
