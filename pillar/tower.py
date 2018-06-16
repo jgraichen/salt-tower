@@ -304,7 +304,8 @@ def _merge_list(tgt, ls, strategy='merge-last'):
         strategy = ls.pop(0)['__']
 
     if strategy == 'remove':
-        for v in ls: tgt.remove(v)
+        for v in ls:
+            if v in tgt: tgt.remove(v)
     elif strategy == 'merge-last':
         tgt.extend(copy.deepcopy(ls))
     elif strategy == 'merge-first':

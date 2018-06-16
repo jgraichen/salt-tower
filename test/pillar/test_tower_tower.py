@@ -92,6 +92,15 @@ def test_merge_list_strategy_remove(tower):
     assert tgt == ['b']
 
 
+def test_merge_list_strategy_remove_non_existant(tower):
+    tgt = ['a', 'b']
+    mod = [{'__': 'remove'}, 'c']
+
+    tower.merge(tgt, mod)
+
+    assert tgt == ['a', 'b']
+
+
 def test_merge_list_strategy_merge_first(tower):
     tgt = ['a', 'b']
     mod = [{'__': 'merge-first'}, 'c']
