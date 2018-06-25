@@ -29,6 +29,10 @@ from salt.utils.odict import OrderedDict
 from salt.ext.six import string_types
 from salt.exceptions import SaltRenderError
 
+try:
+    from salt.utils.files import fopen
+except:
+    from salt.utils import fopen
 
 log = logging.getLogger(__name__)
 
@@ -61,7 +65,7 @@ class YamletLoader(SaltYamlSafeLoader):
     def _read(self, source):
         source = self._resolve(source)
 
-        with salt.utils.fopen(source, 'rb') as f:
+        with fopen(source, 'rb') as f:
             return f.read()
 
     def _compile(self, source, default='jinja|yamlet', context={}):

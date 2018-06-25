@@ -8,7 +8,6 @@ import collections
 import copy
 import logging
 import os
-import six
 import string
 
 from glob import glob
@@ -17,7 +16,12 @@ from functools import partial
 import salt.loader
 import salt.minion
 import salt.template
+import salt.ext.six as six
 
+try:
+    from salt.utils.data import traverse_dict_and_list
+except:
+    from salt.utils import traverse_dict_and_list
 
 log = logging.getLogger(__name__)
 
@@ -61,7 +65,7 @@ class Tower(dict):
             self._default_renderers = 'jinja|yaml'
 
     def get(self, key, default=None, **kwargs):
-        return salt.utils.traverse_dict_and_list(self, key, default, **kwargs)
+        return traverse_dict_and_list(self, key, default, **kwargs)
 
     def update(self, obj, merge=True, **kwargs):
         if merge:
