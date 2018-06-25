@@ -8,6 +8,7 @@ import collections
 import copy
 import logging
 import os
+import six
 import string
 
 from glob import glob
@@ -16,7 +17,6 @@ from functools import partial
 import salt.loader
 import salt.minion
 import salt.template
-import salt.ext.six as six
 
 
 log = logging.getLogger(__name__)

@@ -125,6 +125,12 @@ def test_format(tower):
     assert tower.format('X{app.name}X') == 'XMyAppX'
 
 
+def test_format_bytes(tower):
+    tower.update({'app': {'name': 'MyApp'}})
+
+    assert tower.format(b'X{app.name}X') == b'X{app.name}X'
+
+
 def test_format_dict(tower):
     tower.update({'ports': [80, 443]})
 
