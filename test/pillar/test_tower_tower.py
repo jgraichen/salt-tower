@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 
-import pytest
 import inspect
+import pytest
+import six
 
 from test.conftest import __pillars__
 
@@ -125,10 +126,11 @@ def test_format(tower):
     assert tower.format('X{app.name}X') == 'XMyAppX'
 
 
-def test_format_bytes(tower):
-    tower.update({'app': {'name': 'MyApp'}})
+if six.PY3:
+    def test_format_bytes(tower):
+        tower.update({'app': {'name': 'MyApp'}})
 
-    assert tower.format(b'X{app.name}X') == b'X{app.name}X'
+        assert tower.format(b'X{app.name}X') == b'X{app.name}X'
 
 
 def test_format_dict(tower):
