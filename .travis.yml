@@ -5,9 +5,9 @@ python:
 - '2.7'
 - '3.6'
 env:
-- SALT_VERSION=2018.3.0
-- SALT_VERSION=2017.7.5
-- SALT_VERSION=2016.11.9
+- SALT_VERSION=2018.3.3
+- SALT_VERSION=2017.7.8
+- SALT_VERSION=2016.11.10
 - SALT_VERSION=2015.8.13
 install:
 - pip install salt==${SALT_VERSION}
@@ -17,6 +17,6 @@ script:
 matrix:
   exclude:
   - python: '3.6'
-    env: SALT_VERSION=2016.11.9
+    env: SALT_VERSION=2016.11.10
   - python: '3.6'
     env: SALT_VERSION=2015.8.13
