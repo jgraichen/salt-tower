@@ -216,6 +216,73 @@ def test_include(env):
     assert env.ext_pillar() == {'else': True}
 
 
+def test_include_nested(env):
+    env.setup({
+        'tower.sls':
+            '''
+            base:
+                - common
+            ''',
+        'common.sls':
+            '''
+            include:
+                - dir/file.sls
+            ''',
+        'dir/file.sls':
+            '''
+            test: True
+            '''
+    })
+
+    assert env.ext_pillar() == {'test': True}
+
+
+def test_include_nested_init(env):
+    env.setup({
+        'tower.sls':
+            '''
+            base:
+                - common
+            ''',
+        'common.sls':
+            '''
+            include:
+                - dir
+            ''',
+        'dir/init.sls':
+            '''
+            test: True
+            '''
+    })
+
+    assert env.ext_pillar() == {'test': True}
+
+
+def test_include_nested_glob(env):
+    env.setup({
+        'tower.sls':
+            '''
+            base:
+                - common
+            ''',
+        'common.sls':
+            '''
+            include:
+                - dir/*.sls
+            ''',
+        'dir/one.sls':
+            '''
+            one: True
+            ''',
+        'dir/two.sls':
+            '''
+            two: True
+            '''
+    })
+
+    assert env.ext_pillar() == {'one': True, 'two': True}
+
+
 def test_include_recursive(env):
     env.setup({
         'tower.sls':
