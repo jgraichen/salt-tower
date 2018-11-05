@@ -15,6 +15,12 @@ root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 import salt.config
 import salt.loader
 
+try:
+    from salt.utils.files import fopen
+except:
+    from salt.utils import fopen
+
+
 __opts__ = salt.config.client_config(os.path.join(root, 'test/master.yml'))
 __opts__['extension_modules'] = root
 __opts__['cachedir'] = os.path.join(root, 'tmp/cache')
@@ -56,7 +62,7 @@ class Environment(object):
         if not os.path.isdir(dirname):
             os.makedirs(dirname)
 
-        with salt.utils.fopen(template, 'w') as f:
+        with fopen(template, 'w') as f:
             f.write(str)
 
     def compile_template(self, template, default='yaml|jinja', **kwargs):
