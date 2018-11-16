@@ -41,7 +41,7 @@ def ext_pillar(minion_id, pillar, *args, **kwargs):
 
         tower.run(top)
 
-    return tower.format(tower)
+    return dict(tower)
 
 
 class Tower(dict):

@@ -112,6 +112,7 @@ def test_match_grains(env):
     assert env.ext_pillar() == {'match': 'grains'}
 
 
+@pytest.mark.skip(reason="Global format currently disable as it's a high-risk feature")
 def test_late_bind(env):
     env.setup({
         'tower.sls':

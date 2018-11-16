@@ -292,8 +292,6 @@ assert tgt['a'] == 1
 
 Performs recursive late-bind string formatting using tower pillar and given arguments ad keywords for resolving. Uses `string.Formatter` internally.
 
-The full pillar is formatted before the `ext_pillar` returns.
-
 ```python
 tower.update({
     'database': {
