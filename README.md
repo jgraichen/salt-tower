@@ -12,6 +12,19 @@ Salt Tower is designed to completely replace the usual pillar repository.
 
 ## Installation
 
+The extension files `tower.py` and (optional) the renderers must be placed in the salt extension directory.
+
+### Install with Git
+
+Clone the repository to any location on your salt master and configure the`extension_modules` to point to that location:
+
+```
+# /etc/salt/master.d/tower.conf
+extension_modules: /src/salt/salt-tower-git
+```
+
+### Manual
+
 Install Salt Tower by dropping the `tower.py` in the `<extension_modules>/pillar` directory. It is recommended to install the extra renderers to `<extension_modules>/renderers` too.
 
 ## Configuration
