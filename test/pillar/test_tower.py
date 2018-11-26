@@ -217,6 +217,48 @@ def test_include(env):
     assert env.ext_pillar() == {'else': True}
 
 
+def test_include_relative(env):
+    env.setup({
+        'tower.sls':
+            '''
+            base:
+                - path/to/file
+            ''',
+        'path/to/file.sls':
+            '''
+            include:
+                - ./else.sls
+            ''',
+        'path/to/else.sls':
+            '''
+            else: True
+            '''
+    })
+
+    assert env.ext_pillar() == {'else': True}
+
+
+def test_include_relative_up(env):
+    env.setup({
+        'tower.sls':
+            '''
+            base:
+                - path/to/file
+            ''',
+        'path/to/file.sls':
+            '''
+            include:
+                - ../else.sls
+            ''',
+        'path/else.sls':
+            '''
+            else: True
+            '''
+    })
+
+    assert env.ext_pillar() == {'else': True}
+
+
 def test_include_nested(env):
     env.setup({
         'tower.sls':

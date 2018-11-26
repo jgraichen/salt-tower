@@ -151,8 +151,10 @@ class Tower(dict):
         elif isinstance(item, six.string_types):
             self.load(item, base)
 
-    def lookup(self, item, base=None):
-        if base:
+    def lookup(self, item, base=None, cwd=None):
+        if cwd and (item.startswith('./') or item.startswith('../')):
+            path = os.path.join(cwd, self.format(item))
+        elif base:
             path = os.path.join(base, self.format(item))
         else:
             path = self.format(item)
@@ -173,8 +175,8 @@ class Tower(dict):
 
         return []
 
-    def load(self, item, base=None):
-        for file in self.lookup(item, base):
+    def load(self, item, base=None, cwd=None):
+        for file in self.lookup(item, base, cwd):
             self._load_file(file, base)
 
     def _load_file(self, file, base=None):
@@ -213,7 +215,7 @@ class Tower(dict):
                 includes = [includes]
 
             for include in includes:
-                self.load(include, base)
+                self.load(include, base, cwd=os.path.dirname(file))
 
         self.update(data, merge=True)
 
