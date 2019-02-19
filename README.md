@@ -263,8 +263,10 @@ def run():
     for name, config in databases.items():
         databases[name] = dict(default, **config)
 
-    return None
+    return {}
 ```
+
+*Note:* Do not return `None`. Otherwise [Salt will render the template twice](https://github.com/saltstack/salt/blame/v2019.2.0/salt/template.py#L108) and all side-effects will be applied twice.
 
 The `tower` pillar object itself is available in all rendering engines and can be used for low-level interaction with the ext_pillar engine. Some available functions are:
 
