@@ -1,4 +1,6 @@
-# Salt Tower
+<p align="center"><img height="100" alt="Salt Tower (Logo)" src="./salt-tower.svg" /></p>
+
+# Salt Tower - A Flexible External Pillar Module
 
 [![Build Status](https://travis-ci.org/jgraichen/salt-tower.svg?branch=master)](https://travis-ci.org/jgraichen/salt-tower)
 
