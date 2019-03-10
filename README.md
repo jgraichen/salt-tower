@@ -231,6 +231,24 @@ nginx:
       }
 ```
 
+This can greatly simplify states as they only need to drop pillar values into config files and restart services:
+
+```sls
+nginx:
+  pkg.installed: []
+  service.running: []
+
+{% for name, site in pillar.get('nginx:sites').items() %}
+/etc/nginx/sites-enabled/{{ name }}:
+  file.managed:
+    - contents_pillar: nginx:sites:{{ name }}
+    - makedirs: True
+    - watch_in:
+      - service: nginx
+{% endfor %}
+```
+
+
 ### Text renderer
 
 The text renderer (used above) renders a file as plain text. It stripes the shebang and can optionally strip whitespace from the beginning and end.
