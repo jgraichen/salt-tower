@@ -26,6 +26,17 @@ except:
 log = logging.getLogger(__name__)
 
 
+if hasattr(salt.loader, 'matchers'):
+    # Available since salt 2019.2
+    def _match_minion_impl(tgt, opts):
+        matchers = salt.loader.matchers(dict(__opts__, **opts))
+        return matchers['compound_match.match'](tgt)
+
+else:
+    def _match_minion_impl(tgt, opts):
+        return salt.minion.Matcher(opts, __salt__).compound_match(tgt)
+
+
 def ext_pillar(minion_id, pillar, *args, **kwargs):
     env = __opts__.get('environment', None)
 
@@ -110,19 +121,16 @@ class Tower(dict):
                         self._load_item(base, i)
 
     def _match_minion(self, tgt):
-        opts = {
-            'grains': __grains__,
-            'pillar': self,
-            'id': self.minion_id
-        }
-
-        matcher = salt.minion.Matcher(opts, __salt__)
-
         try:
-            return matcher.compound_match(tgt)
+            return _match_minion_impl(tgt, {
+                'grains': __grains__,
+                'pillar': self,
+                'id': self.minion_id
+            })
         except Exception as e:
             log.exception(e)
             return False
+
 
     def _load_top(self, top):
         data = self._compile(top)
