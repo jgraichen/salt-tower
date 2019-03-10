@@ -6,15 +6,15 @@
 
 Advanced and flexible `ext_pillar` that gives access to pillar values while processing, provides merge functionality and utilizes salts own template engines.
 
-Salt tower is inspired by [pillarstack](https://github.com/bbinet/pillarstack). It reuses the concept of a top file and utilizes salt renderers. Therefore Salt Tower supports all engines including YAML, Jinja and Python, as well as chaining engines together.
+Salt tower is inspired by [pillarstack](https://github.com/bbinet/pillarstack). It reuses the concept of a [top file](#top-file) and utilizes salt renderers. Therefore Salt Tower supports all engines including YAML, Jinja and Python, as well as chaining engines together. Improved [renderers for plain text and YAML](#yamlet-renderer) are included too.
 
-Each tower data file is passed the current processed pillars. They can therefore access previously defined values.
+Each tower data file is passed the current processed pillars. They can therefore access previously defined values. Data files can include other files that are all merged together.
 
-Salt Tower is designed to completely replace the usual pillar repository.
+Salt Tower is designed to completely replace the usual pillar repository or can be utilized beside the usual pillar e.g. to bootstrap a salt master itself.
 
 ## Installation
 
-The extension files `tower.py` and (optional) the renderers must be placed in the salt extension directory.
+The extension files `tower.py` and the renderers must be placed in the salt extension directory.
 
 ### Install with Git
 
