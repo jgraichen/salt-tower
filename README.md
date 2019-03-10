@@ -10,7 +10,7 @@ Salt tower is inspired by [pillarstack](https://github.com/bbinet/pillarstack). 
 
 Each tower data file is passed the current processed pillars. They can therefore access previously defined values. Data files can include other files that are all merged together.
 
-Salt Tower is designed to completely replace the usual pillar repository or can be utilized beside the usual pillar e.g. to bootstrap a salt master itself.
+Salt Tower is designed to completely replace the usual pillar repository or can be utilized beside salts own pillar e.g. to bootstrap a salt master itself.
 
 ## Installation
 
