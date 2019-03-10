@@ -1,4 +1,4 @@
-<p align="center"><img height="100" alt="Salt Tower (Logo)" src="./salt-tower.svg" /></p>
+<p align="center"><img height="100" alt="Salt Tower (Logo)" src="./salt-tower.svg" /></p><br />
 
 # Salt Tower - A Flexible External Pillar Module
 
