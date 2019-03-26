@@ -248,6 +248,24 @@ nginx:
 {% endfor %}
 ```
 
+The yamlet renderer `!include` macro does accept context variables too:
+
+```yaml
+nginx:
+  sites:
+    my-app: !include
+      source: ../files/site.conf
+      context:
+        listen_ip: 127.0.0.1
+```
+
+```
+#!jinja | text strip
+server {
+  listen {{ listen_ip }}:80;
+  root /var/www/my-app;
+}
+```
 
 ### Text renderer
 
