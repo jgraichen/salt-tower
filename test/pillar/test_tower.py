@@ -264,14 +264,14 @@ def test_include_nested(env):
         'tower.sls':
             '''
             base:
-                - common
+                - a/common
             ''',
-        'common.sls':
+        'a/common.sls':
             '''
             include:
-                - dir/file.sls
+                - b/file.sls
             ''',
-        'dir/file.sls':
+        'b/file.sls':
             '''
             test: True
             '''
@@ -285,14 +285,14 @@ def test_include_nested_init(env):
         'tower.sls':
             '''
             base:
-                - common
+                - a/common
             ''',
-        'common.sls':
+        'a/common.sls':
             '''
             include:
-                - dir
+                - b
             ''',
-        'dir/init.sls':
+        'b/init.sls':
             '''
             test: True
             '''
@@ -306,18 +306,18 @@ def test_include_nested_glob(env):
         'tower.sls':
             '''
             base:
-                - common
+                - a/common
             ''',
-        'common.sls':
+        'a/common.sls':
             '''
             include:
-                - dir/*.sls
+                - b/*.sls
             ''',
-        'dir/one.sls':
+        'b/one.sls':
             '''
             one: True
             ''',
-        'dir/two.sls':
+        'b/two.sls':
             '''
             two: True
             '''
