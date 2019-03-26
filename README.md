@@ -114,7 +114,7 @@ base:
   - 'I@site:*':
       - site/default
       - site/{site.id}
-      - site/{site.id}/{site.staging}/*
+      - site/{site.id}/{site.env}/*
 ```
 
 In the above example a minion `node0.a-staging.example.org` will include the following files:
