@@ -148,7 +148,7 @@ application:
 
 **Note:** Using `salt['pillar.get']()` will *not* work.
 
-Tower data files can be any supported template including python files:
+Tower data files can be [any supported template format](https://docs.saltstack.com/en/latest/ref/renderers/) including python files:
 
 ```py
 #!py
@@ -164,21 +164,6 @@ def run():
     return ret
 ```
 
-**Note:** The `__pillar__` object in Python templates is different to other template engines. It is a dict and does not allow to traverse using `get`.
-
-```py
-#!py
-
-def run():
-    return {
-        'wrong': __pilar__.get('tenant:name'),
-        'python': __pillar__['tenant']['name'],
-        'alternative': tower.get('tenant:name')
-    }
-```
-
-The above example demonstrates different usages. The first example will only work if the pillar contains an actual `tenant:name` top-level key. The second example is idiomatic-python but will raise an error if the keys do not exist. The third example uses the additional `tower` helper module to traverse the pillar data.
-
 ##### Includes
 
 Pillar data files can include other pillar files similar to how states can be included:
@@ -190,7 +175,14 @@ include:
 data: more
 ```
 
-Included files cannot be used in the pillar data file template itself but are merge in the pillar before the new pillar data.
+Included files cannot be used in the pillar data file template itself but are merge in the pillar before the new pillar data. Includes can be relative to the current file by prefixing a dot:
+
+```yaml
+include:
+  - file/from/pillar/root.sls
+  - ./adjacent_file.sls
+  - ../parent_file.sls
+```
 
 ### Yamlet renderer
 
@@ -304,9 +296,24 @@ def run():
     return {}
 ```
 
-*Note:* Do not return `None`. Otherwise [Salt will render the template twice](https://github.com/saltstack/salt/blame/v2019.2.0/salt/template.py#L108) and all side-effects will be applied twice.
+*Note 1:* Do not return `None`. Otherwise [Salt will render the template twice](https://github.com/saltstack/salt/blame/v2019.2.0/salt/template.py#L108) and all side-effects will be applied twice.
 
-The `tower` pillar object itself is available in all rendering engines and can be used for low-level interaction with the ext_pillar engine. Some available functions are:
+*Note 2:* The `__pillar__` object in Python templates is different to other template engines. It is a dict and does not allow to traverse using `get`.
+
+```py
+#!py
+
+def run():
+    return {
+        'wrong': __pilar__.get('tenant:name'),
+        'python': __pillar__['tenant']['name'],
+        'alternative': tower.get('tenant:name')
+    }
+```
+
+The above example demonstrates different usages. The first example will only work if the pillar contains an actual `tenant:name` top-level key. The second example is idiomatic-python but will raise an error if the keys do not exist. The third example uses the additional `tower` helper module to traverse the pillar data.
+
+The `tower` pillar object is available in all rendering engines and can be used for low-level interaction with the ext_pillar engine. Some available functions are:
 
 ##### tower.get(key, default=None)
 
