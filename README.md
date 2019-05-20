@@ -225,7 +225,7 @@ nginx:
   pkg.installed: []
   service.running: []
 
-{% for name, site in pillar.get('nginx:sites').items() %}
+{% for name in pillar.get('nginx:sites', {}) %}
 /etc/nginx/sites-enabled/{{ name }}:
   file.managed:
     - contents_pillar: nginx:sites:{{ name }}
@@ -270,7 +270,7 @@ This will return:
 Hello World
 ```
 
-The text renderer usually is used for embedding rendered configuration files into a Yamlet template.
+The text renderer is mostly used for embedding rendered configuration files into a Yamlet file.
 
 ### Advanced usage (very dangerous)
 
