@@ -1,6 +1,6 @@
 # Simple Tower Pillar Example
 
-This examples demonstrates a simple tower pillar with some exemplary states. It will demonstrate the basic tower pillar features and how this simplifies states and makes them much easier to reuse.
+This example demonstrates a simple tower pillar with some exemplary states. It will show the basic tower pillar features and how this simplifies states and makes them much easier to reuse.
 
 The example states consists of `salt/minion.sls`, a simple state to install and configure the salt minion, and `nginx/init.sls`, installing and configuring a Nginx web server with multiple sites.
 
