@@ -27,7 +27,7 @@ tower.sls
 
 The pillar directory contains the tower pillar data and a tower top file for multiple web minions with one special node. The salt master must be configured to use the tower ext_pillar from the example:
 
-```
+```yaml
 # /etc/salt/master.d/tower-example.conf
 ext_pillar:
 - tower: /path/to/example/pillar/tower.sls
