@@ -4,26 +4,22 @@ This example demonstrates a simple tower pillar with some exemplary states. It w
 
 ### States
 
-```
-nginx/init.sls
-salt/minion.sls
-top.sls
-```
+* [`nginx/init.sls`](states/nginx/init.sls)
+* [`salt/minion.sls`](states/salt/minion.sls)
+* [`top.sls`](states/top.sls)
 
 The example states consists of [`salt/minion.sls`](states/salt/minion.sls), a simple state to install and configure the salt minion, and [`nginx/init.sls`](states/nginx/init.sls), installing and configuring a Nginx web server with multiple sites.
 
 
 ### Pillar
 
-```
-common/minion.sls
-minion/web2/10-nginx-override.sls
-minion/web2/files/nginx.web2.conf
-role/nginx.sls
-role/files/nginx.default.conf
-role/files/nginx.www.conf
-tower.sls
-```
+* [`common/minion.sls`](states/common/minion.sls)
+* [`minion/web2/10-nginx-override.sls`](states/minion/web2/10-nginx-override.sls)
+* [`minion/web2/files/nginx.web2.conf`](states/minion/web2/files/nginx.web2.conf)
+* [`role/nginx.sls`](states/role/nginx.sls)
+* [`role/files/nginx.default.conf`](states/role/files/nginx.default.conf)
+* [`role/files/nginx.www.conf`](states/role/files/nginx.www.conf)
+* [`tower.sls`](states/tower.sls)
 
 The pillar directory contains the tower pillar data and a tower top file for multiple web minions with one special node. The salt master must be configured to use the tower ext_pillar from the example:
 
