@@ -11,7 +11,6 @@ import os
 import string
 
 from glob import glob
-from functools import partial
 
 import salt.loader
 import salt.minion

@@ -22,7 +22,6 @@ except:
 
 
 __opts__ = salt.config.client_config(os.path.join(root, 'test/master.yml'))
-__opts__['extension_modules'] = root
 __opts__['cachedir'] = os.path.join(root, 'tmp/cache')
 
 __grains__ = salt.loader.grains(__opts__)

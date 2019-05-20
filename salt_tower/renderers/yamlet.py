@@ -31,7 +31,7 @@ from salt.exceptions import SaltRenderError
 
 try:
     from salt.utils.files import fopen
-except:
+except ImportError:
     from salt.utils import fopen
 
 log = logging.getLogger(__name__)
@@ -52,7 +52,6 @@ class YamletLoader(SaltYamlSafeLoader):
             return self._read(node.value)
         else:
             self._invalid_node(node, 'a scalar node')
-
 
     def _yamlet_include(self, node):
         if isinstance(node, ScalarNode):
@@ -102,7 +101,6 @@ class YamletLoader(SaltYamlSafeLoader):
             None,
             'expected {0}, but found {1}'.format(expected, node.id),
             node.start_mark)
-
 
 
 def get_yaml_loader(**kwargs):

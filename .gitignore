@@ -2,5 +2,11 @@ __pycache__/
 *.py[cod]
 .cache/
 .pytest_cache/
-.env
-tmp
+.eggs/
+/*.lock
+/*.egg-info
+/.env
+/.tox
+/build
+/dist
+/tmp
