@@ -12,7 +12,7 @@ env:
 install:
 - pip install tox-travis
 script:
-- tox
+- tox -- -v
 matrix:
   exclude:
   - python: '3.6'
