@@ -13,13 +13,13 @@ The example states consists of [`salt/minion.sls`](states/salt/minion.sls), a si
 
 ### Pillar
 
-* [`common/minion.sls`](states/common/minion.sls)
-* [`minion/web2/10-nginx-override.sls`](states/minion/web2/10-nginx-override.sls)
-* [`minion/web2/files/nginx.web2.conf`](states/minion/web2/files/nginx.web2.conf)
-* [`role/nginx.sls`](states/role/nginx.sls)
-* [`role/files/nginx.default.conf`](states/role/files/nginx.default.conf)
-* [`role/files/nginx.www.conf`](states/role/files/nginx.www.conf)
-* [`tower.sls`](states/tower.sls)
+* [`common/minion.sls`](pillar/common/minion.sls)
+* [`minion/web2/10-nginx-override.sls`](pillar/minion/web2/10-nginx-override.sls)
+* [`minion/web2/files/nginx.web2.conf`](pillar/minion/web2/files/nginx.web2.conf)
+* [`role/nginx.sls`](pillar/role/nginx.sls)
+* [`role/files/nginx.default.conf`](pillar/role/files/nginx.default.conf)
+* [`role/files/nginx.www.conf`](pillar/role/files/nginx.www.conf)
+* [`tower.sls`](pillar/tower.sls)
 
 The pillar directory contains the tower pillar data and a tower top file for multiple web minions with one special node. The salt master must be configured to use the tower ext_pillar from the example:
 
