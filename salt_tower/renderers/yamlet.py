@@ -17,6 +17,7 @@ import logging
 import os
 import six
 import warnings
+import base64
 
 from yaml.constructor import ConstructorError
 from yaml.nodes import ScalarNode, MappingNode
@@ -46,6 +47,7 @@ class YamletLoader(SaltYamlSafeLoader):
         self.renderers = renderers
         self.add_constructor(u'!read', type(self)._yamlet_read)
         self.add_constructor(u'!include', type(self)._yamlet_include)
+        self.add_constructor(u'!read_b64encoded', type(self)._yamlet_read_b64)
 
     def _yamlet_read(self, node):
         if isinstance(node, ScalarNode):
@@ -61,11 +63,23 @@ class YamletLoader(SaltYamlSafeLoader):
         else:
             self._invalid_node(node, 'a scalar or mapping node')
 
+    def _yamlet_read_b64(self, node):
+        if isinstance(node, ScalarNode):
+            return self._read_b64(node.value)
+        else:
+            self._invalid_node(node, 'a scalar node')
+
     def _read(self, source):
         source = self._resolve(source)
 
         with fopen(source, 'rb') as f:
             return f.read()
+
+    def _read_b64(self, source):
+        source = self._resolve(source)
+
+        with fopen(source, 'rb') as f:
+            return base64.b64encode(f.read())
 
     def _compile(self, source, default='jinja|yamlet', context={}):
         source = self._resolve(source)
