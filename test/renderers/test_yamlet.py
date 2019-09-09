@@ -51,6 +51,13 @@ def test_tag_read(env, result):
     assert result() == {'key': b'content'}
 
 
+def test_tag_read_binary(env, result):
+    env.write('init.sls', 'key: !read other_file.txt')
+    env.write('other_file.txt', b'jd\x81\xed\xa2~*\xca6\xd88,\x15zr\xb6', mode='wb')
+
+    assert result() == {'key': b'jd\x81\xed\xa2~*\xca6\xd88,\x15zr\xb6'}
+
+
 def test_tag_include(env, result):
     env.write('init.sls', 'key: !include template.sls')
     env.write('template.sls', 'another: value')
