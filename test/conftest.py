@@ -54,15 +54,15 @@ class Environment(object):
         for k, v in six.iteritems(files):
             self.write(k, textwrap.dedent(v).strip())
 
-    def write(self, name, str):
+    def write(self, name, content, mode='w'):
         template = os.path.join(self.tmpdir, name)
         dirname = os.path.dirname(template)
 
         if not os.path.isdir(dirname):
             os.makedirs(dirname)
 
-        with fopen(template, 'w') as f:
-            f.write(str)
+        with fopen(template, mode) as f:
+            f.write(content)
 
     def compile_template(self, template, default='yaml|jinja', **kwargs):
         template = os.path.join(self.tmpdir, template)
