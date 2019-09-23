@@ -382,3 +382,28 @@ def test_context_minion_id(env):
     })
 
     assert env.ext_pillar() == {'minion_id': 'test_master'}
+
+
+def test_context_basedir(env):
+    """
+    Test path lookup behavior of the yamlet renderer in a tower.
+
+    The !include tag should lookup non-relative paths from the tower root.
+    """
+    env.setup({
+        'tower.sls':
+            '''
+            base:
+                - common/init.sls
+            ''',
+        'common/init.sls':
+            '''
+            conf: !include {{ basedir }}/files/conf.txt
+            ''',
+        'files/conf.txt':
+            '''
+            Some config file...
+            '''
+    })
+
+    assert env.ext_pillar() == {'conf': 'Some config file...'}

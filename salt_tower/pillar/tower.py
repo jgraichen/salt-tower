@@ -209,7 +209,7 @@ class Tower(dict):
 
         self._included.append(file)
 
-        data = self._compile(file, context={'base': base})
+        data = self._compile(file, context={'basedir': base})
 
         if not isinstance(data, collections.Mapping):
             log.warning('Loading {} did not return dict, but {}'.format(file, type(data)))
