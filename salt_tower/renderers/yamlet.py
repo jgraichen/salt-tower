@@ -16,7 +16,6 @@ import io
 import logging
 import os
 import six
-import warnings
 
 from yaml.constructor import ConstructorError
 from yaml.nodes import ScalarNode, MappingNode
@@ -27,7 +26,6 @@ import salt.template
 from salt.utils.yamlloader import SaltYamlSafeLoader, load
 from salt.utils.odict import OrderedDict
 from salt.ext.six import string_types
-from salt.exceptions import SaltRenderError
 
 try:
     from salt.utils.files import fopen
@@ -37,11 +35,15 @@ except ImportError:
 log = logging.getLogger(__name__)
 
 
-class YamletLoader(SaltYamlSafeLoader):
-    def __init__(self, stream, renderers, context={}, tmplpath=None, **kwargs):
+class YamletLoader(SaltYamlSafeLoader): # pylint: disable=too-many-ancestors
+    def __init__(self, stream, renderers, context=None, tmplpath=None, **_kwargs):
         SaltYamlSafeLoader.__init__(self, stream, dictclass=OrderedDict)
 
-        self.context = context
+        if context is None:
+            self.context = {}
+        else:
+            self.context = context
+
         self.tmplpath = tmplpath
         self.renderers = renderers
         self.add_constructor(u'!read', type(self)._yamlet_read)
@@ -50,27 +52,32 @@ class YamletLoader(SaltYamlSafeLoader):
     def _yamlet_read(self, node):
         if isinstance(node, ScalarNode):
             return self._read(node.value)
-        else:
-            self._invalid_node(node, 'a scalar node')
+
+        return self._invalid_node(node, 'a scalar node')
 
     def _yamlet_include(self, node):
         if isinstance(node, ScalarNode):
             return self._compile(node.value)
-        elif isinstance(node, MappingNode):
+
+        if isinstance(node, MappingNode):
             return self._compile(**self.construct_mapping(node, True))
-        else:
-            self._invalid_node(node, 'a scalar or mapping node')
+
+        return self._invalid_node(node, 'a scalar or mapping node')
 
     def _read(self, source):
         source = self._resolve(source)
 
-        with fopen(source, 'rb') as f:
-            return f.read()
+        with fopen(source, 'rb') as file:
+            return file.read()
 
-    def _compile(self, source, default='jinja|yamlet', context={}):
+    def _compile(self, source, default='jinja|yamlet', context=None):
         source = self._resolve(source)
 
-        context = dict(self.context, **context)
+        if context is None:
+            context = self.context
+        else:
+            context = dict(self.context, **context)
+
         context['tmplpath'] = source
         context['tmpldir'] = os.path.dirname(source)
 
@@ -110,7 +117,7 @@ def get_yaml_loader(**kwargs):
     return yaml_loader
 
 
-def render(source, saltenv='base', sls='', argline='', **kwargs):
+def render(source, _saltenv, _sls, **kwargs):
     '''
     Processes YAML data in a string or file objects.
 

@@ -51,13 +51,14 @@ from salt.ext.six import string_types
 log = logging.getLogger(__name__)
 
 
-def render(blob, saltenv='', sls='', argline=None, key=None, **kwargs):
+def render(blob, _saltenv, _sls, argline=None, key=None, **_kwargs):
     if not isinstance(blob, string_types):
         blob = blob.read()
 
     if blob.startswith('#!'):
         blob = blob[(blob.find('\n') + 1):]
 
+    # pylint: disable=invalid-name
     if argline is not None:
         for arg in argline.split(None):
             if '=' in arg:

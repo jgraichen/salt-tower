@@ -9,6 +9,7 @@ import copy
 import logging
 import os
 import string
+import errno
 
 from glob import glob
 
@@ -19,7 +20,7 @@ import salt.ext.six as six
 
 try:
     from salt.utils.data import traverse_dict_and_list
-except:
+except ImportError:
     from salt.utils import traverse_dict_and_list
 
 log = logging.getLogger(__name__)
@@ -28,7 +29,7 @@ log = logging.getLogger(__name__)
 if hasattr(salt.loader, 'matchers'):
     # Available since salt 2019.2
     def _match_minion_impl(tgt, opts):
-        matchers = salt.loader.matchers(dict(__opts__, **opts))
+        matchers = salt.loader.matchers(dict(__opts__, **opts)) # pylint: disable=no-member
         return matchers['compound_match.match'](tgt)
 
 else:
@@ -36,7 +37,7 @@ else:
         return salt.minion.Matcher(opts, __salt__).compound_match(tgt)
 
 
-def ext_pillar(minion_id, pillar, *args, **kwargs):
+def ext_pillar(minion_id, pillar, *args, **_kwargs):
     env = __opts__.get('environment', None)
 
     if env is None:
@@ -46,7 +47,7 @@ def ext_pillar(minion_id, pillar, *args, **kwargs):
 
     for top in list(args):
         if not os.path.exists(top):
-            log.warn("Tower top file `{0}' does not exists".format(top))
+            log.warning("Tower top file `%s' does not exists", top)
             continue
 
         tower.run(top)
@@ -80,8 +81,7 @@ class Tower(dict):
     def update(self, obj, merge=True, **kwargs):
         if merge:
             return self.merge(self, obj, **kwargs)
-        else:
-            super(Tower, self).update(obj)
+        return super(Tower, self).update(obj)
 
     def merge(self, *args, **kwargs):
         return _merge(*args, **kwargs)
@@ -89,9 +89,11 @@ class Tower(dict):
     def format(self, obj, *args, **kwargs):
         if isinstance(obj, collections.Mapping):
             return {k: self.format(v, *args, **kwargs) for k, v in six.iteritems(obj)}
-        elif isinstance(obj, list):
+
+        if isinstance(obj, list):
             return [self.format(i, *args, **kwargs) for i in obj]
-        elif isinstance(obj, six.string_types):
+
+        if isinstance(obj, six.string_types):
             if six.PY3 and isinstance(obj, bytes):
                 return obj
 
@@ -99,11 +101,11 @@ class Tower(dict):
                 return self._formatter.format(obj, *args, **kwargs)
             except ValueError:
                 return obj
-        else:
-            return obj
+
+        return obj
 
     def run(self, top):
-        log.debug("Process tower top file `{0}'".format(top))
+        log.debug("Process tower top file `%s'", top)
 
         base = os.path.dirname(top)
 
@@ -116,8 +118,8 @@ class Tower(dict):
                     if not self._match_minion(tgt):
                         continue
 
-                    for i in items:
-                        self._load_item(base, i)
+                    for itm in items:
+                        self._load_item(base, itm)
 
     def _match_minion(self, tgt):
         try:
@@ -126,8 +128,8 @@ class Tower(dict):
                 'pillar': self,
                 'id': self.minion_id
             })
-        except Exception as e:
-            log.exception(e)
+        except Exception as err:
+            log.exception(err)
             return False
 
 
@@ -135,18 +137,16 @@ class Tower(dict):
         data = self._compile(top)
 
         if not isinstance(data, collections.Mapping):
-            log.critical("Tower top must be a dict, but is {0}."
-                .format(type(data)))
+            log.critical("Tower top must be a dict, but is %s.", type(data))
             return []
 
         if self.env not in data:
-            log.warn("Tower top `{0}' does not include env {1}, skipping."
-                .format(top, self.env))
+            log.warning("Tower top `%s' does not include env %s, skipping.", top, self.env)
             return []
 
         if not isinstance(data[self.env], list):
-            log.critical("Tower top `{0}' env {1} must be a list, but is {2}."
-                .format(top, self.env, type(data[self.env])))
+            log.critical("Tower top `%s' env %s must be a list, but is %s.",
+                         top, self.env, type(data[self.env]))
             return []
 
         return data[self.env]
@@ -172,12 +172,12 @@ class Tower(dict):
             match = [i for i in match if os.path.isfile(i)]
 
         if match:
-            log.debug('Found glob match: {}'.format(match))
+            log.debug('Found glob match: %s', match)
             return sorted(match)
 
         for match in [path, '{}.sls'.format(path), '{}/init.sls'.format(path)]:
             if os.path.isfile(match):
-                log.debug('Found file match: {}'.format(match))
+                log.debug('Found file match: %s', match)
                 return [match]
 
         return []
@@ -200,11 +200,11 @@ class Tower(dict):
         loaded before the loaded data is merged into the current pillar.
         """
         if file in self._included:
-            log.warning('Skipping already included file: {}'.format(file))
+            log.warning('Skipping already included file: %s', file)
             return
 
         if not os.path.isfile(file):
-            log.warning('Skipping non-existing file: {}'.format(file))
+            log.warning('Skipping non-existing file: %s', file)
             return
 
         self._included.append(file)
@@ -212,7 +212,7 @@ class Tower(dict):
         data = self._compile(file, context={'basedir': base})
 
         if not isinstance(data, collections.Mapping):
-            log.warning('Loading {} did not return dict, but {}'.format(file, type(data)))
+            log.warning('Loading %s did not return dict, but %s', file, type(data))
             return
 
         if 'include' in data:
@@ -226,9 +226,12 @@ class Tower(dict):
 
         self.update(data, merge=True)
 
-    def _compile(self, template, default=None, blacklist=None, whitelist=None, context={}, **kwargs):
+    def _compile(self, template, default=None, blacklist=None, whitelist=None, context=None, **kwargs):
         if default is None:
             default = self._default_renderers
+
+        if context is None:
+            context = {}
 
         context['tmplpath'] = template
         context['tmpldir'] = os.path.dirname(template)
@@ -251,13 +254,13 @@ class Tower(dict):
         kwargs['minion_id'] = context['minion_id']
 
         return salt.template.compile_template(
-                template=template,
-                renderers=self._renderers,
-                default=default,
-                blacklist=blacklist,
-                whitelist=whitelist,
-                context=context,
-                **kwargs)
+            template=template,
+            renderers=self._renderers,
+            default=default,
+            blacklist=blacklist,
+            whitelist=whitelist,
+            context=context,
+            **kwargs)
 
 
 class Formatter(string.Formatter):
@@ -293,43 +296,47 @@ def _merge_dict(tgt, obj):
         raise TypeError(
             'Cannot merge non-dict type, but is {}'.format(type(obj)))
 
-    for k, v in six.iteritems(obj):
-        if k in tgt:
-            if isinstance(tgt[k], collections.Mapping) \
-                    and isinstance(v, collections.Mapping):
-                _merge(tgt[k], v)
-            elif isinstance(tgt[k], list) and isinstance(v, list):
-                _merge_list(tgt[k], v)
+    for key, val in six.iteritems(obj):
+        if key in tgt:
+            if isinstance(tgt[key], collections.Mapping) \
+                    and isinstance(val, collections.Mapping):
+                _merge(tgt[key], val)
+            elif isinstance(tgt[key], list) and isinstance(val, list):
+                _merge_list(tgt[key], val)
             else:
-                tgt[k] = copy.deepcopy(v)
+                tgt[key] = copy.deepcopy(val)
         else:
-            tgt[k] = copy.deepcopy(v)
+            tgt[key] = copy.deepcopy(val)
 
     return tgt
 
 
-def _merge_list(tgt, ls, strategy='merge-last'):
-    if not isinstance(ls, list):
+def _merge_list(tgt, lst, strategy='merge-last'):
+    if not isinstance(lst, list):
         raise TypeError(
-            'Cannot merge non-list type, but is {}'.format(type(obj)))
+            'Cannot merge non-list type, but is {}'.format(type(lst)))
 
-    if len(ls) > 0 \
-            and isinstance(ls[0], dict) \
-            and len(ls[0]) == 1 \
-            and '__' in ls[0]:
-        strategy = ls.pop(0)['__']
+    if lst and isinstance(lst[0], dict) \
+            and len(lst[0]) == 1 \
+            and '__' in lst[0]:
+        strategy = lst.pop(0)['__']
 
     if strategy == 'remove':
-        for v in ls:
-            if v in tgt: tgt.remove(v)
+        for val in lst:
+            if val in tgt:
+                tgt.remove(val)
+
     elif strategy == 'merge-last':
-        tgt.extend(copy.deepcopy(ls))
+        tgt.extend(copy.deepcopy(lst))
+
     elif strategy == 'merge-first':
-        for val in ls:
+        for val in lst:
             tgt.insert(0, copy.deepcopy(val))
+
     elif strategy == 'overwrite':
         del tgt[:]
-        tgt.extend(copy.deepcopy(ls))
+        tgt.extend(copy.deepcopy(lst))
+
     else:
         raise ValueError('Unknown strategy: {}'.format(strategy))
 
