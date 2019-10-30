@@ -35,13 +35,14 @@ ext_pillar:
 
 ### Top File
 
-The tower file is similar to the usual `top.sls` with some important differences.
+The `tower.sls` file is similar to the usual `top.sls` with some important differences.
 
 ##### Ordered matchers
 
 Pillar top items are ordered and processed in order of appearance. You can therefore define identical matchers multiple times.
 
 ```yaml
+# tower.sls
 base:
   - '*':
       - first
