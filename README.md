@@ -12,6 +12,12 @@ Each tower data file is passed the current processed pillars. They can therefore
 
 Salt Tower is designed to completely replace the usual pillar repository or can be utilized beside salts original pillar that e.g. can bootstrap a salt master with Salt Tower.
 
+## Questions or Need Help?
+
+The is a [group](https://groups.google.com/d/forum/salt-tower) and [mailing list](mailto:salt-tower@googlegroups.com). You can join the group [here](https://groups.google.com/d/forum/salt-tower/join) or by sending a [subscribe email](mailto:salt-tower+subscribe@googlegroups.com).
+
+Feel free to ask for help, discuss solutions or ideas there. Otherwise you can open an [issue](https://github.com/jgraichen/salt-tower/issues/new).
+
 ## Installation
 
 Recommended installation is using `pip` / `pip3` on the salt master:
