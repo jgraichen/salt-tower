@@ -11,9 +11,9 @@ env:
 - SALT=2017.7.8
 - SALT=2016.11.10
 install:
-- pip install -q pytest salt~=$SALT
+- pip install pytest salt~=$SALT
 script:
-- python setup.py -q install
+- python setup.py install
 - pytest -v
 matrix:
   exclude:
