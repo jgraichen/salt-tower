@@ -28,7 +28,7 @@ $ pip install salt-tower
 
 #### Using GitFS
 
-You can include this repository as a gitfs root on synchronize runners on the master:
+You can include this repository as a gitfs root and synchronize the extensions on the master:
 
 ```yaml
 gitfs_remotes:
