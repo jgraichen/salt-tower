@@ -26,6 +26,29 @@ Recommended installation is using `pip` / `pip3` on the salt master:
 $ pip install salt-tower
 ```
 
+#### Using GitFS
+
+You can include this repository as a gitfs root on synchronize runners on the master:
+
+```yaml
+gitfs_remotes:
+- https://github.com/jgraichen/salt-tower.git:
+  - base: v1.2.0
+```
+
+Sync all modules:
+
+```
+$ salt-run saltutil.sync_all
+pillar:
+    - pillar.tower
+renderers:
+    - renderers.text
+    - renderers.yamlet
+```
+
+Please note that *everything* in this repository would be merged with your other roots.
+
 #### Manual installation
 
 Install the extension files from the `salt_tower/{pillar,renderers}` directories into the `extension_modules` directory configured in salt.
