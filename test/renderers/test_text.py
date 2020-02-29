@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
+# pylint: disable=missing-docstring
+# pylint: disable=redefined-outer-name
+
+import textwrap
 
 import pytest
-import textwrap
 
 
 @pytest.fixture

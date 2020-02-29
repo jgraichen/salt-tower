@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# pylint: disable=missing-docstring
 '''
 Extended YAML renderer for salt.
 
@@ -13,7 +14,6 @@ Special extensions are added to
 from __future__ import absolute_import
 
 import io
-import logging
 import os
 import six
 
@@ -31,8 +31,6 @@ try:
     from salt.utils.files import fopen
 except ImportError:
     from salt.utils import fopen
-
-log = logging.getLogger(__name__)
 
 
 class YamletLoader(SaltYamlSafeLoader): # pylint: disable=too-many-ancestors

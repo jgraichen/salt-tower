@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# pylint: disable=missing-docstring
 '''
 
 '''
@@ -6,24 +7,24 @@ from __future__ import absolute_import
 
 import collections
 import copy
+import errno
 import logging
 import os
 import string
-import errno
 
 from glob import glob
 
+import salt.ext.six as six
 import salt.loader
 import salt.minion
 import salt.template
-import salt.ext.six as six
 
 try:
     from salt.utils.data import traverse_dict_and_list
 except ImportError:
     from salt.utils import traverse_dict_and_list
 
-log = logging.getLogger(__name__)
+LOGGER = logging.getLogger(__name__)
 
 
 if hasattr(salt.loader, 'matchers'):
@@ -47,7 +48,7 @@ def ext_pillar(minion_id, pillar, *args, **_kwargs):
 
     for top in list(args):
         if not os.path.exists(top):
-            log.warning("Tower top file `%s' does not exists", top)
+            LOGGER.warning("Tower top file `%s' does not exists", top)
             continue
 
         tower.run(top)
@@ -72,7 +73,7 @@ class Tower(dict):
         if 'yamlet' in self._renderers:
             self._default_renderers = 'jinja|yamlet'
         else:
-            log.warning('Yamlet renderer not available. Tower functionality will be limited.')
+            LOGGER.warning('Yamlet renderer not available. Tower functionality will be limited.')
             self._default_renderers = 'jinja|yaml'
 
     def get(self, key, default=None, **kwargs):
@@ -105,7 +106,7 @@ class Tower(dict):
         return obj
 
     def run(self, top):
-        log.debug("Process tower top file `%s'", top)
+        LOGGER.debug("Process tower top file `%s'", top)
 
         base = os.path.dirname(top)
 
@@ -129,7 +130,7 @@ class Tower(dict):
                 'id': self.minion_id
             })
         except Exception as err:
-            log.exception(err)
+            LOGGER.exception(err)
             return False
 
 
@@ -137,15 +138,15 @@ class Tower(dict):
         data = self._compile(top)
 
         if not isinstance(data, collections.Mapping):
-            log.critical("Tower top must be a dict, but is %s.", type(data))
+            LOGGER.critical("Tower top must be a dict, but is %s.", type(data))
             return []
 
         if self.env not in data:
-            log.warning("Tower top `%s' does not include env %s, skipping.", top, self.env)
+            LOGGER.warning("Tower top `%s' does not include env %s, skipping.", top, self.env)
             return []
 
         if not isinstance(data[self.env], list):
-            log.critical("Tower top `%s' env %s must be a list, but is %s.",
+            LOGGER.critical("Tower top `%s' env %s must be a list, but is %s.",
                          top, self.env, type(data[self.env]))
             return []
 
@@ -172,12 +173,12 @@ class Tower(dict):
             match = [i for i in match if os.path.isfile(i)]
 
         if match:
-            log.debug('Found glob match: %s', match)
+            LOGGER.debug('Found glob match: %s', match)
             return sorted(match)
 
         for match in [path, '{}.sls'.format(path), '{}/init.sls'.format(path)]:
             if os.path.isfile(match):
-                log.debug('Found file match: %s', match)
+                LOGGER.debug('Found file match: %s', match)
                 return [match]
 
         return []
@@ -200,11 +201,11 @@ class Tower(dict):
         loaded before the loaded data is merged into the current pillar.
         """
         if file in self._included:
-            log.warning('Skipping already included file: %s', file)
+            LOGGER.warning('Skipping already included file: %s', file)
             return
 
         if not os.path.isfile(file):
-            log.warning('Skipping non-existing file: %s', file)
+            LOGGER.warning('Skipping non-existing file: %s', file)
             return
 
         self._included.append(file)
@@ -212,7 +213,7 @@ class Tower(dict):
         data = self._compile(file, context={'basedir': base})
 
         if not isinstance(data, collections.Mapping):
-            log.warning('Loading %s did not return dict, but %s', file, type(data))
+            LOGGER.warning('Loading %s did not return dict, but %s', file, type(data))
             return
 
         if 'include' in data:

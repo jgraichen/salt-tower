@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
+# pylint: disable=missing-docstring
+# pylint: disable=redefined-outer-name
 
 import os
-import pytest
 import textwrap
+
+import pytest
 
 from salt.utils.odict import OrderedDict
 

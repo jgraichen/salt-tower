@@ -1,28 +1,29 @@
 # -*- coding: utf-8 -*-
+# pylint: disable=missing-docstring
+# pylint: disable=redefined-outer-name
 
 from __future__ import absolute_import
 
 import os
-import pytest
 import shutil
-import six
 import tempfile
 import textwrap
 
-root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-
+import pytest
+import six
 
 import salt.config
 import salt.loader
 
 try:
     from salt.utils.files import fopen
-except:
+except ImportError:
     from salt.utils import fopen
 
+ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 
-__opts__ = salt.config.client_config(os.path.join(root, 'test/master.yml'))
-__opts__['cachedir'] = os.path.join(root, 'tmp/cache')
+__opts__ = salt.config.client_config(os.path.join(ROOT, 'test/master.yml'))
+__opts__['cachedir'] = os.path.join(ROOT, 'tmp/cache')
 
 __grains__ = salt.loader.grains(__opts__)
 __opts__['grains'] = __grains__
@@ -82,7 +83,6 @@ class Environment(object):
 
         if isinstance(args, dict):
             return __pillars__['tower'](minion_id, pillar, **args)
-        elif isinstance(args, list):
+        if isinstance(args, list):
             return __pillars__['tower'](minion_id, pillar, *args)
-        else:
-            return __pillars__['tower'](minion_id, pillar, args)
+        return __pillars__['tower'](minion_id, pillar, args)

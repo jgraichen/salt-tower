@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# pylint: disable=missing-docstring
 '''
 A text renderer for processing and loading text blobs.
 
@@ -43,12 +44,7 @@ This will return the following python dict:
     {'path': {'to': {'blob': 'A short text message'}}}
 
 '''
-import logging
-
 from salt.ext.six import string_types
-
-
-log = logging.getLogger(__name__)
 
 
 def render(blob, _saltenv, _sls, argline=None, key=None, **_kwargs):
@@ -58,7 +54,6 @@ def render(blob, _saltenv, _sls, argline=None, key=None, **_kwargs):
     if blob.startswith('#!'):
         blob = blob[(blob.find('\n') + 1):]
 
-    # pylint: disable=invalid-name
     if argline is not None:
         for arg in argline.split(None):
             if '=' in arg:
