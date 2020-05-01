@@ -25,7 +25,6 @@ import salt.template
 
 from salt.utils.yamlloader import SaltYamlSafeLoader, load
 from salt.utils.odict import OrderedDict
-from salt.ext.six import string_types
 
 try:
     from salt.utils.files import fopen
@@ -121,7 +120,7 @@ def render(source, _saltenv, _sls, **kwargs):
 
     :rtype: A Python data structure
     '''
-    if not isinstance(source, string_types):
+    if not isinstance(source, str):
         source = source.read()
 
     return load(source, Loader=get_yaml_loader(**kwargs))

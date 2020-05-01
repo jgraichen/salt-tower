@@ -14,7 +14,6 @@ import string
 
 from glob import glob
 
-import salt.ext.six as six
 import salt.loader
 import salt.minion
 import salt.template
@@ -89,15 +88,15 @@ class Tower(dict):
 
     def format(self, obj, *args, **kwargs):
         if isinstance(obj, collections.Mapping):
-            return {k: self.format(v, *args, **kwargs) for k, v in six.iteritems(obj)}
+            return {k: self.format(v, *args, **kwargs) for k, v in obj.items()}
 
         if isinstance(obj, list):
             return [self.format(i, *args, **kwargs) for i in obj]
 
-        if isinstance(obj, six.string_types):
-            if six.PY3 and isinstance(obj, bytes):
-                return obj
+        if isinstance(obj, bytes):
+            return obj
 
+        if isinstance(obj, str):
             try:
                 return self._formatter.format(obj, *args, **kwargs)
             except ValueError:
@@ -111,11 +110,11 @@ class Tower(dict):
         base = os.path.dirname(top)
 
         for item in self._load_top(top):
-            if isinstance(item, six.string_types):
+            if isinstance(item, str):
                 self._load_item(base, item)
 
             elif isinstance(item, collections.Mapping):
-                for tgt, items in six.iteritems(item):
+                for tgt, items in item.items():
                     if not self._match_minion(tgt):
                         continue
 
@@ -156,7 +155,7 @@ class Tower(dict):
         if isinstance(item, collections.Mapping):
             self.update(item, merge=True)
 
-        elif isinstance(item, six.string_types):
+        elif isinstance(item, str):
             self.load(item, base)
 
     def lookup(self, item, base=None, cwd=None):
@@ -297,7 +296,7 @@ def _merge_dict(tgt, obj):
         raise TypeError(
             'Cannot merge non-dict type, but is {}'.format(type(obj)))
 
-    for key, val in six.iteritems(obj):
+    for key, val in obj.items():
         if key in tgt:
             if isinstance(tgt[key], collections.Mapping) \
                     and isinstance(val, collections.Mapping):

@@ -44,11 +44,10 @@ This will return the following python dict:
     {'path': {'to': {'blob': 'A short text message'}}}
 
 '''
-from salt.ext.six import string_types
 
 
 def render(blob, _saltenv, _sls, argline=None, key=None, **_kwargs):
-    if not isinstance(blob, string_types):
+    if not isinstance(blob, str):
         blob = blob.read()
 
     if blob.startswith('#!'):
