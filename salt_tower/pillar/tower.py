@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # pylint: disable=missing-docstring
-'''
+"""
 
-'''
+"""
 from __future__ import absolute_import
 
 import collections
@@ -26,22 +26,26 @@ except ImportError:
 LOGGER = logging.getLogger(__name__)
 
 
-if hasattr(salt.loader, 'matchers'):
+if hasattr(salt.loader, "matchers"):
     # Available since salt 2019.2
     def _match_minion_impl(tgt, opts):
-        matchers = salt.loader.matchers(dict(__opts__, **opts)) # pylint: disable=no-member
-        return matchers['compound_match.match'](tgt)
+        matchers = salt.loader.matchers(
+            dict(__opts__, **opts)
+        )  # pylint: disable=no-member
+        return matchers["compound_match.match"](tgt)
+
 
 else:
+
     def _match_minion_impl(tgt, opts):
         return salt.minion.Matcher(opts, __salt__).compound_match(tgt)
 
 
 def ext_pillar(minion_id, pillar, *args, **_kwargs):
-    env = __opts__.get('environment', None)
+    env = __opts__.get("environment", None)
 
     if env is None:
-        env = 'base'
+        env = "base"
 
     tower = Tower(minion_id, env, pillar)
 
@@ -63,17 +67,19 @@ class Tower(dict):
         self.minion_id = minion_id
 
         opts = copy.copy(__opts__)
-        opts['pillar'] = self
+        opts["pillar"] = self
 
         self._renderers = salt.loader.render(opts, __salt__)
         self._formatter = Formatter(self)
         self._included = []
 
-        if 'yamlet' in self._renderers:
-            self._default_renderers = 'jinja|yamlet'
+        if "yamlet" in self._renderers:
+            self._default_renderers = "jinja|yamlet"
         else:
-            LOGGER.warning('Yamlet renderer not available. Tower functionality will be limited.')
-            self._default_renderers = 'jinja|yaml'
+            LOGGER.warning(
+                "Yamlet renderer not available. Tower functionality will be limited."
+            )
+            self._default_renderers = "jinja|yaml"
 
     def get(self, key, default=None, **kwargs):
         return traverse_dict_and_list(self, key, default, **kwargs)
@@ -123,15 +129,12 @@ class Tower(dict):
 
     def _match_minion(self, tgt):
         try:
-            return _match_minion_impl(tgt, {
-                'grains': __grains__,
-                'pillar': self,
-                'id': self.minion_id
-            })
+            return _match_minion_impl(
+                tgt, {"grains": __grains__, "pillar": self, "id": self.minion_id}
+            )
         except Exception as err:
             LOGGER.exception(err)
             return False
-
 
     def _load_top(self, top):
         data = self._compile(top)
@@ -141,12 +144,18 @@ class Tower(dict):
             return []
 
         if self.env not in data:
-            LOGGER.warning("Tower top `%s' does not include env %s, skipping.", top, self.env)
+            LOGGER.warning(
+                "Tower top `%s' does not include env %s, skipping.", top, self.env
+            )
             return []
 
         if not isinstance(data[self.env], list):
-            LOGGER.critical("Tower top `%s' env %s must be a list, but is %s.",
-                         top, self.env, type(data[self.env]))
+            LOGGER.critical(
+                "Tower top `%s' env %s must be a list, but is %s.",
+                top,
+                self.env,
+                type(data[self.env]),
+            )
             return []
 
         return data[self.env]
@@ -159,7 +168,7 @@ class Tower(dict):
             self.load(item, base)
 
     def lookup(self, item, base=None, cwd=None):
-        if cwd and (item.startswith('./') or item.startswith('../')):
+        if cwd and (item.startswith("./") or item.startswith("../")):
             path = os.path.join(cwd, self.format(item))
         elif base:
             path = os.path.join(base, self.format(item))
@@ -172,12 +181,12 @@ class Tower(dict):
             match = [i for i in match if os.path.isfile(i)]
 
         if match:
-            LOGGER.debug('Found glob match: %s', match)
+            LOGGER.debug("Found glob match: %s", match)
             return sorted(match)
 
-        for match in [path, '{}.sls'.format(path), '{}/init.sls'.format(path)]:
+        for match in [path, f"{path}.sls", f"{path}/init.sls"]:
             if os.path.isfile(match):
-                LOGGER.debug('Found file match: %s', match)
+                LOGGER.debug("Found file match: %s", match)
                 return [match]
 
         return []
@@ -200,23 +209,23 @@ class Tower(dict):
         loaded before the loaded data is merged into the current pillar.
         """
         if file in self._included:
-            LOGGER.warning('Skipping already included file: %s', file)
+            LOGGER.warning("Skipping already included file: %s", file)
             return
 
         if not os.path.isfile(file):
-            LOGGER.warning('Skipping non-existing file: %s', file)
+            LOGGER.warning("Skipping non-existing file: %s", file)
             return
 
         self._included.append(file)
 
-        data = self._compile(file, context={'basedir': base})
+        data = self._compile(file, context={"basedir": base})
 
         if not isinstance(data, collections.Mapping):
-            LOGGER.warning('Loading %s did not return dict, but %s', file, type(data))
+            LOGGER.warning("Loading %s did not return dict, but %s", file, type(data))
             return
 
-        if 'include' in data:
-            includes = data.pop('include')
+        if "include" in data:
+            includes = data.pop("include")
 
             if not isinstance(includes, list):
                 includes = [includes]
@@ -226,21 +235,29 @@ class Tower(dict):
 
         self.update(data, merge=True)
 
-    def _compile(self, template, default=None, blacklist=None, whitelist=None, context=None, **kwargs):
+    def _compile(
+        self,
+        template,
+        default=None,
+        blacklist=None,
+        whitelist=None,
+        context=None,
+        **kwargs,
+    ):
         if default is None:
             default = self._default_renderers
 
         if context is None:
             context = {}
 
-        context['tmplpath'] = template
-        context['tmpldir'] = os.path.dirname(template)
-        context['minion_id'] = self.minion_id
-        context['pillar'] = self
-        context['tower'] = self
+        context["tmplpath"] = template
+        context["tmpldir"] = os.path.dirname(template)
+        context["minion_id"] = self.minion_id
+        context["pillar"] = self
+        context["tower"] = self
 
-        def render(tmpl, renderer='text'):
-            file = os.path.join(context.get('base'), tmpl)
+        def render(tmpl, renderer="text"):
+            file = os.path.join(context.get("base"), tmpl)
             file = os.path.abspath(file)
 
             if not os.path.isfile(file):
@@ -248,10 +265,10 @@ class Tower(dict):
 
             return self._compile(file, renderer, None, None, context)
 
-        context['render'] = render
+        context["render"] = render
 
-        kwargs['tower'] = context['tower']
-        kwargs['minion_id'] = context['minion_id']
+        kwargs["tower"] = context["tower"]
+        kwargs["minion_id"] = context["minion_id"]
 
         return salt.template.compile_template(
             template=template,
@@ -260,7 +277,8 @@ class Tower(dict):
             blacklist=blacklist,
             whitelist=whitelist,
             context=context,
-            **kwargs)
+            **kwargs,
+        )
 
 
 class Formatter(string.Formatter):
@@ -271,10 +289,10 @@ class Formatter(string.Formatter):
         if key in kwargs:
             return (kwargs[key], None)
 
-        value = self._tower.get(key, delimiter='.')
+        value = self._tower.get(key, delimiter=".")
 
         if value is None:
-            return ('{' + key + '}', None)
+            return ("{" + key + "}", None)
 
         return (value, None)
 
@@ -286,20 +304,20 @@ def _merge(tgt, *objects):
         elif isinstance(tgt, list):
             tgt = _merge_list(tgt, obj)
         else:
-            raise TypeError('Cannot merge {}'.format(type(tgt)))
+            raise TypeError(f"Cannot merge {type(tgt)}")
 
     return tgt
 
 
 def _merge_dict(tgt, obj):
     if not isinstance(obj, collections.Mapping):
-        raise TypeError(
-            'Cannot merge non-dict type, but is {}'.format(type(obj)))
+        raise TypeError(f"Cannot merge non-dict type, but is {type(obj)}")
 
     for key, val in obj.items():
         if key in tgt:
-            if isinstance(tgt[key], collections.Mapping) \
-                    and isinstance(val, collections.Mapping):
+            if isinstance(tgt[key], collections.Mapping) and isinstance(
+                val, collections.Mapping
+            ):
                 _merge(tgt[key], val)
             elif isinstance(tgt[key], list) and isinstance(val, list):
                 _merge_list(tgt[key], val)
@@ -311,33 +329,30 @@ def _merge_dict(tgt, obj):
     return tgt
 
 
-def _merge_list(tgt, lst, strategy='merge-last'):
+def _merge_list(tgt, lst, strategy="merge-last"):
     if not isinstance(lst, list):
-        raise TypeError(
-            'Cannot merge non-list type, but is {}'.format(type(lst)))
+        raise TypeError(f"Cannot merge non-list type, but is {type(lst)}")
 
-    if lst and isinstance(lst[0], dict) \
-            and len(lst[0]) == 1 \
-            and '__' in lst[0]:
-        strategy = lst.pop(0)['__']
+    if lst and isinstance(lst[0], dict) and len(lst[0]) == 1 and "__" in lst[0]:
+        strategy = lst.pop(0)["__"]
 
-    if strategy == 'remove':
+    if strategy == "remove":
         for val in lst:
             if val in tgt:
                 tgt.remove(val)
 
-    elif strategy == 'merge-last':
+    elif strategy == "merge-last":
         tgt.extend(copy.deepcopy(lst))
 
-    elif strategy == 'merge-first':
+    elif strategy == "merge-first":
         for val in lst:
             tgt.insert(0, copy.deepcopy(val))
 
-    elif strategy == 'overwrite':
+    elif strategy == "overwrite":
         del tgt[:]
         tgt.extend(copy.deepcopy(lst))
 
     else:
-        raise ValueError('Unknown strategy: {}'.format(strategy))
+        raise ValueError(f"Unknown strategy: {strategy}")
 
     return tgt

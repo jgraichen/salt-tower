@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # pylint: disable=missing-docstring
-'''
+"""
 Extended YAML renderer for salt.
 
 For YAML usage information see :ref:`Understanding YAML <yaml>`.
@@ -10,7 +10,7 @@ Special extensions are added to
 * include other render files at arbitrary positions
 * include plain or binary files at arbitrary positions
 
-'''
+"""
 from __future__ import absolute_import
 
 import io
@@ -32,7 +32,7 @@ except ImportError:
     from salt.utils import fopen
 
 
-class YamletLoader(SaltYamlSafeLoader): # pylint: disable=too-many-ancestors
+class YamletLoader(SaltYamlSafeLoader):  # pylint: disable=too-many-ancestors
     def __init__(self, stream, renderers, context=None, tmplpath=None, **_kwargs):
         SaltYamlSafeLoader.__init__(self, stream, dictclass=OrderedDict)
 
@@ -43,14 +43,14 @@ class YamletLoader(SaltYamlSafeLoader): # pylint: disable=too-many-ancestors
 
         self.tmplpath = tmplpath
         self.renderers = renderers
-        self.add_constructor(u'!read', type(self)._yamlet_read)
-        self.add_constructor(u'!include', type(self)._yamlet_include)
+        self.add_constructor("!read", type(self)._yamlet_read)
+        self.add_constructor("!include", type(self)._yamlet_include)
 
     def _yamlet_read(self, node):
         if isinstance(node, ScalarNode):
             return self._read(node.value)
 
-        return self._invalid_node(node, 'a scalar node')
+        return self._invalid_node(node, "a scalar node")
 
     def _yamlet_include(self, node):
         if isinstance(node, ScalarNode):
@@ -59,15 +59,15 @@ class YamletLoader(SaltYamlSafeLoader): # pylint: disable=too-many-ancestors
         if isinstance(node, MappingNode):
             return self._compile(**self.construct_mapping(node, True))
 
-        return self._invalid_node(node, 'a scalar or mapping node')
+        return self._invalid_node(node, "a scalar or mapping node")
 
     def _read(self, source):
         source = self._resolve(source)
 
-        with fopen(source, 'rb') as file:
+        with fopen(source, "rb") as file:
             return file.read()
 
-    def _compile(self, source, default='jinja|yamlet', context=None):
+    def _compile(self, source, default="jinja|yamlet", context=None):
         source = self._resolve(source)
 
         if context is None:
@@ -75,8 +75,8 @@ class YamletLoader(SaltYamlSafeLoader): # pylint: disable=too-many-ancestors
         else:
             context = dict(self.context, **context)
 
-        context['tmplpath'] = source
-        context['tmpldir'] = os.path.dirname(source)
+        context["tmplpath"] = source
+        context["tmpldir"] = os.path.dirname(source)
 
         ret = salt.template.compile_template(
             template=source,
@@ -84,7 +84,8 @@ class YamletLoader(SaltYamlSafeLoader): # pylint: disable=too-many-ancestors
             default=default,
             blacklist=None,
             whitelist=None,
-            context=context)
+            context=context,
+        )
 
         if isinstance(ret, (six.StringIO, six.BytesIO, io.IOBase)):
             ret = ret.read()
@@ -101,10 +102,8 @@ class YamletLoader(SaltYamlSafeLoader): # pylint: disable=too-many-ancestors
 
     def _invalid_node(self, node, expected):
         raise ConstructorError(
-            None,
-            None,
-            'expected {0}, but found {1}'.format(expected, node.id),
-            node.start_mark)
+            None, None, f"expected {expected}, but found {node.id}", node.start_mark
+        )
 
 
 def get_yaml_loader(**kwargs):
@@ -115,11 +114,11 @@ def get_yaml_loader(**kwargs):
 
 
 def render(source, _saltenv, _sls, **kwargs):
-    '''
+    """
     Processes YAML data in a string or file objects.
 
     :rtype: A Python data structure
-    '''
+    """
     if not isinstance(source, str):
         source = source.read()
 

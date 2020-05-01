@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # pylint: disable=missing-docstring
-'''
+"""
 A text renderer for processing and loading text blobs.
 
 It is mainly developed to be used with file loaded in tower pillars and to be
@@ -43,30 +43,30 @@ This will return the following python dict:
 
     {'path': {'to': {'blob': 'A short text message'}}}
 
-'''
+"""
 
 
 def render(blob, _saltenv, _sls, argline=None, key=None, **_kwargs):
     if not isinstance(blob, str):
         blob = blob.read()
 
-    if blob.startswith('#!'):
-        blob = blob[(blob.find('\n') + 1):]
+    if blob.startswith("#!"):
+        blob = blob[(blob.find("\n") + 1) :]
 
     if argline is not None:
         for arg in argline.split(None):
-            if '=' in arg:
-                k, v = arg.split('=', 1)
+            if "=" in arg:
+                k, v = arg.split("=", 1)
             else:
                 k, v = arg, None
 
-            if k == 'strip':
+            if k == "strip":
                 blob = blob.strip()
-            elif k == 'key':
+            elif k == "key":
                 key = v
 
     if key:
-        for k in reversed(key.split(':')):
+        for k in reversed(key.split(":")):
             blob = {k: blob}
 
     return blob
