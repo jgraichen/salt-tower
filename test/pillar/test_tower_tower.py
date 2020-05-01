@@ -122,6 +122,42 @@ def test_merge_list_strategy_merge_overwrite(tower):
     assert tgt == ['c']
 
 
+def test_merge_dict_strategy_remove(tower):
+    tgt = {'a': 0, 'b': 1}
+    mod = {'__': 'remove', 'a': None}
+
+    tower.merge(tgt, mod)
+
+    assert tgt == {'b': 1}
+
+
+def test_merge_dict_strategy_remove_non_existant(tower):
+    tgt = {'a': 0, 'b': 1}
+    mod = {'__': 'remove', 'c': None}
+
+    tower.merge(tgt, mod)
+
+    assert tgt == {'a': 0, 'b': 1}
+
+
+def test_merge_dict_strategy_merge_first(tower):
+    tgt = {'a': 0, 'b': 1, 'd': [4]}
+    mod = {'__': 'merge-first', 'a': 1, 'c': 2, 'd': [5]}
+
+    tower.merge(tgt, mod)
+
+    assert tgt == {'a': 0, 'b': 1, 'c': 2, 'd': [5, 4]}
+
+
+def test_merge_dict_strategy_merge_overwrite(tower):
+    tgt = {'a': 0, 'b': 1}
+    mod = {'__': 'overwrite', 'c': 2}
+
+    tower.merge(tgt, mod)
+
+    assert tgt == {'c': 2}
+
+
 def test_format(tower):
     tower.update({'app': {'name': 'MyApp'}})
 

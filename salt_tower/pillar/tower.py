@@ -5,7 +5,6 @@
 """
 from __future__ import absolute_import
 
-import collections
 import copy
 import errno
 import logging
@@ -93,7 +92,7 @@ class Tower(dict):
         return _merge(*args, **kwargs)
 
     def format(self, obj, *args, **kwargs):
-        if isinstance(obj, collections.Mapping):
+        if isinstance(obj, dict):
             return {k: self.format(v, *args, **kwargs) for k, v in obj.items()}
 
         if isinstance(obj, list):
@@ -119,7 +118,7 @@ class Tower(dict):
             if isinstance(item, str):
                 self._load_item(base, item)
 
-            elif isinstance(item, collections.Mapping):
+            elif isinstance(item, dict):
                 for tgt, items in item.items():
                     if not self._match_minion(tgt):
                         continue
@@ -139,7 +138,7 @@ class Tower(dict):
     def _load_top(self, top):
         data = self._compile(top)
 
-        if not isinstance(data, collections.Mapping):
+        if not isinstance(data, dict):
             LOGGER.critical("Tower top must be a dict, but is %s.", type(data))
             return []
 
@@ -161,7 +160,7 @@ class Tower(dict):
         return data[self.env]
 
     def _load_item(self, base, item):
-        if isinstance(item, collections.Mapping):
+        if isinstance(item, dict):
             self.update(item, merge=True)
 
         elif isinstance(item, str):
@@ -220,7 +219,7 @@ class Tower(dict):
 
         data = self._compile(file, context={"basedir": base})
 
-        if not isinstance(data, collections.Mapping):
+        if not isinstance(data, dict):
             LOGGER.warning("Loading %s did not return dict, but %s", file, type(data))
             return
 
@@ -297,34 +296,54 @@ class Formatter(string.Formatter):
         return (value, None)
 
 
-def _merge(tgt, *objects):
+def _merge(tgt, *objects, strategy="merge-last"):
     for obj in objects:
-        if isinstance(tgt, collections.Mapping):
-            tgt = _merge_dict(tgt, obj)
+        if isinstance(tgt, dict):
+            tgt = _merge_dict(tgt, copy.deepcopy(obj), strategy)
         elif isinstance(tgt, list):
-            tgt = _merge_list(tgt, obj)
+            tgt = _merge_list(tgt, copy.deepcopy(obj), strategy)
         else:
             raise TypeError(f"Cannot merge {type(tgt)}")
 
     return tgt
 
 
-def _merge_dict(tgt, obj):
-    if not isinstance(obj, collections.Mapping):
+def _merge_dict(tgt, obj, strategy="merge-last"):
+    if not isinstance(obj, dict):
         raise TypeError(f"Cannot merge non-dict type, but is {type(obj)}")
 
-    for key, val in obj.items():
-        if key in tgt:
-            if isinstance(tgt[key], collections.Mapping) and isinstance(
-                val, collections.Mapping
-            ):
-                _merge(tgt[key], val)
-            elif isinstance(tgt[key], list) and isinstance(val, list):
-                _merge_list(tgt[key], val)
+    if "__" in obj:
+        strategy = obj.pop("__")
+
+    if strategy == "remove":
+        for k in obj:
+            if k in tgt:
+                tgt.pop(k)
+
+    elif strategy == "merge-last":
+        for key, val in obj.items():
+            if key in tgt and isinstance(tgt[key], dict) and isinstance(val, dict):
+                _merge_dict(tgt[key], val, strategy)
+            elif key in tgt and isinstance(tgt[key], list) and isinstance(val, list):
+                _merge_list(tgt[key], val, strategy)
             else:
-                tgt[key] = copy.deepcopy(val)
-        else:
-            tgt[key] = copy.deepcopy(val)
+                tgt[key] = val
+
+    elif strategy == "merge-first":
+        for key, val in obj.items():
+            if key in tgt and isinstance(tgt[key], dict) and isinstance(val, dict):
+                _merge_dict(tgt[key], val, strategy)
+            elif key in tgt and isinstance(tgt[key], list) and isinstance(val, list):
+                _merge_list(tgt[key], val, strategy)
+            elif key not in tgt:
+                tgt[key] = val
+
+    elif strategy == "overwrite":
+        tgt.clear()
+        tgt.update(obj)
+
+    else:
+        raise ValueError(f"Unknown strategy: {strategy}")
 
     return tgt
 
@@ -342,15 +361,15 @@ def _merge_list(tgt, lst, strategy="merge-last"):
                 tgt.remove(val)
 
     elif strategy == "merge-last":
-        tgt.extend(copy.deepcopy(lst))
+        tgt.extend(lst)
 
     elif strategy == "merge-first":
         for val in lst:
-            tgt.insert(0, copy.deepcopy(val))
+            tgt.insert(0, val)
 
     elif strategy == "overwrite":
         del tgt[:]
-        tgt.extend(copy.deepcopy(lst))
+        tgt.extend(lst)
 
     else:
         raise ValueError(f"Unknown strategy: {strategy}")
