@@ -269,15 +269,20 @@ class Tower(dict):
         kwargs["tower"] = context["tower"]
         kwargs["minion_id"] = context["minion_id"]
 
-        return salt.template.compile_template(
-            template=template,
-            renderers=self._renderers,
-            default=default,
-            blacklist=blacklist,
-            whitelist=whitelist,
-            context=context,
-            **kwargs,
-        )
+        try:
+            return salt.template.compile_template(
+                template=template,
+                renderers=self._renderers,
+                default=default,
+                blacklist=blacklist,
+                whitelist=whitelist,
+                context=context,
+                **kwargs,
+            )
+        except Exception as err:
+            LOGGER.critical("Unable to render template `%s'", template)
+            LOGGER.exception(err)
+            raise err
 
 
 class Formatter(string.Formatter):

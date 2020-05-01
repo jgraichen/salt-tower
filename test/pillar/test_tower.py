@@ -5,6 +5,8 @@ import pytest
 
 from test.conftest import __opts__
 
+from salt.exceptions import SaltRenderError
+
 
 def test_common_wildcard(env):
     env.setup({
@@ -407,3 +409,24 @@ def test_context_basedir(env):
     })
 
     assert env.ext_pillar() == {'conf': 'Some config file...'}
+
+
+def test_error_invalid_file(env):
+    """
+    Rendering errors shall not be ignored but raised. Otherwise an incomplete or
+    wrong pillar dataset might be returned and the error would go unnoticed.
+    """
+    env.setup({
+        'tower.sls':
+            '''
+            base:
+                - common/init.sls
+            ''',
+        'common/init.sls':
+            '''
+            {% abc %}
+            ''',
+    })
+
+    with pytest.raises(SaltRenderError):
+        env.ext_pillar()
