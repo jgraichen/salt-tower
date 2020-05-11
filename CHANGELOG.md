@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [v1.3.1] - 2020-05-11
 ### Fixed
 - Fix mutation of context variables when rendering multiple files
 
@@ -34,7 +36,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   - First version of ext pillar
   - Yamlet and Text renderer
 
-[unreleased]: https://github.com/:jgraichen/salt-tower/compare/v1.3.0...HEAD
+[unreleased]: https://github.com/:jgraichen/salt-tower/compare/vv1.3.1...HEAD
+[v1.3.1]: https://github.com/:jgraichen/salt-tower/compare/v1.3.0...vv1.3.1
 [1.3.0]: https://github.com/jgraichen/salt-tower/compare/v1.2.0...v1.3.0
 [1.2.0]: https://github.com/jgraichen/salt-tower/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/jgraichen/salt-tower/compare/v1.0.0...v1.1.0
