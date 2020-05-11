@@ -246,32 +246,32 @@ class Tower(dict):
         if default is None:
             default = self._default_renderers
 
-        if context is None:
-            context = {}
+        ctx = {}
 
-        context["tmplpath"] = template
-        context["tmpldir"] = os.path.dirname(template)
-        context["minion_id"] = self.minion_id
-        context["pillar"] = self
-        context["tower"] = self
+        if context:
+            ctx.update(context)
 
-        def render(tmpl, renderer="text"):
-            if (tmpl.startswith("./") or tmpl.startswith("../")):
-                path = os.path.join(context["tmpldir"], tmpl)
-            elif not tmpl.startswith("/"):
-                path = os.path.join(context["basedir"], tmpl)
+        ctx["tmplpath"] = template
+        ctx["tmpldir"] = os.path.dirname(template)
+        ctx["minion_id"] = self.minion_id
+        ctx["pillar"] = self
+        ctx["tower"] = self
+
+        def render(path, renderer="text"):
+            if "basedir" in ctx:
+                path = os.path.join(ctx["basedir"], path)
 
             file = os.path.abspath(path)
 
             if not os.path.isfile(file):
                 raise FileNotFoundError(errno.ENOENT, os.strerror(errno.ENOENT), file)
 
-            return self._compile(file, renderer, None, None, context)
+            return self._compile(file, renderer, None, None, ctx)
 
-        context["render"] = render
+        ctx["render"] = render
 
-        kwargs["tower"] = context["tower"]
-        kwargs["minion_id"] = context["minion_id"]
+        kwargs["tower"] = ctx["tower"]
+        kwargs["minion_id"] = ctx["minion_id"]
 
         try:
             return salt.template.compile_template(
@@ -280,7 +280,7 @@ class Tower(dict):
                 default=default,
                 blacklist=blacklist,
                 whitelist=whitelist,
-                context=context,
+                context=ctx,
                 **kwargs,
             )
         except Exception as err:

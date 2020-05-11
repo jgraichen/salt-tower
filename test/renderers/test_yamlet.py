@@ -177,3 +177,20 @@ def test_include_inherit_context(env, result):
         return 'fuubar'
 
     assert result(context={'fuubar': fuubar}) == {'key': 'fuubar'}
+
+
+def test_include_does_not_mutate_context(env, result):
+    '''
+    The !include tag passes given ``context`` to downstream renderers.
+    '''
+    env.write('init.sls',
+        '''
+        key: !include template.sls
+        ''')
+
+    env.write('template.sls', '')
+
+    context = {"key": "abc"}
+    result(context=context)
+
+    assert context == {"key": "abc"}

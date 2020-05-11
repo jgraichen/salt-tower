@@ -13,6 +13,7 @@ Special extensions are added to
 """
 from __future__ import absolute_import
 
+import copy
 import io
 import os
 import six
@@ -70,13 +71,13 @@ class YamletLoader(SaltYamlSafeLoader):  # pylint: disable=too-many-ancestors
     def _compile(self, source, default="jinja|yamlet", context=None):
         source = self._resolve(source)
 
-        if context is None:
-            context = self.context
-        else:
-            context = dict(self.context, **context)
+        ctx = copy.copy(self.context)
 
-        context["tmplpath"] = source
-        context["tmpldir"] = os.path.dirname(source)
+        if context:
+            ctx.update(context)
+
+        ctx["tmplpath"] = source
+        ctx["tmpldir"] = os.path.dirname(source)
 
         ret = salt.template.compile_template(
             template=source,
@@ -84,7 +85,7 @@ class YamletLoader(SaltYamlSafeLoader):  # pylint: disable=too-many-ancestors
             default=default,
             blacklist=None,
             whitelist=None,
-            context=context,
+            context=ctx,
         )
 
         if isinstance(ret, (six.StringIO, six.BytesIO, io.IOBase)):

@@ -458,6 +458,9 @@ def test_render_func(env):
 
 
 def test_render_func_relative(env):
+    """
+    Relative paths must be specified using the `tmpldir` variable.
+    """
     env.setup({
         'tower.sls':
             '''
@@ -471,7 +474,7 @@ def test_render_func_relative(env):
         'test/conf.j2':
             '''
             #! jinja | text strip
-            {{ render('./conf2.j2') }}
+            {{ render(tmpldir + '/conf2.j2') }}
             ''',
         'test/conf2.j2':
             '''
@@ -493,7 +496,7 @@ def test_render_func_in_top(env):
         'test/conf.j2':
             '''
             #! jinja | text strip
-            {{ render('./conf2.j2') }}
+            {{ render(tmpldir + '/conf2.j2') }}
             ''',
         'test/conf2.j2':
             '''
