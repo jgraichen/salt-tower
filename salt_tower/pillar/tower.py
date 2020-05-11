@@ -114,7 +114,7 @@ class Tower(dict):
 
         base = os.path.dirname(top)
 
-        for item in self._load_top(top):
+        for item in self._load_top(top, base):
             if isinstance(item, str):
                 self._load_item(base, item)
 
@@ -135,8 +135,8 @@ class Tower(dict):
             LOGGER.exception(err)
             return False
 
-    def _load_top(self, top):
-        data = self._compile(top)
+    def _load_top(self, top, base):
+        data = self._compile(top, context={'basedir': base})
 
         if not isinstance(data, dict):
             LOGGER.critical("Tower top must be a dict, but is %s.", type(data))
@@ -256,8 +256,12 @@ class Tower(dict):
         context["tower"] = self
 
         def render(tmpl, renderer="text"):
-            file = os.path.join(context.get("base"), tmpl)
-            file = os.path.abspath(file)
+            if (tmpl.startswith("./") or tmpl.startswith("../")):
+                path = os.path.join(context["tmpldir"], tmpl)
+            elif not tmpl.startswith("/"):
+                path = os.path.join(context["basedir"], tmpl)
+
+            file = os.path.abspath(path)
 
             if not os.path.isfile(file):
                 raise FileNotFoundError(errno.ENOENT, os.strerror(errno.ENOENT), file)

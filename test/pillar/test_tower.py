@@ -430,3 +430,75 @@ def test_error_invalid_file(env):
 
     with pytest.raises(SaltRenderError):
         env.ext_pillar()
+
+
+def test_render_func(env):
+    env.setup({
+        'tower.sls':
+            '''
+            base:
+                - index
+            ''',
+        'index.sls':
+            '''
+            key: !include test/conf.j2
+            ''',
+        'test/conf.j2':
+            '''
+            #! jinja | text strip
+            {{ render('test/conf2.j2') }}
+            ''',
+        'test/conf2.j2':
+            '''
+            This is a test.
+            ''',
+    })
+
+    assert env.ext_pillar() == {'key': 'This is a test.'}
+
+
+def test_render_func_relative(env):
+    env.setup({
+        'tower.sls':
+            '''
+            base:
+                - index
+            ''',
+        'index.sls':
+            '''
+            key: !include test/conf.j2
+            ''',
+        'test/conf.j2':
+            '''
+            #! jinja | text strip
+            {{ render('./conf2.j2') }}
+            ''',
+        'test/conf2.j2':
+            '''
+            This is a test.
+            ''',
+    })
+
+    assert env.ext_pillar() == {'key': 'This is a test.'}
+
+
+def test_render_func_in_top(env):
+    env.setup({
+        'tower.sls':
+            '''
+            base:
+                - '*':
+                    - key: !include test/conf.j2
+            ''',
+        'test/conf.j2':
+            '''
+            #! jinja | text strip
+            {{ render('./conf2.j2') }}
+            ''',
+        'test/conf2.j2':
+            '''
+            This is a test.
+            ''',
+    })
+
+    assert env.ext_pillar() == {'key': 'This is a test.'}

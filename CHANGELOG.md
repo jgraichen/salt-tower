@@ -8,6 +8,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 - Added `merge-last`, `merge-first`, `remove` and `overwrite` merge strategies for dictionaries
 - Improve logging source and exception for rendering errors (#10)
+- Extended `render` context function to support relative lookup
+
+### Fixed
+- Fix `render` context function to use correct `basedir` variable
+- Add `basedir` variable when rendering top file
 
 ## [1.2.0] - 2020-01-31
 ### Added
