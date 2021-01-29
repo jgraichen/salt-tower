@@ -14,6 +14,8 @@ Salt Tower is designed to completely replace the usual pillar repository or can 
 
 ## Questions or Need Help?
 
+See [examples](examples/). They each have their own README further explaining the given example.
+
 The is a [group](https://groups.google.com/d/forum/salt-tower) and [mailing list](mailto:salt-tower@googlegroups.com). You can join the group [here](https://groups.google.com/d/forum/salt-tower/join) or by sending a [subscribe email](mailto:salt-tower+subscribe@googlegroups.com).
 
 Feel free to ask for help, discuss solutions or ideas there. Otherwise you can open an [issue](https://github.com/jgraichen/salt-tower/issues/new).
