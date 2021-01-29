@@ -21,9 +21,10 @@ setuptools.setup(
         "Programming Language :: Python :: 3",
         "Topic :: System :: Systems Administration",
     ],
-    entry_points='''
-        [salt.loader]
-        pillar_dirs = salt_tower.loader:pillar_dirs
-        render_dirs = salt_tower.loader:renderers_dirs
-    ''',
+    entry_points={
+        "salt.loader": [
+            "pillar_dirs = salt_tower.loader:pillar_dirs",
+            "render_dirs = salt_tower.loader:renderers_dirs",
+        ]
+    },
 )
