@@ -20,20 +20,14 @@ Feel free to ask for help, discuss solutions or ideas there. Otherwise you can o
 
 ## Installation
 
-Recommended installation is using `pip` / `pip3` on the salt master:
-
-```
-$ pip install salt-tower
-```
-
-#### Using GitFS
+#### GitFS
 
 You can include this repository as a gitfs root and synchronize the extensions on the master:
 
 ```yaml
 gitfs_remotes:
 - https://github.com/jgraichen/salt-tower.git:
-  - base: v1.3.1
+  - base: v1.4.0
 ```
 
 Sync all modules:
@@ -48,6 +42,12 @@ renderers:
 ```
 
 Please note that *everything* in this repository would be merged with your other roots.
+
+#### pip
+
+```
+$ pip install salt-tower
+```
 
 #### Manual installation
 
