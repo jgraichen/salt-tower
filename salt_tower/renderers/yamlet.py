@@ -16,7 +16,6 @@ from __future__ import absolute_import
 import copy
 import io
 import os
-import six
 
 from yaml.constructor import ConstructorError
 from yaml.nodes import ScalarNode, MappingNode
@@ -88,7 +87,7 @@ class YamletLoader(SaltYamlSafeLoader):  # pylint: disable=too-many-ancestors
             context=ctx,
         )
 
-        if isinstance(ret, (six.StringIO, six.BytesIO, io.IOBase)):
+        if isinstance(ret, io.IOBase):
             ret = ret.read()
 
         return ret

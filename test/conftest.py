@@ -10,7 +10,6 @@ import tempfile
 import textwrap
 
 import pytest
-import six
 
 import salt.config
 import salt.loader
@@ -52,7 +51,7 @@ class Environment(object):
         self.tmpdir = tmpdir
 
     def setup(self, files):
-        for k, v in six.iteritems(files):
+        for k, v in files.items():
             self.write(k, textwrap.dedent(v).strip())
 
     def write(self, name, content, mode='w'):
