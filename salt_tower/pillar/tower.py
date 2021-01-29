@@ -136,7 +136,7 @@ class Tower(dict):
             return False
 
     def _load_top(self, top, base):
-        data = self._compile(top, context={'basedir': base})
+        data = self._compile(top, context={"basedir": base})
 
         if not isinstance(data, dict):
             LOGGER.critical("Tower top must be a dict, but is %s.", type(data))
