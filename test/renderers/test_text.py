@@ -2,46 +2,32 @@
 # pylint: disable=missing-docstring
 # pylint: disable=redefined-outer-name
 
-import textwrap
 
-import pytest
+def test_render(render):
+    template = """
+        A small text
+    """
 
-
-@pytest.fixture
-def result(env):
-    def fn():
-        return env.compile_template('template.sls', default='text')
-
-    return fn
+    assert render(template, default="text") == "A small text\n"
 
 
-def test_render(env, result):
-    env.write('template.sls', 'A small text')
-
-    assert result() == 'A small text'
-
-
-def test_strip(env, result):
-    env.write('template.sls', textwrap.dedent(
-        '''
+def test_strip(render):
+    template = """
         #!text strip
 
             Indented text
 
         END
 
-        '''
-        ).lstrip())
+    """
 
-    assert result() == 'Indented text\n\nEND'
+    assert render(template) == "Indented text\n\nEND"
 
 
-def test_key(env, result):
-    env.write('template.sls', textwrap.dedent(
-        '''
+def test_key(render):
+    template = """
         #!text key=a:b:c
         text value
-        '''
-        ).strip())
+    """
 
-    assert result() == {'a': {'b': {'c': 'text value'}}}
+    assert render(template) == {"a": {"b": {"c": "text value\n"}}}

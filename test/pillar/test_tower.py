@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
+# pylint: disable=missing-docstring
+# pylint: disable=redefined-outer-name
 
 import os
 import pytest
-
-from test.conftest import __opts__
 
 from salt.exceptions import SaltRenderError
 
@@ -38,7 +38,7 @@ def test_jinja(env):
             '''
     })
 
-    assert env.ext_pillar() == {'minion': {'id': __opts__['id']}}
+    assert env.ext_pillar() == {'minion': {'id': 'test_master'}}
 
 
 def test_match_minion_id(env):

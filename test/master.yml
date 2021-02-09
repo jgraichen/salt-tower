@@ -1,1 +1,4 @@
 id: test_master
+
+features:
+  enable_slsvars_fixes: True
