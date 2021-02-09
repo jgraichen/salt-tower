@@ -39,6 +39,7 @@ $ salt-run saltutil.sync_all
 pillar:
     - pillar.tower
 renderers:
+    - renderers.filter
     - renderers.text
     - renderers.yamlet
 ```
@@ -303,6 +304,39 @@ Hello World
 ```
 
 The text renderer is mostly used for embedding rendered configuration files into a Yamlet file.
+
+### Filter renderer
+
+The filter renderer returns only a subset of data that matches a given grain or pillar key value:
+
+```
+#!yamlet | filter grain=os_family default='Unknown OS'
+
+Debian:
+  package_source: apt
+
+RedHat:
+  package_source: rpm
+
+Unknown OS:
+  package_source: unknown
+```
+
+When this file is rendered, only the data from the matching top level key is returned. The renderer supports glob matches and uses the minion ID by default:
+
+```
+#!yamlet | filter
+
+minion-1:
+  monitoring:
+    type: ping
+    address: 10.0.0.1
+
+webserver-*:
+  monitoring:
+    type: http
+    address: http://example.org
+```
 
 ### Advanced usage (very dangerous)
 
