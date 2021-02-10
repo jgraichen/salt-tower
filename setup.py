@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="salt-tower",
-    version="1.5.0",
+    version="1.5.1",
     author="Jan Graichen",
     author_email="jgraichen@altimos.de",
     description="A Flexible External Salt Pillar Module",

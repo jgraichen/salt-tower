@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [1.5.1] - 2021-02-10
+### Fixed
+- Missing symlink to new filter renderer from `_renderers` directory for gitfs deployments
+
 ## [1.5.0] - 2021-02-10
 ### Added
 - `filter` renderer returning only a matching subset from a dataset (e.g. YAML)
@@ -44,7 +48,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   - First version of ext pillar
   - Yamlet and Text renderer
 
-[Unreleased]: https://github.com/jgraichen/salt-tower/compare/v1.5.0...HEAD
+[Unreleased]: https://github.com/jgraichen/salt-tower/compare/v1.5.1...HEAD
+[1.5.1]: https://github.com/jgraichen/salt-tower/compare/v1.5.0...v1.5.1
 [1.5.0]: https://github.com/jgraichen/salt-tower/compare/v1.4.0...v1.5.0
 [1.4.0]: https://github.com/jgraichen/salt-tower/compare/v1.3.1...v1.4.0
 [1.3.1]: https://github.com/jgraichen/salt-tower/compare/v1.3.0...v1.3.1
