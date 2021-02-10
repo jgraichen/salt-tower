@@ -10,18 +10,18 @@ jobs:
       fail-fast: false
       matrix:
         python: ["3.9", "3.8", "3.7", "3.6"]
-        salt: ["3002.0", "3001.0", "3000.0", "2019.2.0", "2018.3.4"]
-        exclude:
-          - { salt: "2018.3.4", python: "3.8" }
-          - { salt: "2018.3.4", python: "3.9" }
-          - { salt: "2019.2.0", python: "3.8" }
-          - { salt: "2019.2.0", python: "3.9" }
-          - { salt: "3000.0", python: "3.8" }
-          - { salt: "3000.0", python: "3.9" }
-
-          # AttributeError: _scope_id in ipaddress.py:1920
-          # via salt/utils/network.py:1333
-          - { salt: "3001.0", python: "3.9" }
+        salt: ["3002.0"]
+        include:
+          - { salt: "2017.7.4", python: "3.6" }
+          - { salt: "2018.3.4", python: "3.6" }
+          - { salt: "2018.3.4", python: "3.7" }
+          - { salt: "2019.2.0", python: "3.6" }
+          - { salt: "2019.2.0", python: "3.7" }
+          - { salt: "3000.0", python: "3.6" }
+          - { salt: "3000.0", python: "3.7" }
+          - { salt: "3001.0", python: "3.6" }
+          - { salt: "3001.0", python: "3.7" }
+          - { salt: "3001.0", python: "3.8" }
 
     steps:
       - uses: actions/checkout@v1

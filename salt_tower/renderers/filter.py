@@ -49,7 +49,10 @@ import shlex
 
 from fnmatch import fnmatch
 
-from salt.exceptions import TemplateError
+try:
+    from salt.exceptions import TemplateError
+except ImportError:
+    from salt.exceptions import SaltException as TemplateError
 
 try:
     from salt.utils.data import traverse_dict_and_list
