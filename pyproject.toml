@@ -4,7 +4,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
 name = "salt-tower"
-version = "1.4.0"
+version = "1.5.0"
 homepage = "https://github.com/jgraichen/salt-tower"
 description = "A Flexible External Salt Pillar Module"
 classifiers = [
