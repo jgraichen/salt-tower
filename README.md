@@ -376,13 +376,15 @@ The above example demonstrates different usages. The first example will only wor
 
 The `tower` pillar object is available in all rendering engines and can be used for low-level interaction with the ext_pillar engine. Some available functions are:
 
-##### tower.get(key, default=None)
+##### tower.get(key, default=None, require=False)
 
 Get a pillar value by given traverse path:
 
 ```python
 tower.get('my:pillar:key')
 ```
+
+If `require=True` is set, `default` will be ignored and a KeyError will be raised if the pillar key is not found.
 
 ##### tower.update(dict)
 

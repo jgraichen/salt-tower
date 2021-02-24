@@ -80,8 +80,13 @@ class Tower(dict):
             )
             self._default_renderers = "jinja|yaml"
 
-    def get(self, key, default=None, **kwargs):
-        return traverse_dict_and_list(self, key, default, **kwargs)
+    def get(self, key, default=None, require=False, **kwargs):
+        if require:
+            default = KeyError(f"Pillar key missing: {key}")
+        value = traverse_dict_and_list(self, key, default, **kwargs)
+        if isinstance(value, KeyError):
+            raise value
+        return value
 
     def update(self, obj, merge=True, **kwargs):
         if merge:

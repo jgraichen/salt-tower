@@ -32,6 +32,9 @@ def test_get_default(tower):
 def test_get_default_value(tower):
     assert tower.get('pillar:none', default=5) == 5
 
+def test_get_default_require(tower):
+    with pytest.raises(KeyError):
+        tower.get('pillar:none', require=True)
 
 def test_update(tower):
     tower.update({
