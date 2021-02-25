@@ -262,16 +262,21 @@ class Tower(dict):
         ctx["pillar"] = self
         ctx["tower"] = self
 
-        def render(path, renderer="text"):
-            if "basedir" in ctx:
-                path = os.path.join(ctx["basedir"], path)
+        def render(path, context=None, renderer='text'):
+            if isinstance(context, dict):
+                context = {**ctx, **context}
+            else:
+                context = ctx
+
+            if "basedir" in context:
+                path = os.path.join(context["basedir"], path)
 
             file = os.path.abspath(path)
 
             if not os.path.isfile(file):
                 raise FileNotFoundError(errno.ENOENT, os.strerror(errno.ENOENT), file)
 
-            return self._compile(file, renderer, None, None, ctx)
+            return self._compile(file, renderer, None, None, context)
 
         ctx["render"] = render
 

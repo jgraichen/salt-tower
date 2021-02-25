@@ -505,3 +505,31 @@ def test_render_func_in_top(env):
     })
 
     assert env.ext_pillar() == {'key': 'This is a test.'}
+
+
+def test_render_func_context(env):
+    env.setup({
+        'tower.sls':
+            '''
+            base:
+                - '*':
+                    - key: !include context/test.py
+            ''',
+        'context/test.py':
+            '''
+            #!py
+            import os.path
+            def run():
+                return context["render"](
+                    os.path.join(context["tmplpath"], "../template.j2"),
+                    context={**context, "message": "Hello World!"}
+                )
+            ''',
+        'context/template.j2':
+            '''
+            #!jinja|text strip
+            {{ message }}
+            ''',
+    })
+
+    assert env.ext_pillar() == {'key': 'Hello World!'}
