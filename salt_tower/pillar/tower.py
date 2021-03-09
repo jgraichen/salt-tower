@@ -262,7 +262,7 @@ class Tower(dict):
         ctx["pillar"] = self
         ctx["tower"] = self
 
-        def render(path, context=None, renderer='text'):
+        def render(path, context=None, renderer="text"):
             if isinstance(context, dict):
                 context = {**ctx, **context}
             else:
@@ -318,13 +318,25 @@ class Formatter(string.Formatter):
 def _merge(tgt, *objects, strategy="merge-last"):
     for obj in objects:
         if isinstance(tgt, dict):
-            tgt = _merge_dict(tgt, copy.deepcopy(obj), strategy)
+            tgt = _merge_dict(tgt, obj, strategy)
         elif isinstance(tgt, list):
-            tgt = _merge_list(tgt, copy.deepcopy(obj), strategy)
+            tgt = _merge_list(tgt, obj, strategy)
         else:
             raise TypeError(f"Cannot merge {type(tgt)}")
 
     return tgt
+
+
+def _merge_clean(obj):
+    if isinstance(obj, dict):
+        return {k: _merge_clean(v) for k, v in obj.items() if k != "__"}
+
+    if isinstance(obj, list):
+        if obj and isinstance(obj[0], dict) and len(obj[0]) == 1 and "__" in obj[0]:
+            obj = obj[1:]
+        return [_merge_clean(v) for v in obj]
+
+    return obj
 
 
 def _merge_dict(tgt, obj, strategy="merge-last"):
@@ -346,7 +358,7 @@ def _merge_dict(tgt, obj, strategy="merge-last"):
             elif key in tgt and isinstance(tgt[key], list) and isinstance(val, list):
                 _merge_list(tgt[key], val, strategy)
             else:
-                tgt[key] = val
+                tgt[key] = _merge_clean(val)
 
     elif strategy == "merge-first":
         for key, val in obj.items():
@@ -355,11 +367,11 @@ def _merge_dict(tgt, obj, strategy="merge-last"):
             elif key in tgt and isinstance(tgt[key], list) and isinstance(val, list):
                 _merge_list(tgt[key], val, strategy)
             elif key not in tgt:
-                tgt[key] = val
+                tgt[key] = _merge_clean(val)
 
     elif strategy == "overwrite":
         tgt.clear()
-        tgt.update(obj)
+        tgt.update(_merge_clean(obj))
 
     else:
         raise ValueError(f"Unknown strategy: {strategy}")
@@ -380,15 +392,15 @@ def _merge_list(tgt, lst, strategy="merge-last"):
                 tgt.remove(val)
 
     elif strategy == "merge-last":
-        tgt.extend(lst)
+        tgt.extend(_merge_clean(lst))
 
     elif strategy == "merge-first":
-        for val in lst:
+        for val in _merge_clean(lst):
             tgt.insert(0, val)
 
     elif strategy == "overwrite":
         del tgt[:]
-        tgt.extend(lst)
+        tgt.extend(_merge_clean(lst))
 
     else:
         raise ValueError(f"Unknown strategy: {strategy}")

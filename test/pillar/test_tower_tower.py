@@ -124,6 +124,24 @@ def test_merge_list_strategy_merge_overwrite(tower):
     assert tgt == ['c']
 
 
+def test_merge_list_remove_nested_doubledash(tower):
+    tgt = {'a': 0}
+    mod = {'a': [{'__': 'overwrite'}, 'a', 'b']}
+
+    tower.merge(tgt, mod)
+
+    assert tgt == {'a': ['a', 'b']}
+
+
+def test_merge_list_remove_nested_doubledash_list(tower):
+    tgt = [0]
+    mod = [[{'__': 'overwrite'}, 1]]
+
+    tower.merge(tgt, mod)
+
+    assert tgt == [0, [1]]
+
+
 def test_merge_dict_strategy_remove(tower):
     tgt = {'a': 0, 'b': 1}
     mod = {'__': 'remove', 'a': None}
@@ -158,6 +176,15 @@ def test_merge_dict_strategy_merge_overwrite(tower):
     tower.merge(tgt, mod)
 
     assert tgt == {'c': 2}
+
+
+def test_merge_dict_remove_nested_doubledash(tower):
+    tgt = {'a': 0}
+    mod = {'a': {'__': 'overwrite', 'key': 1}}
+
+    tower.merge(tgt, mod)
+
+    assert tgt == {'a': {'key': 1}}
 
 
 def test_format(tower):

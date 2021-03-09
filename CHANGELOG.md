@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 - Add require option to tower.get
 - Experimental: Support custom context in template injected `render` function
+- Deep scrubbing of merge strategies (`__`) from merged pillar data
 
 ## [1.5.2] - 2021-02-10
 ### Fixed
