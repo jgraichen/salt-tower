@@ -70,6 +70,7 @@ def test_match_extended_regex(env):
 
 
 def test_match_pillar_data(env):
+    env.pillar.update({"pillar_key": True})
     env.setup(
         {
             "tower.sls": """
@@ -80,7 +81,7 @@ def test_match_pillar_data(env):
         }
     )
 
-    assert env.ext_pillar(pillar={"pillar_key": True}) == {
+    assert env.ext_pillar() == {
         "pillar_key": True,
         "match": "pillar",
     }
@@ -102,9 +103,8 @@ def test_match_tower_pillar_key(env):
     assert env.ext_pillar() == {"minion": {"id": "value"}, "match": "tower_pillar"}
 
 
-def test_match_grains(env, opts):
-    opts["grains"].update({"virtual": False})
-
+def test_match_grains(env):
+    env.grains.update({"virtual": False})
     env.setup(
         {
             "tower.sls": """

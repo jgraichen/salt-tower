@@ -13,102 +13,107 @@ import salt.config
 import salt.loader
 
 try:
-    from salt.utils.files import fopen
-except ImportError:
-    from salt.utils import fopen
-
-try:
     import salt.features
 
-    SALT_FEATURES = True
+    SALT_FEATURES_AVAILABLE = True
 except ImportError:
-    SALT_FEATURES = False
+    SALT_FEATURES_AVAILABLE = False
 
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 
 
 @pytest.fixture
-def opts(tmpdir):
-    opts = salt.config.client_config(os.path.join(ROOT, "test/master.yml"))
-    opts["cachedir"] = os.path.join(tmpdir, "cache")
-    opts["pillar_roots"] = {"base": [os.path.join(ROOT, "test/fixtures/pillar")]}
-    opts["grains"] = {"id": opts["id"]}
-    return opts
+def env(tmpdir):
+    return Environment(tmpdir)
 
 
 @pytest.fixture
-def renderers(opts):
-    return salt.loader.render(opts, {})
+def features():
+    return {
+        # This feature will become the default in the Phoshorus release.
+        "enable_slsvars_fixes": True,
+    }
 
 
-@pytest.fixture
-def pillars(opts):
-    return salt.loader.pillars(opts, {})
-
-
-# Setup salt feature flags if supported
-@pytest.fixture(autouse=SALT_FEATURES)
-def setup_features(opts):
-    salt.features.setup_features(opts)
-
-
-@pytest.fixture
-def env(tmpdir, opts, renderers, pillars):
-    return Environment(tmpdir, opts, renderers, pillars)
+@pytest.fixture(autouse=SALT_FEATURES_AVAILABLE)
+def setup_features(features):
+    salt.features.features.setup = True
+    salt.features.features.features = features
 
 
 @pytest.fixture
 def render(env):
-    def _render(input_data, **kwargs):
-        input_data = textwrap.dedent(input_data).lstrip()
-
-        env.write("unnamed.sls", input_data)
-        return env.compile_template("unnamed.sls", **kwargs)
-
-    return _render
+    return env.render
 
 
 class Environment:
-    def __init__(self, basedir, opts, renderers, pillars):
-        self._base = basedir
-        self._opts = opts
-        self._renderers = renderers
-        self._pillars = pillars
+    def __init__(self, tmpd):
+        self.tmpd = tmpd
+
+        self.opts = salt.config.client_config(os.path.join(ROOT, "test/master.yml"))
+        self.opts["cachedir"] = os.path.join(tmpd, "cache")
+        self.opts["pillar_roots"] = {
+            "base": [os.path.join(ROOT, "test/fixtures/pillar")]
+        }
+
+        self.pillar = {}
+        self.grains = {"id": self.opts["id"]}
+        self.opts["grains"] = self.grains
+        self.opts["pillar"] = self.pillar
 
     def setup(self, files):
         for k, v in files.items():
             self.write(k, textwrap.dedent(v).strip())
 
     def write(self, name, content, mode="w"):
-        template = os.path.join(self._base, name)
-        dirname = os.path.dirname(template)
+        template = self.tmpd / name
+        template.write(content, mode, ensure=True)
 
-        if not os.path.isdir(dirname):
-            os.makedirs(dirname)
+    def build(self):
+        return Master(self.tmpd, self.opts)
 
-        with fopen(template, mode) as f:
-            f.write(content)
+    def compile_template(self, *args, **kwargs):
+        return self.build().compile_template(*args, **kwargs)
 
-    def compile_template(self, template, default="yaml|jinja", **kwargs):
-        template = os.path.join(self._base, template)
+    def ext_pillar(self, *args, **kwargs):
+        return self.build().ext_pillar(*args, **kwargs)
 
+    def render(self, *args, **kwargs):
+        return self.build().render(*args, **kwargs)
+
+
+class Master:
+    def __init__(self, tmpd, opts):
+        self.tmpd = tmpd
+        self.opts = opts
+        self.minion_mods = salt.loader.minion_mods(self.opts)
+        self.renderers = salt.loader.render(self.opts, self.minion_mods)
+        self.pillars = salt.loader.pillars(self.opts, self.minion_mods)
+
+    def compile_template(self, template, default="jinja|yaml", **kwargs):
+        template = os.path.join(self.tmpd, template)
         return salt.template.compile_template(
-            template=template,
-            renderers=self._renderers,
-            default=default,
-            blacklist=None,
-            whitelist=None,
-            **kwargs,
+            template,
+            self.renderers,
+            default,
+            self.opts["renderer_blacklist"],
+            self.opts["renderer_whitelist"],
+            **kwargs
         )
 
     def ext_pillar(self, **kwargs):
-        minion_id = kwargs.pop("minion_id", self._opts["id"])
-        pillar = kwargs.pop("pillar", {})
-        args = kwargs.pop("args", [os.path.join(self._base, "tower.sls")])
+        args = kwargs.pop("args", [os.path.join(self.tmpd, "tower.sls")])
+        pillar = self.opts["pillar"]
+        minion_id = kwargs.pop("minion_id", self.opts["id"])
 
         if isinstance(args, dict):
-            return self._pillars["tower"](minion_id, pillar, **args)
+            return self.pillars["tower"](minion_id, pillar, **args)
         if isinstance(args, list):
-            return self._pillars["tower"](minion_id, pillar, *args)
-        return self._pillars["tower"](minion_id, pillar, args)
+            return self.pillars["tower"](minion_id, pillar, *args)
+        return self.pillars["tower"](minion_id, pillar, args)
+
+    def render(self, content, mode="w", **kwargs):
+        path = self.tmpd / "unnamed.sls"
+        path.write(textwrap.dedent(content).lstrip(), mode, ensure=True)
+        return self.compile_template(path, **kwargs)

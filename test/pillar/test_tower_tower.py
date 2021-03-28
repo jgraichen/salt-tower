@@ -7,8 +7,8 @@ import pytest
 
 
 @pytest.fixture
-def mod(pillars):
-    return inspect.getmodule(pillars["tower"])
+def mod(env):
+    return inspect.getmodule(env.build().pillars["tower"])
 
 
 @pytest.fixture

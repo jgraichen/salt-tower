@@ -32,8 +32,8 @@ def test_render_default_minion_id(render):
     assert render(template) == {"key": 1}
 
 
-def test_render_grain(render, opts):
-    opts["grains"]["os_family"] = "Debian"
+def test_render_grain(env, render):
+    env.grains.update({"os_family": "Debian"})
 
     template = """
         #!yaml | filter grain=os_family
