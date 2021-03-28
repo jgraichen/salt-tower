@@ -4,6 +4,7 @@
 
 import os
 import pytest
+import salt
 
 from salt.exceptions import SaltRenderError
 
@@ -558,6 +559,7 @@ def test_tower_jinja_import(env):
     assert env.ext_pillar() == {"foo": 1}
 
 
+@pytest.mark.skipif(salt.version.__version__ < "2018", reason="requires salt 2018+")
 def test_tower_jinja_import_roots(env):
     """
     Test that the rendering engines are called with all flags to import files
