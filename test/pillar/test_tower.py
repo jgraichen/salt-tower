@@ -102,7 +102,9 @@ def test_match_tower_pillar_key(env):
     assert env.ext_pillar() == {"minion": {"id": "value"}, "match": "tower_pillar"}
 
 
-def test_match_grains(env):
+def test_match_grains(env, opts):
+    opts["grains"].update({"virtual": False})
+
     env.setup(
         {
             "tower.sls": """

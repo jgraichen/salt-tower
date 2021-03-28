@@ -5,12 +5,10 @@
 import inspect
 import pytest
 
-from test.conftest import __pillars__
-
 
 @pytest.fixture
-def mod():
-    return inspect.getmodule(__pillars__["tower"])
+def mod(pillars):
+    return inspect.getmodule(pillars["tower"])
 
 
 @pytest.fixture
