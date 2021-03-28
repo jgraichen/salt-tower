@@ -17,6 +17,14 @@ try:
 except ImportError:
     from salt.utils import fopen
 
+try:
+    import salt.features
+
+    SALT_FEATURES = True
+except ImportError:
+    SALT_FEATURES = False
+
+
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 
 
@@ -39,6 +47,10 @@ def pillars(opts):
     return salt.loader.pillars(opts, {})
 
 
+# Setup salt feature flags if supported
+@pytest.fixture(autouse=SALT_FEATURES)
+def setup_features(opts):
+    salt.features.setup_features(opts)
 
 
 @pytest.fixture

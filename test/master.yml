@@ -1,4 +1,5 @@
 id: test_master
 
+# This feature will become the default in the Phoshorus release.
 features:
   enable_slsvars_fixes: True
