@@ -1,0 +1,7 @@
+# This is a pillar roots file.
+#
+# It is used in a tower test with the JINJA renderer, which always looks up
+# files in either the states roots or pillar roots, and cannot be customized by
+# the caller.
+
+source: pillar_root

@@ -556,3 +556,32 @@ def test_tower_jinja_import(env):
     )
 
     assert env.ext_pillar() == {"foo": 1}
+
+
+def test_tower_jinja_import_roots(env):
+    """
+    Test that the rendering engines are called with all flags to import files
+    from the pillar roots instead of the states root. This behavior is disabled
+    by default, but can be enabled by a config flag.
+
+    Some rendering engines will behave differently now and lookup files in the
+    salt masters pillar_roots instead of realtive to the current file. The exact
+    behavor depends on salt internals and cannot be customized.
+    """
+    env.opts.update({"salt_tower.unstable_enable_saltenv": True})
+    env.setup(
+        {
+            "tower.sls": """
+            base:
+                - '*':
+                    - context/init.sls
+            """,
+            "context/init.sls": """
+            #!jinja|yaml
+            {%- import_yaml "data.yaml" as data %}
+            foo: {{ data.source }}
+            """,
+        }
+    )
+
+    assert env.ext_pillar() == {"foo": "pillar_root"}

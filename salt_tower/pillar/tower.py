@@ -304,6 +304,9 @@ class Tower(dict):
         kwargs["saltenv"] = None
         kwargs["_pillar_rend"] = True
 
+        if __opts__.get("salt_tower.unstable_enable_saltenv", False):
+            kwargs["saltenv"] = self.env
+
         try:
             return salt.template.compile_template(
                 template=template,
