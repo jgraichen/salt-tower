@@ -519,3 +519,38 @@ def test_render_func_context(env):
     )
 
     assert env.ext_pillar() == {"key": "Hello World!"}
+
+
+def test_tower_jinja_import(env):
+    """
+    The JINJA renderer will always lookup relative files (e.g. from import or
+    include) using either the states roots or the pillar roots directories if a
+    `saltenv` is set (which is the case when renderering pillars).
+
+    Unfortunatly it is *not* possible to pass any customization to the renderer,
+    e.g. passing an own function to resolve files therefore it currently is
+    impossible to load files from the tower directory *unless* it also is a
+    pillars root directory.
+
+    This tests ensures that the renderers are called *without* a saltenv and do
+    lookup files relative to the current template file.
+    """
+    env.setup(
+        {
+            "tower.sls": """
+            base:
+                - '*':
+                    - context/init.sls
+            """,
+            "context/init.sls": """
+            #!jinja|yaml
+            {%- import_yaml "data.yaml" as data %}
+            foo: {{ data.key }}
+            """,
+            "context/data.yaml": """
+            key: 1
+            """,
+        }
+    )
+
+    assert env.ext_pillar() == {"foo": 1}

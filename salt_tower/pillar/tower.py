@@ -261,6 +261,7 @@ class Tower(dict):
         ctx["minion_id"] = self.minion_id
         ctx["pillar"] = self
         ctx["tower"] = self
+        ctx["env"] = self.env
 
         def render(path, context=None, renderer="text"):
             if isinstance(context, dict):
@@ -282,6 +283,26 @@ class Tower(dict):
 
         kwargs["tower"] = ctx["tower"]
         kwargs["minion_id"] = ctx["minion_id"]
+
+        # Explicitly set `saltenv=None` to disable any special behavor
+        # of some rendering engines (mostly JINJA) regarding rendering
+        # states or pillars.
+        #
+        # Salt does not provide an option to pass any file lookup
+        # customization to the renderers. Therefore some renderering
+        # engines strictly assume that if `saltenv` is not `None` they
+        # are rendering salt states, and if the internal variable
+        # `_pillar_rend` is set, they are rendering pillars. They will
+        # then use a different file lookup mechanism using the
+        # configured pillar_roots or file_roots. This cannot be
+        # customized.
+        #
+        # It is currently impossible to lookup files relative to the
+        # tower.sls directory (which might or might not be also a
+        # pillar_roots) for these renderers without explicitly using a
+        # helper function.
+        kwargs["saltenv"] = None
+        kwargs["_pillar_rend"] = True
 
         try:
             return salt.template.compile_template(
