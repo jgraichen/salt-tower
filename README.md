@@ -1,6 +1,6 @@
 <p align="center"><img height="100" alt="Salt Tower (Logo)" src="./salt-tower.svg" /></p><br />
 
-# Salt Tower - A Flexible External Pillar Module
+# Salt Tower — A Flexible External Pillar Module
 
 [![GitHub Workflow Status (master branch)](https://img.shields.io/github/workflow/status/jgraichen/salt-tower/Python%20Package/master?logo=github)](https://github.com/jgraichen/salt-tower/actions?query=branch%3Amaster+workflow%3A%22Python+Package%22)
 
@@ -16,9 +16,9 @@ Salt Tower is designed to completely replace the usual pillar repository or can 
 
 See [examples](examples/). They each have their own README further explaining the given example.
 
-The is a [group](https://groups.google.com/d/forum/salt-tower) and [mailing list](mailto:salt-tower@googlegroups.com). You can join the group [here](https://groups.google.com/d/forum/salt-tower/join) or by sending a [subscribe email](mailto:salt-tower+subscribe@googlegroups.com).
+There is a [group](https://groups.google.com/d/forum/salt-tower) and [mailing list](mailto:salt-tower@googlegroups.com). You can join the group [here](https://groups.google.com/d/forum/salt-tower/join) or by sending a [subscribe-email](mailto:salt-tower+subscribe@googlegroups.com).
 
-Feel free to ask for help, discuss solutions or ideas there. Otherwise you can open an [issue](https://github.com/jgraichen/salt-tower/issues/new).
+Feel free to ask for help, discuss solutions or ideas there. Otherwise, you can open an [issue](https://github.com/jgraichen/salt-tower/issues/new).
 
 ## Installation
 
@@ -85,7 +85,7 @@ base:
 
 ##### Common includes
 
-You do not need to define a matcher at all, the files will be included for all minions. You also can use globs to match multiple files, e.g. include all files from `common/`.
+You do not need to define a matcher at all, the files will be included for all minions. Furthermore, you also can use globs to match multiple files, e.g. include all files from `common/`.
 
 ```yaml
 base:
@@ -94,7 +94,7 @@ base:
 
 ##### Grains
 
-The top file itself is rendered using the default renderer (`yaml|jinja`). Therefore you can use e.g. `grains` to include specific files.
+The top file itself is rendered using the default renderer (`yaml|jinja`). Therefore, you can use e.g. `grains` to include specific files.
 
 ```yaml
 base:
@@ -129,7 +129,7 @@ base:
 
 ##### Late-bound variable replacement
 
-File includes are pre-processed by a string formatter to late-bind pillar values.
+File includes are preprocessed by a string formatter to late-bind pillar values.
 
 ```yaml
 base:
@@ -203,7 +203,7 @@ include:
 data: more
 ```
 
-Included files cannot be used in the pillar data file template itself but are merge in the pillar before the new pillar data. Includes can be relative to the current file by prefixing a dot:
+Included files cannot be used in the pillar data file template itself but are merged in the pillar before the new pillar data. Includes can be relative to the current file by prefixing a dot:
 
 ```yaml
 include:
@@ -221,7 +221,7 @@ ssh_private_key: !read id_rsa
 ssh_public_key: !read id_rsa.pub
 ```
 
-This reads a file from the pillar directory in plain text or binary and embeds it into the pillar. This eases shipping private files to minions.
+This reads a file from the pillar directory in plain text or binary and embeds it into the pillar to e.g. ease shipping private file blobs to minions.
 
 Using the `!include` tag files can be pushed through salts rendering pipeline on the server:
 
@@ -357,9 +357,9 @@ def run():
     return {}
 ```
 
-*Note 1:* Do not return `None`. Otherwise [Salt will render the template twice](https://github.com/saltstack/salt/blame/v2019.2.0/salt/template.py#L108) and all side-effects will be applied twice.
+*Note 1:* Do not return `None`. Otherwise, [Salt will render the template twice](https://github.com/saltstack/salt/blame/v2019.2.0/salt/template.py#L108) and all side effects will be applied twice.
 
-*Note 2:* The `__pillar__` object in Python templates is different to other template engines. It is a dict and does not allow to traverse using `get`.
+*Note 2:* The `__pillar__` object in Python templates is different to other template engines. It is a dict and does not allow traversing using `get`.
 
 ```py
 #!py
@@ -427,7 +427,7 @@ ret = tower.format('postgres://user@{database.password}/db')
 assert ret == 'postgres://user@secret/db'
 ```
 
-Format accept dictionaries and list as well an can therefore be used to format full or partial pillar data, this can be used to e.g. format defaults with extra variables:
+Format accept dictionaries and list as well and can therefore be used to format full or partial pillar data, this can be used to e.g. format defaults with extra variables:
 
 ```python
 #!py
