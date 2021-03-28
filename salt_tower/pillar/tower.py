@@ -225,7 +225,7 @@ class Tower(dict):
         data = self._compile(file, context={"basedir": base})
 
         if not isinstance(data, dict):
-            LOGGER.warning("Loading %s did not return dict, but %s", file, type(data))
+            LOGGER.debug("Loading %s did not return dict, but %s", file, type(data))
             return
 
         if "include" in data:
