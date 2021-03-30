@@ -1,0 +1,30 @@
+site_name: Salt Tower
+repo_url: https://github.com/jgraichen/salt-tower
+repo_name: jgraichen/salt-tower
+
+theme:
+  name: material
+  palette:
+    scheme: preference
+  features:
+    - navigation.expand
+    - navigation.instant
+    - navigation.sections
+
+plugins:
+  - search
+
+markdown_extensions:
+  - abbr
+  - admonition
+  - def_list
+  - footnotes
+  - meta
+  - pymdownx.details
+  - pymdownx.highlight
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - pymdownx.tabbed
+  - toc:
+      permalink: true

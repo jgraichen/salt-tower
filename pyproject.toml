@@ -23,12 +23,13 @@ python = "^3.6"
 salt = "*"
 
 [tool.poetry.dev-dependencies]
-pytest = "*"
+pytest = "^6.2.2"
+mkdocs-material = "^7.1.0"
 
 [tool.poetry.plugins."salt.loader"]
 pillar_dirs = "salt_tower.loader:pillar_dirs"
 render_dirs = "salt_tower.loader:renderers_dirs"
 
 [tool.dephell.main]
-from = {format = "poetry", path = "pyproject.toml"}
-to = {format = "setuppy", path = "setup.py"}
+from = { format = "poetry", path = "pyproject.toml" }
+to = { format = "setuppy", path = "setup.py" }
