@@ -21,18 +21,20 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.6"
 salt = "*"
-black = {version = "^20.8b1", optional = true}
-pytest = {version = "^6.2.2", optional = true}
-mkdocs-material = {version = "^7.1.0", optional = true}
+black = { version = "^20.8b1", optional = true }
+pytest = { version = "^6.2.2", optional = true }
+mkdocs-material = { version = "^7.1.0", optional = true }
+pylint = { version = "^2.7.4", optional = true }
 
 [tool.poetry.extras]
 docs = ["mkdocs-material"]
-test = ["black", "pytest"]
+test = ["black", "pylint", "pytest"]
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.2"
 mkdocs-material = "^7.1.0"
 black = "^20.8b1"
+pylint = "^2.7.4"
 
 [tool.poetry.plugins."salt.loader"]
 pillar_dirs = "salt_tower.loader:pillar_dirs"

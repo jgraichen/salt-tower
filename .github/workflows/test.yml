@@ -30,7 +30,7 @@ jobs:
       - uses: actions/cache@v2
         with:
           path: ~/.cache/pip
-          key: pip-${{ runner.os }}-${{ matrix.python }}-pytest-${{ hashFiles('pyproject.toml') }}
+          key: pip-${{ runner.os }}-${{ matrix.python }}-test-${{ hashFiles('pyproject.toml') }}
       - run: python -m pip install --upgrade --upgrade-strategy eager .[test] salt~=${{ matrix.salt }}
       - run: pytest -v
 
@@ -45,6 +45,21 @@ jobs:
       - uses: actions/cache@v2
         with:
           path: ~/.cache/pip
-          key: pip-${{ runner.os }}-3.8-black-${{ hashFiles('pyproject.toml') }}
+          key: pip-${{ runner.os }}-3.8-test-${{ hashFiles('pyproject.toml') }}
       - run: python -m pip install --upgrade --upgrade-strategy eager .[test]
       - run: black . --check
+
+  pylint:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v1
+      - name: Set up Python ${{ matrix.python }}
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.8
+      - uses: actions/cache@v2
+        with:
+          path: ~/.cache/pip
+          key: pip-${{ runner.os }}-3.8-test-${{ hashFiles('pyproject.toml') }}
+      - run: python -m pip install --upgrade --upgrade-strategy eager .[test]
+      - run: pylint -E $(find . -iname '*.py')
