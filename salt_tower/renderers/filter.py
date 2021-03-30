@@ -64,7 +64,9 @@ VALID_SELECTORS = ("grain", "pillar")
 LOG = logging.getLogger(__name__)
 
 
-def render(source, _saltenv, _sls, argline=None, **kwargs):
+def render(  # pylint: disable=too-many-branches
+    source, _saltenv, _sls, argline=None, **kwargs
+):
     if not isinstance(source, dict):
         raise TypeError(f"Source must be a dict, not {type(source)}")
 

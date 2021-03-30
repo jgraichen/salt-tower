@@ -50,7 +50,12 @@ class YamletLoader(SaltYamlSafeLoader):  # pylint: disable=too-many-ancestors
         if isinstance(node, ScalarNode):
             return self._read(node.value)
 
-        return self._invalid_node(node, "a scalar node")
+        raise ConstructorError(
+            None,
+            None,
+            f"expected a scalar node, but found {node.id}",
+            node.start_mark,
+        )
 
     def _yamlet_include(self, node):
         if isinstance(node, ScalarNode):
@@ -59,7 +64,12 @@ class YamletLoader(SaltYamlSafeLoader):  # pylint: disable=too-many-ancestors
         if isinstance(node, MappingNode):
             return self._compile(**self.construct_mapping(node, True))
 
-        return self._invalid_node(node, "a scalar or mapping node")
+        raise ConstructorError(
+            None,
+            None,
+            f"expected a scalar or mapping node, but found {node.id}",
+            node.start_mark,
+        )
 
     def _read(self, source):
         source = self._resolve(source)
@@ -99,11 +109,6 @@ class YamletLoader(SaltYamlSafeLoader):  # pylint: disable=too-many-ancestors
             return os.path.realpath(os.path.join(base, path))
 
         return path
-
-    def _invalid_node(self, node, expected):
-        raise ConstructorError(
-            None, None, f"expected {expected}, but found {node.id}", node.start_mark
-        )
 
 
 def get_yaml_loader(**kwargs):
