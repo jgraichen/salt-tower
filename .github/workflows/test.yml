@@ -4,7 +4,7 @@ name: Python Package
 on: [push]
 
 jobs:
-  Test:
+  pytest:
     runs-on: ubuntu-20.04
     strategy:
       fail-fast: false
@@ -27,11 +27,24 @@ jobs:
         uses: actions/setup-python@v1
         with:
           python-version: ${{ matrix.python }}
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          python -m pip install pytest salt~=${{ matrix.salt }}
-      - name: Build package
-        run: python setup.py install
-      - name: Test
-        run: pytest -v
+      - uses: actions/cache@v2
+        with:
+          path: ~/.cache/pip
+          key: pip-${{ runner.os }}-${{ matrix.python }}-pytest-${{ hashFiles('pyproject.toml') }}
+      - run: python -m pip install --upgrade --upgrade-strategy eager .[test] salt~=${{ matrix.salt }}
+      - run: pytest -v
+
+  black:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v1
+      - name: Set up Python ${{ matrix.python }}
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.8
+      - uses: actions/cache@v2
+        with:
+          path: ~/.cache/pip
+          key: pip-${{ runner.os }}-3.8-black-${{ hashFiles('pyproject.toml') }}
+      - run: python -m pip install --upgrade --upgrade-strategy eager .[test]
+      - run: black . --check
