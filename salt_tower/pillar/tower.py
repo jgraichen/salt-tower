@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # pylint: disable=missing-docstring
 """
-
+salt-tower ext_pillar module
 """
 from __future__ import absolute_import
 
@@ -37,7 +37,9 @@ if hasattr(salt.loader, "matchers"):
 else:
 
     def _match_minion_impl(tgt, opts):
-        return salt.minion.Matcher(opts, __salt__).compound_match(tgt)
+        return salt.minion.Matcher(  # pylint: disable=no-member
+            opts, __salt__
+        ).compound_match(tgt)
 
 
 def ext_pillar(minion_id, pillar, *args, **_kwargs):
@@ -60,7 +62,7 @@ def ext_pillar(minion_id, pillar, *args, **_kwargs):
 
 class Tower(dict):
     def __init__(self, minion_id, env, pillar):
-        super(Tower, self).__init__(pillar)
+        super().__init__(pillar)
 
         self.env = env
         self.minion_id = minion_id
@@ -85,15 +87,15 @@ class Tower(dict):
             default = KeyError(f"Pillar key missing: {key}")
         value = traverse_dict_and_list(self, key, default, **kwargs)
         if isinstance(value, KeyError):
-            raise value
+            raise value  # pylint: disable=raising-non-exception
         return value
 
     def update(self, obj, merge=True, **kwargs):
         if merge:
             return self.merge(self, obj, **kwargs)
-        return super(Tower, self).update(obj)
+        return super().update(obj)
 
-    def merge(self, *args, **kwargs):
+    def merge(self, *args, **kwargs):  # pylint: disable=no-self-use
         return _merge(*args, **kwargs)
 
     def format(self, obj, *args, **kwargs):
@@ -136,7 +138,7 @@ class Tower(dict):
             return _match_minion_impl(
                 tgt, {"grains": __grains__, "pillar": self, "id": self.minion_id}
             )
-        except Exception as err:
+        except Exception as err:  # pylint: disable=broad-except
             LOGGER.exception(err)
             return False
 
@@ -239,7 +241,7 @@ class Tower(dict):
 
         self.update(data, merge=True)
 
-    def _compile(
+    def _compile(  # pylint: disable=too-many-arguments
         self,
         template,
         default=None,
@@ -327,14 +329,14 @@ class Formatter(string.Formatter):
     def __init__(self, tower):
         self._tower = tower
 
-    def get_field(self, key, args, kwargs):
-        if key in kwargs:
-            return (kwargs[key], None)
+    def get_field(self, field_name, args, kwargs):
+        if field_name in kwargs:
+            return (kwargs[field_name], None)
 
-        value = self._tower.get(key, delimiter=".")
+        value = self._tower.get(field_name, delimiter=".")
 
         if value is None:
-            return ("{" + key + "}", None)
+            return ("{" + field_name + "}", None)
 
         return (value, None)
 
@@ -363,7 +365,7 @@ def _merge_clean(obj):
     return obj
 
 
-def _merge_dict(tgt, obj, strategy="merge-last"):
+def _merge_dict(tgt, obj, strategy="merge-last"):  # pylint: disable=too-many-branches
     if not isinstance(obj, dict):
         raise TypeError(f"Cannot merge non-dict type, but is {type(obj)}")
 
