@@ -21,4 +21,5 @@ jobs:
       - run: |
           git config --global user.name "$(git --no-pager log --format=format:'%an' -n 1)"
           git config --global user.email "$(git --no-pager log --format=format:'%ae' -n 1)"
+          git fetch origin gh-pages:gh-pages
       - run: mike deploy --push --rebase latest
