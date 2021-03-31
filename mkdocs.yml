@@ -1,6 +1,7 @@
 site_name: Salt Tower
 repo_url: https://github.com/jgraichen/salt-tower
 repo_name: jgraichen/salt-tower
+edit_uri: edit/main/docs/
 
 theme:
   name: material
@@ -26,6 +27,7 @@ theme:
 
 plugins:
   - search
+  - git-revision-date
   - minify:
       minify_html: true
       minify_js: true
