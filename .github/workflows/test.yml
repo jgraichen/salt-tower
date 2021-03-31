@@ -22,7 +22,7 @@ jobs:
           - { salt: "2017.7.4", python: "3.6" }
 
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
       - name: Set up Python ${{ matrix.python }}
         uses: actions/setup-python@v2
         with:
@@ -37,7 +37,7 @@ jobs:
   black:
     runs-on: ubuntu-20.04
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
       - name: Set up Python ${{ matrix.python }}
         uses: actions/setup-python@v2
         with:
@@ -52,7 +52,7 @@ jobs:
   pylint:
     runs-on: ubuntu-20.04
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
       - name: Set up Python ${{ matrix.python }}
         uses: actions/setup-python@v2
         with:
