@@ -135,8 +135,12 @@ class Tower(dict):
 
     def _match_minion(self, tgt):
         try:
+            if hasattr(__grains__, "value"):
+                grains = __grains__.value()
+            else:
+                grains = __grains__
             return _match_minion_impl(
-                tgt, {"grains": __grains__, "pillar": self, "id": self.minion_id}
+                tgt, {"grains": grains, "pillar": dict(self), "id": self.minion_id}
             )
         except Exception as err:  # pylint: disable=broad-except
             LOGGER.exception(err)
