@@ -5,6 +5,13 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Fixed
+- Python package loader for Salt 3003
+- Calling conventions to have more salt renderer lookup files relative to current template (e.g. JINJA `include`) (#11)
+
+### Added
+- Tower compatibility with Salt 3003 (#18)
+- Experimental flag to have some renderers (e.g. JINJA) lookup files in `pillar_roots` (#11)
 
 ## [1.6.0] - 2021-03-09
 ### Added
