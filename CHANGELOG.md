@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [1.7.0] - 2021-04-03
 ### Fixed
 - Python package loader for Salt 3003
 - Calling conventions to have more salt renderer lookup files relative to current template (e.g. JINJA `include`) (#11)
@@ -65,7 +67,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   - First version of ext pillar
   - Yamlet and Text renderer
 
-[Unreleased]: https://github.com/jgraichen/salt-tower/compare/v1.6.0...HEAD
+[Unreleased]: https://github.com/jgraichen/salt-tower/compare/v1.7.0...HEAD
+[1.7.0]: https://github.com/jgraichen/salt-tower/compare/v1.6.0...v1.7.0
 [1.6.0]: https://github.com/jgraichen/salt-tower/compare/v1.5.2...v1.6.0
 [1.5.2]: https://github.com/jgraichen/salt-tower/compare/v1.5.1...v1.5.2
 [1.5.1]: https://github.com/jgraichen/salt-tower/compare/v1.5.0...v1.5.1
