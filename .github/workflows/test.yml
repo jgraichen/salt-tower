@@ -1,5 +1,5 @@
 # -*- vim: ft=yaml:sw=2 -*-
-name: Python Package
+name: Test
 
 on: [push]
 
