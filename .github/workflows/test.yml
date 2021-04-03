@@ -12,6 +12,8 @@ jobs:
       fail-fast: false
       matrix:
         include:
+          - { salt: "3003.0", python: "3.9" }
+          - { salt: "3003.0", python: "3.8" }
           - { salt: "3002.0", python: "3.9" }
           - { salt: "3002.0", python: "3.8" }
           - { salt: "3001.0", python: "3.8" }
