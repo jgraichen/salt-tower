@@ -1,7 +1,9 @@
 # -*- vim: ft=yaml:sw=2 -*-
 name: Test
 
-on: [push]
+on:
+  - pull_request
+  - push
 
 jobs:
   pytest:
