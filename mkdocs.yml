@@ -23,6 +23,7 @@ theme:
   features:
     - navigation.expand
     - navigation.instant
+    # - navigation.tabs
     - navigation.sections
 
 plugins:
