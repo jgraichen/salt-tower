@@ -154,7 +154,7 @@ server {
 
 ### Include a data file
 
-The result of a template file doesn't have to a string, it can be data too. You can e.g. include one YAML file into multiple pillar files, or combine that with the [filter renderer](../filter/), to include data from a shared set.
+The result of a template file doesn't have to a string, it can be data too. You can e.g. include one YAML file into multiple pillar files, or combine that with the [filter renderer](filter.md), to include data from a shared set.
 
 The following example shows to include a shared YAML dataset into multiple places, without any parsing or indention errors, as can happen when using the JINJA `include` directive:
 

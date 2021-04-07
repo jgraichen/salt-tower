@@ -1,6 +1,6 @@
 # Filter
 
-The `filter` renderer takes a data structure, e.g. from the [Yamlet](../yamlet/) renderer, applies some filter based on the top-level keys and returns the first matching item.
+The `filter` renderer takes a data structure, e.g. from the [Yamlet](yamlet.md) renderer, applies some filter based on the top-level keys and returns the first matching item.
 
 ## Example
 

@@ -8,7 +8,7 @@ Salt-tower ships multiple renderers to ease working with complex pillars and org
 
 ## Yamlet
 
-The [Yamlet renderer](./yamlet/) is a supercharged YAML renderer that supports including additional files, template or binary files, in a safe and easy manner.
+The [Yamlet renderer](yamlet.md) is a supercharged YAML renderer that supports including additional files, template or binary files, in a safe and easy manner.
 
 This can help with
 
@@ -25,9 +25,9 @@ This can help with
 
 ## Filter
 
-The [filter renderer](./filter/) returns a subset of its data matching grains or pillar keys. This eases organizing data and reusing datasets for multiple minions, roles or any common pillar file.
+The [filter renderer](filter.md) returns a subset of its data matching grains or pillar keys. This eases organizing data and reusing datasets for multiple minions, roles or any common pillar file.
 
 
 ## Text
 
-The [text renderer](./text/) is a renderer mostly needed in conjunction with the Yamlet renderer when loading and including templates.
+The [text renderer](text.md) is a renderer mostly needed in conjunction with the Yamlet renderer when loading and including templates.
