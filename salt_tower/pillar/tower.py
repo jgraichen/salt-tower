@@ -12,10 +12,12 @@ import os
 import string
 
 from glob import glob
+from typing import Any, TYPE_CHECKING
 
 import salt.loader
 import salt.minion
 import salt.template
+import salt.utils.context
 
 try:
     from salt.utils.data import traverse_dict_and_list
@@ -23,6 +25,12 @@ except ImportError:
     from salt.utils import traverse_dict_and_list
 
 LOGGER = logging.getLogger(__name__)
+
+
+if TYPE_CHECKING:
+    __grains__: salt.utils.context.NamespacedDictWrapper
+    __opts__: dict[str, Any]
+    __salt__: salt.loader.LazyLoader
 
 
 if hasattr(salt.loader, "matchers"):
