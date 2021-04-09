@@ -1,12 +1,12 @@
 # -*- vim: ft=yaml:sw=2 -*-
-name: Test
+name: test
 
 on:
   - pull_request
   - push
 
 jobs:
-  pytest:
+  test:
     runs-on: ubuntu-20.04
     strategy:
       fail-fast: false
@@ -53,19 +53,3 @@ jobs:
       - run: python -m pip install --upgrade --upgrade-strategy eager .[test]
       - run: which black && black --version
       - run: black . --check
-
-  pylint:
-    runs-on: ubuntu-20.04
-    steps:
-      - uses: actions/checkout@v2
-      - name: Set up Python ${{ matrix.python }}
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.9
-      - uses: actions/cache@v2
-        with:
-          path: ~/.cache/pip
-          key: pip-${{ runner.os }}-3.9-test-${{ hashFiles('pyproject.toml') }}
-      - run: python -m pip install --upgrade --upgrade-strategy eager .[test]
-      - run: which pylint && pylint --version
-      - run: pylint -E $(find . -iname '*.py')
