@@ -1,12 +1,11 @@
+# vim: ft=ini
+
 [BASIC]
-good-names=log
+good-names=log,f,k,v
 
 [MESSAGES CONTROL]
 # Handled by black
 disable=bad-continuation
-
-[FORMAT]
-good-names=f,k,v
 
 [VARIABLES]
 # List of additional names supposed to be defined in builtins. Remember that

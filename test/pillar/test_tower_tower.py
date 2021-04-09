@@ -30,7 +30,7 @@ def test_get_traverse(tower):
 
 
 def test_get_default(tower):
-    assert tower.get("pillar:none") == None
+    assert tower.get("pillar:none") is None
 
 
 def test_get_default_value(tower):

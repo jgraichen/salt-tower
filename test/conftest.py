@@ -38,6 +38,7 @@ def features():
 
 @pytest.fixture(autouse=SALT_FEATURES_AVAILABLE)
 def setup_features(features):
+    # pylint: disable=no-member
     salt.features.features.setup = True
     salt.features.features.features = features
 
@@ -99,7 +100,7 @@ class Master:
             default,
             self.opts["renderer_blacklist"],
             self.opts["renderer_whitelist"],
-            **kwargs
+            **kwargs,
         )
 
     def ext_pillar(self, **kwargs):

@@ -36,9 +36,9 @@ if TYPE_CHECKING:
 if hasattr(salt.loader, "matchers"):
     # Available since salt 2019.2
     def _match_minion_impl(tgt, opts):
-        matchers = salt.loader.matchers(
+        matchers = salt.loader.matchers(  # pylint: disable=no-member
             dict(__opts__, **opts)
-        )  # pylint: disable=no-member
+        )
         return matchers["compound_match.match"](tgt)
 
 
