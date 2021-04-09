@@ -2,7 +2,7 @@
 
 # Salt Tower — A Flexible External Pillar Module
 
-[![GitHub Workflow Status (master branch)](https://img.shields.io/github/workflow/status/jgraichen/salt-tower/Python%20Package/master?logo=github)](https://github.com/jgraichen/salt-tower/actions?query=branch%3Amaster+workflow%3A%22Python+Package%22)
+[![GitHub Workflow Status](https://github.com/jgraichen/salt-tower/actions/workflows/test.yml/badge.svg)](https://github.com/jgraichen/salt-tower/actions/workflows/test.yml)
 
 Salt Tower is an advanced and flexible `ext_pillar` that gives access to pillar values while processing and merging them, can render all usual salt file formats and include private and binary files for a minion.
 
