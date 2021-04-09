@@ -48,6 +48,7 @@ mkdocs-minify-plugin = "^0.4.0"
 pylint = "^2.7.4"
 pytest = "^6.2.2"
 tox = "^3.23.0"
+mypy = "^0.812"
 
 [tool.poetry.plugins."salt.loader"]
 pillar_dirs = "salt_tower.loader:pillar_dirs"
