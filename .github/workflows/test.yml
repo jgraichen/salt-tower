@@ -12,18 +12,18 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - { salt: "3003.0", python: "3.9" }
-          - { salt: "3003.0", python: "3.8" }
-          - { salt: "3002.0", python: "3.9" }
-          - { salt: "3002.0", python: "3.8" }
-          - { salt: "3001.0", python: "3.8" }
-          - { salt: "3001.0", python: "3.7" }
-          - { salt: "3000.0", python: "3.7" }
-          - { salt: "3000.0", python: "3.6" }
-          - { salt: "2019.2.0", python: "3.7" }
-          - { salt: "2019.2.0", python: "3.6" }
-          - { salt: "2018.3.4", python: "3.6" }
-          - { salt: "2017.7.4", python: "3.6" }
+          - { salt: "3003", python: "3.9" }
+          - { salt: "3003", python: "3.8" }
+          - { salt: "3002", python: "3.9" }
+          - { salt: "3002", python: "3.8" }
+          - { salt: "3001", python: "3.8" }
+          - { salt: "3001", python: "3.7" }
+          - { salt: "3000", python: "3.7" }
+          - { salt: "3000", python: "3.6" }
+          - { salt: "2019", python: "3.7" }
+          - { salt: "2019", python: "3.6" }
+          - { salt: "2018", python: "3.6" }
+          - { salt: "2017", python: "3.6" }
 
     steps:
       - uses: actions/checkout@v2
@@ -35,9 +35,8 @@ jobs:
         with:
           path: ~/.cache/pip
           key: pip-${{ runner.os }}-${{ matrix.python }}-test-${{ hashFiles('pyproject.toml') }}
-      - run: python -m pip install --upgrade --upgrade-strategy eager .[test] salt~=${{ matrix.salt }}
-      - run: which pytest && pytest --version
-      - run: pytest -v
+      - run: python -m pip install --upgrade tox
+      - run: tox -e salt${{ matrix.salt }}
 
   black:
     runs-on: ubuntu-20.04
