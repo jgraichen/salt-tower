@@ -3,6 +3,7 @@ __pycache__/
 /.cache/
 /.eggs/
 /.env
+/.mypy_cache/
 /.pytest_cache/
 /.tox
 /.vscode
