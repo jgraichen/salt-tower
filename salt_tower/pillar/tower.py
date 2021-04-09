@@ -12,7 +12,7 @@ import os
 import string
 
 from glob import glob
-from typing import Any, TYPE_CHECKING
+from typing import Any, Dict, TYPE_CHECKING
 
 import salt.loader
 import salt.minion
@@ -29,7 +29,7 @@ LOGGER = logging.getLogger(__name__)
 
 if TYPE_CHECKING:
     __grains__: salt.utils.context.NamespacedDictWrapper
-    __opts__: dict[str, Any]
+    __opts__: Dict[str, Any]
     __salt__: salt.loader.LazyLoader
 
 
