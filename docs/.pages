@@ -1,0 +1,9 @@
+# vim: ft=yaml
+
+nav:
+  - index.md
+  - installation.md
+  - configuration.md
+  - tower.md
+  - pillar.md
+  - renderers

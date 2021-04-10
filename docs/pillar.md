@@ -1,4 +1,4 @@
-# Pillar Data File
+# Pillar Data Files
 
 Pillar data files define the actual pillar data that is loaded and merged by salt tower. Data files are rendered using the available salt renderers, therefore all usual features are available. The default renderers are `jinja|yamlet`, if no shebang is specified.
 

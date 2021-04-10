@@ -27,6 +27,7 @@ theme:
     - navigation.sections
 
 plugins:
+  - awesome-pages
   - search
   - git-revision-date
   - minify:
