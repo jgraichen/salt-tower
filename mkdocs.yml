@@ -23,8 +23,9 @@ theme:
   features:
     - navigation.expand
     - navigation.instant
-    # - navigation.tabs
     - navigation.sections
+    - search.suggest
+    - search.highlight
 
 plugins:
   - awesome-pages
