@@ -77,6 +77,13 @@ def test_merge(tower):
     assert ret == {"a": True, "b": [1, 2]}
 
 
+def test_merge_none(tower):
+    tgt = {"a": {"b": 1}}
+    ret = tower.merge(tgt, {"a": None})
+
+    assert ret == {"a": None}
+
+
 def test_merge_copy(tower):
     tgt = {}
     mod = {"a": {"b": 2}}
