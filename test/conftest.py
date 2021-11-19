@@ -54,6 +54,10 @@ class Environment:
 
         self.opts = salt.config.client_config(os.path.join(ROOT, "test/master.yml"))
         self.opts["cachedir"] = os.path.join(tmpd, "cache")
+
+        if os.getenv("USE_PACKAGE", "") == "":
+            self.opts["module_dirs"] = [ROOT]
+
         self.opts["pillar_roots"] = {
             "base": [os.path.join(ROOT, "test/fixtures/pillar")]
         }
