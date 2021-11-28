@@ -26,7 +26,7 @@ black = { version = "^20.8b1", optional = true }
 mike = { version = "^1.0.0", optional = true }
 mkdocs-awesome-pages-plugin = { version = "^2.5.0", optional = true }
 mkdocs-git-revision-date-plugin = { version = "^0.3.1", optional = true }
-mkdocs-material = { version = "^7.1.0", optional = true }
+mkdocs-material = { version = "^8.0.0", optional = true }
 pylint = { version = "2.11.1", optional = true }
 pytest = { version = "^6.2.2", optional = true }
 
@@ -44,7 +44,7 @@ black = "^20.8b1"
 mike = "^1.0.0"
 mkdocs-awesome-pages-plugin = "^2.5.0"
 mkdocs-git-revision-date-plugin = "^0.3.1"
-mkdocs-material = "^7.2.0"
+mkdocs-material = "^8.0.0"
 mypy = "^0.910"
 pylint = "2.11.1"
 pytest = "^6.2.2"
