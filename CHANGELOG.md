@@ -6,9 +6,17 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [1.8.2] - 2021-12-03
+### Fixed
+- Trying to release a versioned documentation
+
+## [1.8.1] - 2021-12-03
+### Fixed
+- Trying to release a versioned documentation
+
 ## [1.8.0] - 2021-12-03
 ### Added
-- [Alternative directory include mode](https://jgraichen.github.io/salt-tower/1.8.0/configuration/#include_directory_mode)
+- [Alternative directory include mode](https://jgraichen.github.io/salt-tower/v1.8.2/configuration/#include_directory_mode)
 
 ## [1.7.0] - 2021-04-03
 ### Fixed
