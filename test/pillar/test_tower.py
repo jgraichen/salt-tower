@@ -524,6 +524,29 @@ def test_render_func_context(env):
     assert env.ext_pillar() == {"key": "Hello World!"}
 
 
+def test_render_include_dir_mode_sls(env):
+    env.opts.update({"salt_tower.include_directory_mode": "all-sls"})
+    env.setup(
+        {
+            "tower.sls": """
+            base:
+                - '*':
+                    - role/openssh
+            """,
+            "role/openssh/10-config.sls": """
+            openssh:
+                config: 1
+            """,
+            "role/openssh/20-extension.sls": """
+            openssh:
+                extension: 1
+            """,
+        }
+    )
+
+    assert env.ext_pillar() == {"openssh": {"config": 1, "extension": 1}}
+
+
 def test_tower_jinja_import(env):
     """
     The JINJA renderer will always lookup relative files (e.g. from import or

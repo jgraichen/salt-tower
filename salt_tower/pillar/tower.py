@@ -202,6 +202,21 @@ class Tower(dict):
             LOGGER.debug("Found glob match: %s", match)
             return sorted(match)
 
+        mode = __opts__.get("salt_tower.include_directory_mode")
+        if mode == "all-sls":
+            # This mode first checks if the given path is a directory. If yes,
+            # all `*.sls` files inside the directory will be returned, ordered
+            # by filename.
+            if os.path.isdir(path):
+                LOGGER.debug("Found directory match: %s", path)
+                return sorted(
+                    [
+                        file
+                        for file in glob(os.path.join(path, "*.sls"))
+                        if os.path.isfile(file)
+                    ]
+                )
+
         for match in [path, f"{path}.sls", f"{path}/init.sls"]:
             if os.path.isfile(match):
                 LOGGER.debug("Found file match: %s", match)
