@@ -4,12 +4,15 @@ on:
   push:
     branches:
       - main
+    tags:
 
 jobs:
   docs:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
       - uses: actions/setup-python@v2
         with:
           python-version: 3.8
@@ -22,4 +25,5 @@ jobs:
           git config --global user.name "$(git --no-pager log --format=format:'%an' -n 1)"
           git config --global user.email "$(git --no-pager log --format=format:'%ae' -n 1)"
           git fetch origin gh-pages:gh-pages
-      - run: mike deploy --push --rebase latest
+      - run: echo "TAG=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+      - run: mike deploy --push --rebase ${TAG:-latest}
