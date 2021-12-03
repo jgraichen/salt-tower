@@ -9,7 +9,7 @@
       
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-8.0.0">
+      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-8.0.3">
     
     
       
@@ -17,7 +17,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.ad626c1e.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.62128196.min.css">
       
         
         <link rel="stylesheet" href="../assets/stylesheets/palette.9204c3b2.min.css">
@@ -37,7 +37,6 @@
     <script>function __md_scope(e,t,_){return new URL(_||(t===localStorage?"..":".."),location).pathname+"."+e}function __md_get(e,t=localStorage,_){return JSON.parse(t.getItem(__md_scope(e,t,_)))}function __md_set(e,t,_=localStorage,o){try{_.setItem(__md_scope(e,_,o),JSON.stringify(t))}catch(e){}}</script>
     
       
-
 
     
     
@@ -275,9 +274,60 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Configuration
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         Configuration
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#feature-flags" class="md-nav__link">
+    Feature flags
+  </a>
+  
+    <nav class="md-nav" aria-label="Feature flags">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#include_directory_mode" class="md-nav__link">
+    include_directory_mode
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#salt_towerunstable_enable_saltenv" class="md-nav__link">
+    salt_tower.unstable_enable_saltenv
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -425,6 +475,41 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#feature-flags" class="md-nav__link">
+    Feature flags
+  </a>
+  
+    <nav class="md-nav" aria-label="Feature flags">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#include_directory_mode" class="md-nav__link">
+    include_directory_mode
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#salt_towerunstable_enable_saltenv" class="md-nav__link">
+    salt_tower.unstable_enable_saltenv
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -448,13 +533,78 @@
 <span class="nt">ext_pillar</span><span class="p">:</span>
   <span class="p p-Indicator">-</span> <span class="nt">tower</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">/path/to/tower.sls</span>
 </code></pre></div>
+<h2 id="feature-flags">Feature flags<a class="headerlink" href="#feature-flags" title="Permanent link">&para;</a></h2>
+<p>Salt Tower behavior can be twisted a bit using feature flags. They can be set in the salt master configuration file.</p>
+<h3 id="include_directory_mode">include_directory_mode<a class="headerlink" href="#include_directory_mode" title="Permanent link">&para;</a></h3>
+<p>The <code>include_directory_mode</code> flag changes the behavior when including files from a directory. The default mode <code>"init"</code> works just like expected.</p>
+<p>When including a file such as <code>role/openssh</code>, Salt Tower will look for the following files and pick the first one that exists:</p>
+<ol>
+<li><code>role/openssh</code></li>
+<li><code>role/openssh.sls</code></li>
+<li><code>role/openssh/init.sls</code></li>
+</ol>
+<p>An alternative mode can be enabled by setting <code>include_directory_mode</code> to <code>"all-sls"</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># /etc/salt/master</span>
+
+<span class="nt">salt_tower.include_directory_mode</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">all-sls</span>
+</code></pre></div>
+<p>Salt Tower will now look if <code>role/openssh</code> is a directory. If that is the case, it will include all <code>*.sls</code> files in that directory, ordered by filename:</p>
+<ol>
+<li><code>role/openssh/10-config.sls</code></li>
+<li><code>role/openssh/20-ciphers.sls</code></li>
+</ol>
+<p>When no files are found in that directory, it will proceed with the same lookup roles as before.</p>
+<p>The <code>all-sls</code> mode can be quite useful if you like to split up e.g. your roles, or minion overrides into multiple, ordered files, for example to use different renderers.</p>
+<div class="admonition example">
+<p class="admonition-title">Example</p>
+<p>Imagine you want to configure <code>openssh</code> for your servers and you want to ship distribution specific settings for e.g. allowed ciphers. Servers running <code>openssh</code> are currently including <code>role/openssh</code>, that contains the shared config, and you do not want to add role details to your <code>tower.sls</code>, or update the include statement for each server.</p>
+<p>Using the <code>salt_tower.include_directory_mode: all-sls</code> mode, you can simply replace your <code>role/openssh.sls</code> or <code>role/openssh/init.sls</code> with a directory, and, for example, use the <code>filter</code> renderer to only add the specific bits needed:</p>
+<div class="highlight"><span class="filename">role/openssh/10-config.sls</span><pre><span></span><code><span class="c1"># Shared config for all openssh daemons</span>
+
+<span class="nt">openssh</span><span class="p">:</span>
+  <span class="nt">server</span><span class="p">:</span>
+    <span class="nt">config</span><span class="p">:</span>
+      <span class="nt">Port</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">22</span>
+      <span class="nt">Protocol</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">2</span>
+      <span class="nt">HostKey</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="nv">/etc/ssh/ssh_host_ed25519_key</span><span class="p p-Indicator">]</span>
+      <span class="c1"># ...</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">role/openssh/11-ciphers.sls</span><pre><span></span><code><span class="c1"># yaml | filter grain=oscodename</span>
+
+<span class="c1"># Restrict key exchange, cipher, and MAC algorithms, as per sshaudit.com</span>
+<span class="c1"># hardening guide.</span>
+
+<span class="nt">bionic</span><span class="p">:</span> <span class="c1"># Ubuntu 18.04</span>
+  <span class="nt">openssh</span><span class="p">:</span>
+    <span class="nt">server</span><span class="p">:</span>
+      <span class="nt">config</span><span class="p">:</span>
+        <span class="nt">Ciphers</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">chacha20-poly1305@openssh.com,aes256-gcm@openssh.com,aes128-gcm@openssh.com,aes256-ctr,aes192-ctr,aes128-ctr</span>
+        <span class="nt">HostKeyAlgorithms</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ssh-ed25519,ssh-ed25519-cert-v01@openssh.com</span>
+        <span class="nt">KexAlgorithms</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">curve25519-sha256,curve25519-sha256@libssh.org,diffie-hellman-group16-sha512,diffie-hellman-group18-sha512,diffie-hellman-group-exchange-sha256</span>
+        <span class="nt">MACs</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">hmac-sha2-256-etm@openssh.com,hmac-sha2-512-etm@openssh.com,umac-128-etm@openssh.com</span>
+
+<span class="nt">focal</span><span class="p">:</span> <span class="c1"># Ubuntu 20.04</span>
+  <span class="nt">openssh</span><span class="p">:</span>
+    <span class="nt">server</span><span class="p">:</span>
+      <span class="nt">config</span><span class="p">:</span>
+        <span class="nt">Ciphers</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">chacha20-poly1305@openssh.com,aes256-gcm@openssh.com,aes128-gcm@openssh.com,aes256-ctr,aes192-ctr,aes128-ctr</span>
+        <span class="nt">HostKeyAlgorithms</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ssh-ed25519,ssh-ed25519-cert-v01@openssh.com,sk-ssh-ed25519@openssh.com,sk-ssh-ed25519-cert-v01@openssh.com,rsa-sha2-256,rsa-sha2-512,rsa-sha2-256-cert-v01@openssh.com,rsa-sha2-512-cert-v01@openssh.com</span>
+        <span class="nt">KexAlgorithms</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">curve25519-sha256,curve25519-sha256@libssh.org,diffie-hellman-group16-sha512,diffie-hellman-group18-sha512,diffie-hellman-group-exchange-sha256</span>
+        <span class="nt">MACs</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">hmac-sha2-256-etm@openssh.com,hmac-sha2-512-etm@openssh.com,umac-128-etm@openssh.com</span>
+</code></pre></div>
+<p>The servers will now a all share the same configuration, but will have different cipher settings depending on their operating system version.</p>
+</div>
+<h3 id="salt_towerunstable_enable_saltenv">salt_tower.unstable_enable_saltenv<a class="headerlink" href="#salt_towerunstable_enable_saltenv" title="Permanent link">&para;</a></h3>
+<p>The <code>salt_tower.unstable_enable_saltenv</code> flags modifies some flags passed to the salt rendering pipeline. The salt renderers behave differently if they think they are rendering a state file or a pillar file. Including a file, such as with JINJA <code>import_yaml</code> will look up files in either <code>file_roots</code> or <code>pillar_roots</code>. Unfortunately, this behavior cannot be customized by plugins.</p>
+<p>By setting <code>salt_tower.unstable_enable_saltenv</code> to <code>True</code>, Salt Tower will pass additional flags to the rendering pipeline, indicating that pillars are rendered. Engines, such as JINJA, will now look up files in <code>pillar_roots</code>. This can work well, when you Salt Tower base directory is the same as the pillar root directory.</p>
+<p>See issue <a href="https://github.com/jgraichen/salt-tower/issues/11">#11</a> for more details.</p>
 
   <hr>
 <div class="md-source-file">
   <small>
     
       Last update:
-      2021-11-28
+      2021-12-03
     
   </small>
 </div>
@@ -526,7 +676,7 @@
     <script id="__config" type="application/json">{"base": "..", "features": ["navigation.expand", "navigation.instant", "navigation.sections", "search.suggest", "search.highlight"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../assets/javascripts/workers/search.01824240.min.js", "version": {"provider": "mike"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.e8a254df.min.js"></script>
+      <script src="../assets/javascripts/bundle.e0abf5b0.min.js"></script>
       
     
   </body>
