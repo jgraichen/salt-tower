@@ -9,7 +9,7 @@
       
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-8.1.3">
+      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-8.1.8">
     
     
       
@@ -17,7 +17,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.edf004c2.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.6e60f8b8.min.css">
       
         
         <link rel="stylesheet" href="../assets/stylesheets/palette.e6a45f82.min.css">
@@ -54,7 +54,7 @@
   
     
     
-      <script>var palette=__md_get("__palette");if(palette&&"object"==typeof palette.color)for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)</script>
+      <script>var palette=__md_get("__palette");if(palette&&"object"==typeof palette.color)for(var key of Object.keys(palette.color))document.body.setAttribute("data-md-color-"+key,palette.color[key])</script>
     
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
@@ -528,10 +528,10 @@
 <h1 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h1>
 <p>Salt Tower is set up and configured in the salt master configuration. See salts <a href="https://docs.saltproject.io/en/latest/topics/development/modules/external_pillars.html"><code>ext_pillar</code> documentation</a> for details about external pillar modules.</p>
 <p>The <code>tower</code> external pillar modules only needs one or more tower files for configuration:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># /etc/salt/master.d/tower.conf</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># /etc/salt/master.d/tower.conf</span><span class="w"></span>
 
-<span class="nt">ext_pillar</span><span class="p">:</span>
-  <span class="p p-Indicator">-</span> <span class="nt">tower</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">/path/to/tower.sls</span>
+<span class="nt">ext_pillar</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">tower</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/path/to/tower.sls</span><span class="w"></span>
 </code></pre></div>
 <h2 id="feature-flags">Feature flags<a class="headerlink" href="#feature-flags" title="Permanent link">&para;</a></h2>
 <p>Salt Tower behavior can be twisted a bit using feature flags. They can be set in the salt master configuration file.</p>
@@ -544,9 +544,9 @@
 <li><code>role/openssh/init.sls</code></li>
 </ol>
 <p>An alternative mode can be enabled by setting <code>include_directory_mode</code> to <code>"all-sls"</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># /etc/salt/master</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># /etc/salt/master</span><span class="w"></span>
 
-<span class="nt">salt_tower.include_directory_mode</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">all-sls</span>
+<span class="nt">salt_tower.include_directory_mode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">all-sls</span><span class="w"></span>
 </code></pre></div>
 <p>Salt Tower will now look if <code>role/openssh</code> is a directory. If that is the case, it will include all <code>*.sls</code> files in that directory, ordered by filename:</p>
 <ol>
@@ -559,38 +559,38 @@
 <p class="admonition-title">Example</p>
 <p>Imagine you want to configure <code>openssh</code> for your servers and you want to ship distribution specific settings for e.g. allowed ciphers. Servers running <code>openssh</code> are currently including <code>role/openssh</code>, that contains the shared config, and you do not want to add role details to your <code>tower.sls</code>, or update the include statement for each server.</p>
 <p>Using the <code>salt_tower.include_directory_mode: all-sls</code> mode, you can simply replace your <code>role/openssh.sls</code> or <code>role/openssh/init.sls</code> with a directory, and, for example, use the <code>filter</code> renderer to only add the specific bits needed:</p>
-<div class="highlight"><span class="filename">role/openssh/10-config.sls</span><pre><span></span><code><span class="c1"># Shared config for all openssh daemons</span>
+<div class="highlight"><span class="filename">role/openssh/10-config.sls</span><pre><span></span><code><span class="c1"># Shared config for all openssh daemons</span><span class="w"></span>
 
-<span class="nt">openssh</span><span class="p">:</span>
-  <span class="nt">server</span><span class="p">:</span>
-    <span class="nt">config</span><span class="p">:</span>
-      <span class="nt">Port</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">22</span>
-      <span class="nt">Protocol</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">2</span>
-      <span class="nt">HostKey</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="nv">/etc/ssh/ssh_host_ed25519_key</span><span class="p p-Indicator">]</span>
-      <span class="c1"># ...</span>
+<span class="nt">openssh</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="nt">server</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">config</span><span class="p">:</span><span class="w"></span>
+<span class="w">      </span><span class="nt">Port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">22</span><span class="w"></span>
+<span class="w">      </span><span class="nt">Protocol</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span><span class="w"></span>
+<span class="w">      </span><span class="nt">HostKey</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">/etc/ssh/ssh_host_ed25519_key</span><span class="p p-Indicator">]</span><span class="w"></span>
+<span class="w">      </span><span class="c1"># ...</span><span class="w"></span>
 </code></pre></div>
-<div class="highlight"><span class="filename">role/openssh/11-ciphers.sls</span><pre><span></span><code><span class="c1"># yaml | filter grain=oscodename</span>
+<div class="highlight"><span class="filename">role/openssh/11-ciphers.sls</span><pre><span></span><code><span class="c1"># yaml | filter grain=oscodename</span><span class="w"></span>
 
-<span class="c1"># Restrict key exchange, cipher, and MAC algorithms, as per sshaudit.com</span>
-<span class="c1"># hardening guide.</span>
+<span class="c1"># Restrict key exchange, cipher, and MAC algorithms, as per sshaudit.com</span><span class="w"></span>
+<span class="c1"># hardening guide.</span><span class="w"></span>
 
-<span class="nt">bionic</span><span class="p">:</span> <span class="c1"># Ubuntu 18.04</span>
-  <span class="nt">openssh</span><span class="p">:</span>
-    <span class="nt">server</span><span class="p">:</span>
-      <span class="nt">config</span><span class="p">:</span>
-        <span class="nt">Ciphers</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">chacha20-poly1305@openssh.com,aes256-gcm@openssh.com,aes128-gcm@openssh.com,aes256-ctr,aes192-ctr,aes128-ctr</span>
-        <span class="nt">HostKeyAlgorithms</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ssh-ed25519,ssh-ed25519-cert-v01@openssh.com</span>
-        <span class="nt">KexAlgorithms</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">curve25519-sha256,curve25519-sha256@libssh.org,diffie-hellman-group16-sha512,diffie-hellman-group18-sha512,diffie-hellman-group-exchange-sha256</span>
-        <span class="nt">MACs</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">hmac-sha2-256-etm@openssh.com,hmac-sha2-512-etm@openssh.com,umac-128-etm@openssh.com</span>
+<span class="nt">bionic</span><span class="p">:</span><span class="w"> </span><span class="c1"># Ubuntu 18.04</span><span class="w"></span>
+<span class="w">  </span><span class="nt">openssh</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">server</span><span class="p">:</span><span class="w"></span>
+<span class="w">      </span><span class="nt">config</span><span class="p">:</span><span class="w"></span>
+<span class="w">        </span><span class="nt">Ciphers</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">chacha20-poly1305@openssh.com,aes256-gcm@openssh.com,aes128-gcm@openssh.com,aes256-ctr,aes192-ctr,aes128-ctr</span><span class="w"></span>
+<span class="w">        </span><span class="nt">HostKeyAlgorithms</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ssh-ed25519,ssh-ed25519-cert-v01@openssh.com</span><span class="w"></span>
+<span class="w">        </span><span class="nt">KexAlgorithms</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">curve25519-sha256,curve25519-sha256@libssh.org,diffie-hellman-group16-sha512,diffie-hellman-group18-sha512,diffie-hellman-group-exchange-sha256</span><span class="w"></span>
+<span class="w">        </span><span class="nt">MACs</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hmac-sha2-256-etm@openssh.com,hmac-sha2-512-etm@openssh.com,umac-128-etm@openssh.com</span><span class="w"></span>
 
-<span class="nt">focal</span><span class="p">:</span> <span class="c1"># Ubuntu 20.04</span>
-  <span class="nt">openssh</span><span class="p">:</span>
-    <span class="nt">server</span><span class="p">:</span>
-      <span class="nt">config</span><span class="p">:</span>
-        <span class="nt">Ciphers</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">chacha20-poly1305@openssh.com,aes256-gcm@openssh.com,aes128-gcm@openssh.com,aes256-ctr,aes192-ctr,aes128-ctr</span>
-        <span class="nt">HostKeyAlgorithms</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ssh-ed25519,ssh-ed25519-cert-v01@openssh.com,sk-ssh-ed25519@openssh.com,sk-ssh-ed25519-cert-v01@openssh.com,rsa-sha2-256,rsa-sha2-512,rsa-sha2-256-cert-v01@openssh.com,rsa-sha2-512-cert-v01@openssh.com</span>
-        <span class="nt">KexAlgorithms</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">curve25519-sha256,curve25519-sha256@libssh.org,diffie-hellman-group16-sha512,diffie-hellman-group18-sha512,diffie-hellman-group-exchange-sha256</span>
-        <span class="nt">MACs</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">hmac-sha2-256-etm@openssh.com,hmac-sha2-512-etm@openssh.com,umac-128-etm@openssh.com</span>
+<span class="nt">focal</span><span class="p">:</span><span class="w"> </span><span class="c1"># Ubuntu 20.04</span><span class="w"></span>
+<span class="w">  </span><span class="nt">openssh</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">server</span><span class="p">:</span><span class="w"></span>
+<span class="w">      </span><span class="nt">config</span><span class="p">:</span><span class="w"></span>
+<span class="w">        </span><span class="nt">Ciphers</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">chacha20-poly1305@openssh.com,aes256-gcm@openssh.com,aes128-gcm@openssh.com,aes256-ctr,aes192-ctr,aes128-ctr</span><span class="w"></span>
+<span class="w">        </span><span class="nt">HostKeyAlgorithms</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ssh-ed25519,ssh-ed25519-cert-v01@openssh.com,sk-ssh-ed25519@openssh.com,sk-ssh-ed25519-cert-v01@openssh.com,rsa-sha2-256,rsa-sha2-512,rsa-sha2-256-cert-v01@openssh.com,rsa-sha2-512-cert-v01@openssh.com</span><span class="w"></span>
+<span class="w">        </span><span class="nt">KexAlgorithms</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">curve25519-sha256,curve25519-sha256@libssh.org,diffie-hellman-group16-sha512,diffie-hellman-group18-sha512,diffie-hellman-group-exchange-sha256</span><span class="w"></span>
+<span class="w">        </span><span class="nt">MACs</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hmac-sha2-256-etm@openssh.com,hmac-sha2-512-etm@openssh.com,umac-128-etm@openssh.com</span><span class="w"></span>
 </code></pre></div>
 <p>The servers will now a all share the same configuration, but will have different cipher settings depending on their operating system version.</p>
 </div>
@@ -673,10 +673,10 @@
     <div class="md-dialog" data-md-component="dialog">
       <div class="md-dialog__inner md-typeset"></div>
     </div>
-    <script id="__config" type="application/json">{"base": "..", "features": ["navigation.expand", "navigation.instant", "navigation.sections", "search.suggest", "search.highlight"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../assets/javascripts/workers/search.0bbba5b5.min.js", "version": {"provider": "mike"}}</script>
+    <script id="__config" type="application/json">{"base": "..", "features": ["navigation.expand", "navigation.instant", "navigation.sections", "search.suggest", "search.highlight"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../assets/javascripts/workers/search.22074ed6.min.js", "version": {"provider": "mike"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.e1a181d9.min.js"></script>
+      <script src="../assets/javascripts/bundle.960e086b.min.js"></script>
       
     
   </body>

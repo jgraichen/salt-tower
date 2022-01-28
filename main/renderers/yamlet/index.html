@@ -9,7 +9,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-8.1.3">
+      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-8.1.8">
     
     
       
@@ -17,7 +17,7 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.edf004c2.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.6e60f8b8.min.css">
       
         
         <link rel="stylesheet" href="../../assets/stylesheets/palette.e6a45f82.min.css">
@@ -54,7 +54,7 @@
   
     
     
-      <script>var palette=__md_get("__palette");if(palette&&"object"==typeof palette.color)for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)</script>
+      <script>var palette=__md_get("__palette");if(palette&&"object"==typeof palette.color)for(var key of Object.keys(palette.color))document.body.setAttribute("data-md-color-"+key,palette.color[key])</script>
     
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
@@ -643,11 +643,11 @@
 <h3 id="include-a-template-file">Include a template file<a class="headerlink" href="#include-a-template-file" title="Permanent link">&para;</a></h3>
 <p>The Yamlet renderer can include a template file into the pillar, without any formatting issues that might arrive when trying to use JINJA. The renderer will parse the YAML and directly render the template into the pillar, not the other way around.</p>
 <p>Assume we have an <code>nginx</code> state that expects a list of site configuration files as string blobs:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># role/webserver/init.sls</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># role/webserver/init.sls</span><span class="w"></span>
 
-<span class="nt">nginx</span><span class="p">:</span>
-  <span class="nt">site</span><span class="p">:</span>
-    <span class="nt">default</span><span class="p">:</span> <span class="kt">!include</span> <span class="l l-Scalar l-Scalar-Plain">files/nginx.default.j2</span>
+<span class="nt">nginx</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="nt">site</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">default</span><span class="p">:</span><span class="w"> </span><span class="kt">!include</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">files/nginx.default.j2</span><span class="w"></span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="x">#!jinja|text</span>
 <span class="x"># role/webserver/files/nginx.default.j2</span>
@@ -682,50 +682,50 @@
 <p>Read more about salts rendering pipeline and how to combine renderers in the <a href="https://docs.saltproject.io/en/master/ref/renderers/index.html">official documentation</a>.</p>
 </div>
 <p>The result will look like this, but there will be no issue with indention, encoding, formatting or anything else:</p>
-<div class="highlight"><pre><span></span><code><span class="nt">nginx</span><span class="p">:</span>
-  <span class="nt">site</span><span class="p">:</span>
-    <span class="nt">default</span><span class="p">:</span> <span class="p p-Indicator">|</span>
-      <span class="no"># role/webserver/files/nginx.default.j2</span>
-      <span class="no"># We want this file to be rendered using JINJA first, and into</span>
-      <span class="no"># a text string second, to be included as a string in the pillar.</span>
+<div class="highlight"><pre><span></span><code><span class="nt">nginx</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="nt">site</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">default</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span><span class="w"></span>
+<span class="w">      </span><span class="no"># role/webserver/files/nginx.default.j2</span><span class="w"></span>
+<span class="w">      </span><span class="no"># We want this file to be rendered using JINJA first, and into</span><span class="w"></span>
+<span class="w">      </span><span class="no"># a text string second, to be included as a string in the pillar.</span><span class="w"></span>
 
-      <span class="no">server {</span>
-          <span class="no">listen 80 default_server;</span>
-          <span class="no">listen [::]:80 default_server;</span>
+<span class="w">      </span><span class="no">server {</span><span class="w"></span>
+<span class="w">          </span><span class="no">listen 80 default_server;</span><span class="w"></span>
+<span class="w">          </span><span class="no">listen [::]:80 default_server;</span><span class="w"></span>
 
-          <span class="no">listen  443 ssl http2 default_server;</span>
-          <span class="no">listen  [::]:443 ssl http2 default_server;</span>
+<span class="w">          </span><span class="no">listen  443 ssl http2 default_server;</span><span class="w"></span>
+<span class="w">          </span><span class="no">listen  [::]:443 ssl http2 default_server;</span><span class="w"></span>
 
-          <span class="no">server_name server-hostname-here;</span>
-          <span class="no">include snippets/snakeoil.conf;</span>
+<span class="w">          </span><span class="no">server_name server-hostname-here;</span><span class="w"></span>
+<span class="w">          </span><span class="no">include snippets/snakeoil.conf;</span><span class="w"></span>
 
-          <span class="no">root /var/www/html;</span>
+<span class="w">          </span><span class="no">root /var/www/html;</span><span class="w"></span>
 
-          <span class="no">location / {</span>
-              <span class="no"># First attempt to serve request as file, then</span>
-              <span class="no"># as directory, then fall back to displaying a 404.</span>
-              <span class="no">try_files $uri $uri/ =404;</span>
-          <span class="no">}</span>
-      <span class="no">}</span>
+<span class="w">          </span><span class="no">location / {</span><span class="w"></span>
+<span class="w">              </span><span class="no"># First attempt to serve request as file, then</span><span class="w"></span>
+<span class="w">              </span><span class="no"># as directory, then fall back to displaying a 404.</span><span class="w"></span>
+<span class="w">              </span><span class="no">try_files $uri $uri/ =404;</span><span class="w"></span>
+<span class="w">          </span><span class="no">}</span><span class="w"></span>
+<span class="w">      </span><span class="no">}</span><span class="w"></span>
 </code></pre></div>
 <p>This can greatly simplify writing states, as is much easier to just ship full configuration files or snippets.</p>
 <h3 id="custom-template-context">Custom template context<a class="headerlink" href="#custom-template-context" title="Permanent link">&para;</a></h3>
 <p>The longer mapping variant of the <code>!include</code> tag allows passing custom context data to the renderers. This can be used to expand e.g. a shared configuration file snippet with some custom values:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># role/webserver/init.sls</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># role/webserver/init.sls</span><span class="w"></span>
 
-<span class="nt">nginx</span><span class="p">:</span>
-  <span class="nt">site</span><span class="p">:</span>
-    <span class="nt">app1</span><span class="p">:</span> <span class="kt">!include</span>
-      <span class="nt">source</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">files/nginx.app.j2</span>
-      <span class="nt">context</span><span class="p">:</span>
-        <span class="nt">server_name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">app1.com</span>
-        <span class="nt">directory</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sites/app1</span>
+<span class="nt">nginx</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="nt">site</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">app1</span><span class="p">:</span><span class="w"> </span><span class="kt">!include</span><span class="w"></span>
+<span class="w">      </span><span class="nt">source</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">files/nginx.app.j2</span><span class="w"></span>
+<span class="w">      </span><span class="nt">context</span><span class="p">:</span><span class="w"></span>
+<span class="w">        </span><span class="nt">server_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">app1.com</span><span class="w"></span>
+<span class="w">        </span><span class="nt">directory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sites/app1</span><span class="w"></span>
 
-    <span class="nt">app2</span><span class="p">:</span> <span class="kt">!include</span>
-      <span class="nt">source</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">files/nginx.app.j2</span>
-      <span class="nt">context</span><span class="p">:</span>
-        <span class="nt">server_name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">app2.com</span>
-        <span class="nt">directory</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">app2/public</span>
+<span class="w">    </span><span class="nt">app2</span><span class="p">:</span><span class="w"> </span><span class="kt">!include</span><span class="w"></span>
+<span class="w">      </span><span class="nt">source</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">files/nginx.app.j2</span><span class="w"></span>
+<span class="w">      </span><span class="nt">context</span><span class="p">:</span><span class="w"></span>
+<span class="w">        </span><span class="nt">server_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">app2.com</span><span class="w"></span>
+<span class="w">        </span><span class="nt">directory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">app2/public</span><span class="w"></span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="x">#!jinja|text</span>
 <span class="x"># role/webserver/files/nginx.app.j2</span>
@@ -748,31 +748,31 @@
 <h3 id="include-a-data-file">Include a data file<a class="headerlink" href="#include-a-data-file" title="Permanent link">&para;</a></h3>
 <p>The result of a template file doesn't have to a string, it can be data too. You can e.g. include one YAML file into multiple pillar files, or combine that with the <a href="../filter/">filter renderer</a>, to include data from a shared set.</p>
 <p>The following example shows to include a shared YAML dataset into multiple places, without any parsing or indention errors, as can happen when using the JINJA <code>include</code> directive:</p>
-<div class="highlight"><pre><span></span><code><span class="c1">#!yaml</span>
-<span class="c1"># Shared data set (dataset.yaml)</span>
+<div class="highlight"><pre><span></span><code><span class="c1">#!yaml</span><span class="w"></span>
+<span class="c1"># Shared data set (dataset.yaml)</span><span class="w"></span>
 
-<span class="nt">key</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"></span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><span class="c1"># A pillar data file</span>
-<span class="nt">application_1</span><span class="p">:</span>
-  <span class="nt">config</span><span class="p">:</span> <span class="kt">!include</span> <span class="l l-Scalar l-Scalar-Plain">../dataset.yaml</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># A pillar data file</span><span class="w"></span>
+<span class="nt">application_1</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="nt">config</span><span class="p">:</span><span class="w"> </span><span class="kt">!include</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">../dataset.yaml</span><span class="w"></span>
 
-<span class="nt">application_2</span><span class="p">:</span>
-  <span class="nt">config</span><span class="p">:</span> <span class="kt">!include</span> <span class="l l-Scalar l-Scalar-Plain">../dataset.yaml</span>
+<span class="nt">application_2</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="nt">config</span><span class="p">:</span><span class="w"> </span><span class="kt">!include</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">../dataset.yaml</span><span class="w"></span>
 </code></pre></div>
 <p>The result will have the data set loaded and included for both application keys:</p>
-<div class="highlight"><pre><span></span><code><span class="nt">application_1</span><span class="p">:</span>
-  <span class="nt">config</span><span class="p">:</span>
-    <span class="nt">key</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">1</span>
+<div class="highlight"><pre><span></span><code><span class="nt">application_1</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="nt">config</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"></span>
 
-<span class="nt">application_2</span><span class="p">:</span>
-  <span class="nt">config</span><span class="p">:</span>
-    <span class="nt">key</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">2</span>
+<span class="nt">application_2</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="nt">config</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span><span class="w"></span>
 </code></pre></div>
 <h3 id="include-a-binary-file">Include a binary file<a class="headerlink" href="#include-a-binary-file" title="Permanent link">&para;</a></h3>
 <p>The <code>!read</code> YAML tag can safely load text or binary files and include them as blobs in the result.</p>
-<div class="highlight"><pre><span></span><code><span class="nt">application</span><span class="p">:</span>
-  <span class="nt">license_file</span><span class="p">:</span> <span class="kt">!read</span> <span class="l l-Scalar l-Scalar-Plain">files/license.bin</span>
+<div class="highlight"><pre><span></span><code><span class="nt">application</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="nt">license_file</span><span class="p">:</span><span class="w"> </span><span class="kt">!read</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">files/license.bin</span><span class="w"></span>
 </code></pre></div>
 <p>The <code>license.bin</code> file can be any kind of file, even a binary file. The Yamlet renderer will load the file <em>after</em> it has parsed the YAML and safely embed the binary file content into the data result.</p>
 <div class="admonition note">
@@ -785,24 +785,24 @@
 <h2 id="tag-details">Tag details<a class="headerlink" href="#tag-details" title="Permanent link">&para;</a></h2>
 <h3 id="include">include<a class="headerlink" href="#include" title="Permanent link">&para;</a></h3>
 <p>The <code>!include</code> tag can be used the short variant, to include a template file using the default renderers:</p>
-<div class="highlight"><pre><span></span><code><span class="nt">key</span><span class="p">:</span> <span class="kt">!include</span> <span class="l l-Scalar l-Scalar-Plain">path/to/template</span>
+<div class="highlight"><pre><span></span><code><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="kt">!include</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">path/to/template</span><span class="w"></span>
 </code></pre></div>
 <p>The tag also takes a mapping, which allows specifying more options:</p>
-<div class="highlight"><pre><span></span><code><span class="nt">key</span><span class="p">:</span> <span class="kt">!include</span>
-  <span class="c1"># Path to template file</span>
-  <span class="nt">source</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">path/to/template</span>
+<div class="highlight"><pre><span></span><code><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="kt">!include</span><span class="w"></span>
+<span class="w">  </span><span class="c1"># Path to template file</span><span class="w"></span>
+<span class="w">  </span><span class="nt">source</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">path/to/template</span><span class="w"></span>
 
-  <span class="c1"># Default renderers if not shebang is specified in template file</span>
-  <span class="nt">default</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">jinja|yamlet</span>
+<span class="w">  </span><span class="c1"># Default renderers if not shebang is specified in template file</span><span class="w"></span>
+<span class="w">  </span><span class="nt">default</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">jinja|yamlet</span><span class="w"></span>
 
-  <span class="c1"># Additional context passed to renderers</span>
-  <span class="nt">context</span><span class="p">:</span>
-    <span class="nt">some_data</span><span class="p">:</span>
-      <span class="nt">key</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">  </span><span class="c1"># Additional context passed to renderers</span><span class="w"></span>
+<span class="w">  </span><span class="nt">context</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">some_data</span><span class="p">:</span><span class="w"></span>
+<span class="w">      </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"></span>
 </code></pre></div>
 <h3 id="read">read<a class="headerlink" href="#read" title="Permanent link">&para;</a></h3>
 <p>The <code>!read</code> only supports the show variant and as no options:</p>
-<div class="highlight"><pre><span></span><code><span class="nt">key</span><span class="p">:</span> <span class="kt">!read</span> <span class="l l-Scalar l-Scalar-Plain">path/to/file</span>
+<div class="highlight"><pre><span></span><code><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="kt">!read</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">path/to/file</span><span class="w"></span>
 </code></pre></div>
 <p>See <a href="https://github.com/jgraichen/salt-tower/blob/main/test/renderers/test_yamlet.py"><code>test/renderers/test_yamlet.py</code></a> for more examples and detailed behavior.</p>
 
@@ -865,10 +865,10 @@
     <div class="md-dialog" data-md-component="dialog">
       <div class="md-dialog__inner md-typeset"></div>
     </div>
-    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.expand", "navigation.instant", "navigation.sections", "search.suggest", "search.highlight"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../assets/javascripts/workers/search.0bbba5b5.min.js", "version": {"provider": "mike"}}</script>
+    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.expand", "navigation.instant", "navigation.sections", "search.suggest", "search.highlight"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../assets/javascripts/workers/search.22074ed6.min.js", "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.e1a181d9.min.js"></script>
+      <script src="../../assets/javascripts/bundle.960e086b.min.js"></script>
       
     
   </body>
