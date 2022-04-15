@@ -51,6 +51,6 @@ jobs:
         with:
           path: ~/.cache/pip
           key: pip-${{ runner.os }}-3.9-test-${{ hashFiles('pyproject.toml') }}
-      - run: python -m pip install --upgrade --upgrade-strategy eager .[test] 'click<8'
+      - run: python -m pip install --upgrade --upgrade-strategy eager .[test]
       - run: which black && black --version
       - run: black . --check
