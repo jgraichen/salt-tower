@@ -41,7 +41,6 @@ if hasattr(salt.loader, "matchers"):
         )
         return matchers["compound_match.match"](tgt)
 
-
 else:
 
     def _match_minion_impl(tgt, opts):
