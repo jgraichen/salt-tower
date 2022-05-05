@@ -30,6 +30,7 @@ docs = [
     "mkdocs-awesome-pages-plugin~=2.5.0",
     "mkdocs-git-revision-date-plugin~=0.3.1",
     'mkdocs-material==8.2.13; python_version >= "3.7"',
+    "setuptools",                                       # required by mike
 ]
 
 [build-system]
