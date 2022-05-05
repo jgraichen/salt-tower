@@ -8,7 +8,6 @@ import os
 import textwrap
 
 import pytest
-
 import salt.config
 import salt.loader
 

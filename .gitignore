@@ -1,9 +1,11 @@
 __pycache__/
+__pypackages__/
 *.py[cod]
 /.cache/
 /.eggs/
 /.env
 /.mypy_cache/
+/.pdm.toml
 /.pytest_cache/
 /.tox
 /.vscode
