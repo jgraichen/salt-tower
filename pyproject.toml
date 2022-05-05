@@ -29,7 +29,7 @@ docs = [
     "mike~=1.0.0",
     "mkdocs-awesome-pages-plugin~=2.5.0",
     "mkdocs-git-revision-date-plugin~=0.3.1",
-    "mkdocs-material~=8.0.0",
+    'mkdocs-material==8.2.13; python_version >= "3.7"',
 ]
 
 [build-system]
@@ -44,8 +44,8 @@ dev = [
     "black~=22.3.0",
     "mike~=1.0.0",
     "mkdocs-awesome-pages-plugin~=2.5.0",
-    "mkdocs-git-revision-date-plugin~=0.3.1",
-    "mkdocs-material~=8.0.0",
+    'mkdocs-git-revision-date-plugin~=0.3.1',
+    'mkdocs-material==8.2.13; python_version >= "3.7"',
     "mypy~=0.950",
     "pylint==2.13.8",
     "pytest~=7.0.0",
