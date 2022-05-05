@@ -31,7 +31,7 @@ jobs:
         with:
           python-version: ${{ matrix.python }}
       - run: pdm install --dev --no-self --no-default
-      - run: pdm run tox -e ${{ matrix.env }} -- -vv
+      - run: pdm run tox -e salt${{ matrix.salt }} -- -vv
 
   black:
     runs-on: ubuntu-20.04
