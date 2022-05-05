@@ -18,7 +18,7 @@ jobs:
       - uses: pdm-project/setup-pdm@main
         with:
           python-version: "3.10"
-      - run: pdm install --no-self --no-default --group docs
+      - run: pdm install --prod --group docs --no-self --no-default
       - run: |
           git config --global user.name "$(git --no-pager log --format=format:'%an' -n 1)"
           git config --global user.email "$(git --no-pager log --format=format:'%ae' -n 1)"

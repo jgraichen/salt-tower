@@ -24,7 +24,7 @@ pillar_dirs = "salt_tower.loader:pillar_dirs"
 render_dirs = "salt_tower.loader:renderers_dirs"
 
 [project.optional-dependencies]
-test = ["black~=22.3.0", "pylint==2.13.8", "pytest~=7.0.0"]
+test = ["pylint==2.13.8", "pytest~=7.0.0"]
 docs = [
     "mike~=1.0.0",
     "mkdocs-awesome-pages-plugin~=2.5.0",
@@ -42,10 +42,6 @@ target_version = ["py36", "py37", "py38"]
 [tool.pdm.dev-dependencies]
 dev = [
     "black~=22.3.0",
-    "mike~=1.0.0",
-    "mkdocs-awesome-pages-plugin~=2.5.0",
-    'mkdocs-git-revision-date-plugin~=0.3.1',
-    'mkdocs-material==8.2.13; python_version >= "3.7"',
     "mypy~=0.950",
     "pylint==2.13.8",
     "pytest~=7.0.0",
