@@ -30,7 +30,7 @@ docs = [
     "mkdocs-awesome-pages-plugin~=2.5.0; python_version > '3.8'",
     "mkdocs-git-revision-date-plugin~=0.3.1; python_version > '3.8'",
     'mkdocs-material==8.2.13; python_version >= "3.8"',
-    "setuptools; python_version > '3.8'",                             # required by mike
+    "setuptools",                                                     # required by mike
 ]
 
 [build-system]
@@ -47,7 +47,7 @@ dev = [
     "pylint==2.13.8",
     "pytest~=7.0.0",
     "tox~=3.23.0",
-    "jinja2<3.0",     # not support by salt
+    "jinja2<3.0",                            # not support by salt
 ]
 
 [tool.pytest.ini_options]
