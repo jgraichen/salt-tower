@@ -11,7 +11,7 @@ import logging
 import os
 import string
 from glob import glob
-from typing import TYPE_CHECKING, Any, Dict
+from typing import TYPE_CHECKING, Any, Dict, NamedTuple
 
 import salt.loader
 import salt.minion
@@ -68,16 +68,15 @@ def ext_pillar(minion_id, pillar, *args, **_kwargs):
     return dict(tower)
 
 
-class Optional:
-    def __init__(self, pattern):
-        self.pattern = pattern
+class Optional(NamedTuple):
+    pattern: str
 
 
 def _yamlet_construct_optional(_loader, node):
     if isinstance(node, ScalarNode):
         return Optional(node.value)
 
-    raise ConstructorError(
+    raise ConstructorError( #pylint: disable=duplicate-code
         None,
         None,
         f"expected a scalar node, but found {node.id}",

@@ -21,13 +21,14 @@ import salt.loader
 import salt.template
 from salt.utils.odict import OrderedDict
 from salt.utils.yamlloader import SaltYamlSafeLoader, load
-from yaml.constructor import ConstructorError
-from yaml.nodes import MappingNode, ScalarNode
 
 try:
     from salt.utils.files import fopen
 except ImportError:
     from salt.utils import fopen
+
+from yaml.constructor import ConstructorError
+from yaml.nodes import MappingNode, ScalarNode
 
 
 class YamletLoader(SaltYamlSafeLoader):  # pylint: disable=too-many-ancestors
