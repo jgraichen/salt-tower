@@ -315,6 +315,13 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#salt_towerraise_on_missing_files" class="md-nav__link">
+    salt_tower.raise_on_missing_files
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#salt_towerunstable_enable_saltenv" class="md-nav__link">
     salt_tower.unstable_enable_saltenv
   </a>
@@ -498,6 +505,13 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#salt_towerraise_on_missing_files" class="md-nav__link">
+    salt_tower.raise_on_missing_files
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#salt_towerunstable_enable_saltenv" class="md-nav__link">
     salt_tower.unstable_enable_saltenv
   </a>
@@ -596,8 +610,10 @@
 </code></pre></div>
 <p>The servers will now a all share the same configuration, but will have different cipher settings depending on their operating system version.</p>
 </div>
+<h3 id="salt_towerraise_on_missing_files">salt_tower.raise_on_missing_files<a class="headerlink" href="#salt_towerraise_on_missing_files" title="Permanent link">&para;</a></h3>
+<p>Enabling the <code>salt_tower.raise_on_missing_files</code> flag will have salt tower raise an error if any included file from <code>tower.sls</code> or any <code>include</code> list cannot be found. If the include statement is a pattern, that does not match any files, an error will be raised too.</p>
 <h3 id="salt_towerunstable_enable_saltenv">salt_tower.unstable_enable_saltenv<a class="headerlink" href="#salt_towerunstable_enable_saltenv" title="Permanent link">&para;</a></h3>
-<p>The <code>salt_tower.unstable_enable_saltenv</code> flags modifies some flags passed to the salt rendering pipeline. The salt renderers behave differently if they think they are rendering a state file or a pillar file. Including a file, such as with JINJA <code>import_yaml</code> will look up files in either <code>file_roots</code> or <code>pillar_roots</code>. Unfortunately, this behavior cannot be customized by plugins.</p>
+<p>The <code>salt_tower.unstable_enable_saltenv</code> flag modifies some options passed to the salt rendering pipeline. The salt renderers behave differently if they think they are rendering a state file or a pillar file. Including a file, such as with JINJA <code>import_yaml</code> will look up files in either <code>file_roots</code> or <code>pillar_roots</code>. Unfortunately, this behavior cannot be customized by plugins.</p>
 <p>By setting <code>salt_tower.unstable_enable_saltenv</code> to <code>True</code>, Salt Tower will pass additional flags to the rendering pipeline, indicating that pillars are rendered. Engines, such as JINJA, will now look up files in <code>pillar_roots</code>. This can work well, when you Salt Tower base directory is the same as the pillar root directory.</p>
 <p>See issue <a href="https://github.com/jgraichen/salt-tower/issues/11">#11</a> for more details.</p>
 
@@ -606,7 +622,7 @@
   <small>
     
       Last update:
-      2021-12-03
+      2022-05-09
     
   </small>
 </div>
