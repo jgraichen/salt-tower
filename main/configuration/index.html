@@ -612,6 +612,13 @@
 </div>
 <h3 id="salt_towerraise_on_missing_files">salt_tower.raise_on_missing_files<a class="headerlink" href="#salt_towerraise_on_missing_files" title="Permanent link">&para;</a></h3>
 <p>Enabling the <code>salt_tower.raise_on_missing_files</code> flag will have salt tower raise an error if any included file from <code>tower.sls</code> or any <code>include</code> list cannot be found. If the include statement is a pattern, that does not match any files, an error will be raised too.</p>
+<p>Includes in the top <code>tower.sls</code> can be marked as optional using the special <code>!optional</code> YAML tag:</p>
+<div class="highlight"><span class="filename">tower.sls</span><pre><span></span><code><span class="nt">base</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">common/*</span><span class="w"></span>
+
+<span class="w">  </span><span class="c1"># Optional minion-specific overrides</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="kt">!optional</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">minion/{{ minion_id }}</span><span class="w"></span>
+</code></pre></div>
 <h3 id="salt_towerunstable_enable_saltenv">salt_tower.unstable_enable_saltenv<a class="headerlink" href="#salt_towerunstable_enable_saltenv" title="Permanent link">&para;</a></h3>
 <p>The <code>salt_tower.unstable_enable_saltenv</code> flag modifies some options passed to the salt rendering pipeline. The salt renderers behave differently if they think they are rendering a state file or a pillar file. Including a file, such as with JINJA <code>import_yaml</code> will look up files in either <code>file_roots</code> or <code>pillar_roots</code>. Unfortunately, this behavior cannot be customized by plugins.</p>
 <p>By setting <code>salt_tower.unstable_enable_saltenv</code> to <code>True</code>, Salt Tower will pass additional flags to the rendering pipeline, indicating that pillars are rendered. Engines, such as JINJA, will now look up files in <code>pillar_roots</code>. This can work well, when you Salt Tower base directory is the same as the pillar root directory.</p>
