@@ -10,9 +10,9 @@ import errno
 import logging
 import os
 import string
-
+from copyreg import constructor
 from glob import glob
-from typing import Any, Dict, TYPE_CHECKING
+from typing import TYPE_CHECKING, Any, Dict
 
 import salt.loader
 import salt.minion
@@ -224,7 +224,12 @@ class Tower(dict):
         return []
 
     def load(self, item, base=None, cwd=None):
-        for file in self.lookup(item, base, cwd):
+        matches = self.lookup(item, base, cwd)
+
+        if not matches and __opts__.get("salt_tower.raise_on_missing_files"):
+            raise FileNotFoundError(f"File not found: {item}")
+
+        for file in matches:
             self._load_file(file, base)
 
     def _load_file(self, file, base=None):

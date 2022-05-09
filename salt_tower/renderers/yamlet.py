@@ -17,14 +17,12 @@ import copy
 import io
 import os
 
-from yaml.constructor import ConstructorError
-from yaml.nodes import ScalarNode, MappingNode
-
 import salt.loader
 import salt.template
-
-from salt.utils.yamlloader import SaltYamlSafeLoader, load
 from salt.utils.odict import OrderedDict
+from salt.utils.yamlloader import SaltYamlSafeLoader, load
+from yaml.constructor import ConstructorError
+from yaml.nodes import MappingNode, ScalarNode
 
 try:
     from salt.utils.files import fopen

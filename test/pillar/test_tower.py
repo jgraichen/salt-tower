@@ -3,9 +3,9 @@
 # pylint: disable=redefined-outer-name
 
 import os
+
 import pytest
 import salt
-
 from salt.exceptions import SaltRenderError
 
 
@@ -23,6 +23,66 @@ def test_common_wildcard(env):
     )
 
     assert env.ext_pillar() == {"common": True}
+
+
+def test_missing_file(env):
+    env.setup(
+        {
+            "tower.sls": """
+            base:
+                - common.sls
+            """,
+        }
+    )
+
+    assert env.ext_pillar() == {}
+
+
+def test_missing_file_raises(env):
+    env.opts.update({"salt_tower.raise_on_missing_files": True})
+    env.setup(
+        {
+            "tower.sls": """
+            base:
+                - common.sls
+            """,
+        }
+    )
+
+    with pytest.raises(FileNotFoundError, match=r"common.sls"):
+        env.ext_pillar()
+
+
+def test_missing_file_raises_wildcard(env):
+    env.opts.update({"salt_tower.raise_on_missing_files": True})
+    env.setup(
+        {
+            "tower.sls": """
+            base:
+                - common/*
+            """,
+        }
+    )
+
+    with pytest.raises(FileNotFoundError, match=r"common/\*"):
+        env.ext_pillar()
+
+
+def test_missing_file_raises_wildcard_present(env):
+    env.opts.update({"salt_tower.raise_on_missing_files": True})
+    env.setup(
+        {
+            "tower.sls": """
+            base:
+                - common/*
+            """,
+            "common/file.sls": """
+            key: 1
+            """,
+        }
+    )
+
+    assert env.ext_pillar() == {"key": 1}
 
 
 def test_jinja(env):
@@ -386,7 +446,8 @@ def test_context_basedir(env):
     """
     Test path lookup behavior of the yamlet renderer in a tower.
 
-    The !include tag should lookup non-relative paths from the tower root.
+    The !include tag should lookup non-relative paths from the tower
+    root.
     """
     env.setup(
         {
@@ -408,8 +469,9 @@ def test_context_basedir(env):
 
 def test_error_invalid_file(env):
     """
-    Rendering errors shall not be ignored but raised. Otherwise an incomplete or
-    wrong pillar dataset might be returned and the error would go unnoticed.
+    Rendering errors shall not be ignored but raised. Otherwise an
+    incomplete or wrong pillar dataset might be returned and the error
+    would go unnoticed.
     """
     env.setup(
         {
@@ -549,17 +611,18 @@ def test_render_include_dir_mode_sls(env):
 
 def test_tower_jinja_import(env):
     """
-    The JINJA renderer will always lookup relative files (e.g. from import or
-    include) using either the states roots or the pillar roots directories if a
-    `saltenv` is set (which is the case when renderering pillars).
+    The JINJA renderer will always lookup relative files (e.g. from
+    import or include) using either the states roots or the pillar roots
+    directories if a `saltenv` is set (which is the case when
+    renderering pillars).
 
-    Unfortunatly it is *not* possible to pass any customization to the renderer,
-    e.g. passing an own function to resolve files therefore it currently is
-    impossible to load files from the tower directory *unless* it also is a
-    pillars root directory.
+    Unfortunately it is *not* possible to pass any customization to the
+    renderer, e.g. passing an own function to resolve files therefore it
+    currently is impossible to load files from the tower directory
+    *unless* it also is a pillars root directory.
 
-    This tests ensures that the renderers are called *without* a saltenv and do
-    lookup files relative to the current template file.
+    This tests ensures that the renderers are called *without* a saltenv
+    and do lookup files relative to the current template file.
     """
     env.setup(
         {
@@ -585,13 +648,15 @@ def test_tower_jinja_import(env):
 @pytest.mark.skipif(salt.version.__version__ < "2018", reason="requires salt 2018+")
 def test_tower_jinja_import_roots(env):
     """
-    Test that the rendering engines are called with all flags to import files
-    from the pillar roots instead of the states root. This behavior is disabled
-    by default, but can be enabled by a config flag.
+    Test that the rendering engines are called with all flags to import
+    files from the pillar roots instead of the states root. This
+    behavior is disabled by default, but can be enabled by a config
+    flag.
 
-    Some rendering engines will behave differently now and lookup files in the
-    salt masters pillar_roots instead of realtive to the current file. The exact
-    behavor depends on salt internals and cannot be customized.
+    Some rendering engines will behave differently now and lookup files
+    in the salt masters pillar_roots instead of realtive to the current
+    file. The exact behavor depends on salt internals and cannot be
+    customized.
     """
     env.opts.update({"salt_tower.unstable_enable_saltenv": True})
     env.setup(

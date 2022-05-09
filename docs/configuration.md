@@ -87,9 +87,13 @@ The `all-sls` mode can be quite useful if you like to split up e.g. your roles, 
 
     The servers will now a all share the same configuration, but will have different cipher settings depending on their operating system version.
 
+### salt_tower.raise_on_missing_files
+
+Enabling the `salt_tower.raise_on_missing_files` flag will have salt tower raise an error if any included file from `tower.sls` or any `include` list cannot be found. If the include statement is a pattern, that does not match any files, an error will be raised too.
+
 ### salt_tower.unstable_enable_saltenv
 
-The `salt_tower.unstable_enable_saltenv` flags modifies some flags passed to the salt rendering pipeline. The salt renderers behave differently if they think they are rendering a state file or a pillar file. Including a file, such as with JINJA `import_yaml` will look up files in either `file_roots` or `pillar_roots`. Unfortunately, this behavior cannot be customized by plugins.
+The `salt_tower.unstable_enable_saltenv` flag modifies some options passed to the salt rendering pipeline. The salt renderers behave differently if they think they are rendering a state file or a pillar file. Including a file, such as with JINJA `import_yaml` will look up files in either `file_roots` or `pillar_roots`. Unfortunately, this behavior cannot be customized by plugins.
 
 By setting `salt_tower.unstable_enable_saltenv` to `True`, Salt Tower will pass additional flags to the rendering pipeline, indicating that pillars are rendered. Engines, such as JINJA, will now look up files in `pillar_roots`. This can work well, when you Salt Tower base directory is the same as the pillar root directory.
 

@@ -3,8 +3,8 @@
 """
 A text renderer for processing and loading text blobs.
 
-It is mainly developed to be used with file loaded in tower pillars and to be
-used with the yamlet renderers include tag:
+It is mainly developed to be used with file loaded in tower pillars and
+to be used with the yamlet renderers include tag:
 
 .. code-block:: yaml
 
@@ -18,8 +18,8 @@ used with the yamlet renderers include tag:
     The pillar key content.
 
 
-The following example will render a text file and
-strip whitespace from both ends:
+The following example will render a text file and strip whitespace from
+both ends:
 
 .. code-block:: text
 
@@ -28,7 +28,8 @@ strip whitespace from both ends:
     A short text message
 
 
-The renderer is further able to wrap the text blob into a nested dictionary:
+The renderer is further able to wrap the text blob into a nested
+dictionary:
 
 .. code-block:: text
 

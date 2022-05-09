@@ -1,16 +1,16 @@
 # -*- coding: utf-8 -*-
 # pylint: disable=missing-docstring
 """
-The ``filter`` renderers takes a dataset and only returns the first matching
-value. It can match globs on grains and pillar values.
+The ``filter`` renderers takes a dataset and only returns the first
+matching value. It can match globs on grains and pillar values.
 
-The input must be a parsed dictionary, for example from the YAML renderer. The
-first key is uses as a pattern to match the value from grains or pillar. Shell
-like globs are supported as the ``fnmatch`` function is used to check the
-patterns.
+The input must be a parsed dictionary, for example from the YAML
+renderer. The first key is uses as a pattern to match the value from
+grains or pillar. Shell like globs are supported as the ``fnmatch``
+function is used to check the patterns.
 
-The ``default`` option can provide a string used as the value if the grain or
-pillar key does not exist.
+The ``default`` option can provide a string used as the value if the
+grain or pillar key does not exist.
 
 Example: Default matching uses ``minion_id``:
 
@@ -46,7 +46,6 @@ Example: Matching using the ``os_family`` grain
 
 import logging
 import shlex
-
 from fnmatch import fnmatch
 
 try:
