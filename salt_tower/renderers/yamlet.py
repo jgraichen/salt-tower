@@ -31,7 +31,7 @@ except ImportError:
 
 
 class YamletLoader(SaltYamlSafeLoader):  # pylint: disable=too-many-ancestors
-    def __init__(self, stream, renderers, context=None, tmplpath=None, **_kwargs):
+    def __init__(self, stream, renderers, context=None, tmplpath=None, **kwargs):
         SaltYamlSafeLoader.__init__(self, stream, dictclass=OrderedDict)
 
         if context is None:
@@ -43,6 +43,11 @@ class YamletLoader(SaltYamlSafeLoader):  # pylint: disable=too-many-ancestors
         self.renderers = renderers
         self.add_constructor("!read", type(self)._yamlet_read)
         self.add_constructor("!include", type(self)._yamlet_include)
+
+        constructors = kwargs.get("_yamlet_constructors")
+        if constructors and isinstance(constructors, dict):
+            for tag, constructor in constructors.items():
+                self.add_constructor(tag, constructor)
 
     def _yamlet_read(self, node):
         if isinstance(node, ScalarNode):

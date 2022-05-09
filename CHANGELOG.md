@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 
 - Enabling `salt_tower.raise_on_missing_files` will raise an error when an included file does not exist
+- Include in `tower.sls` can be marked as optional
 
 ## [1.8.2] - 2021-12-03
 
@@ -45,7 +46,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 
-- Add require option to tower.get
+- Add require option to `tower.get`
 - Experimental: Support custom context in template injected `render` function
 - Deep scrubbing of merge strategies (`__`) from merged pillar data
 
@@ -59,7 +60,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Fixed
 
-- Missing symlink to new filter renderer from `_renderers` directory for gitfs deployments
+- Missing symlink to new filter renderer from `_renderers` directory for `gitfs` deployments
 
 ## [1.5.0] - 2021-02-10
 
@@ -97,7 +98,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 
 - Provide `basedir` context variable for absolute includes, e.g. `!include {{ basedir }}/files/config.ini`
-- Support loading pillar and renderer modules via gitfs and sync runner
+- Support loading pillar and renderer modules via `gitfs` and sync runner
 
 ## [1.1.0] - 2019-03-10
 
@@ -114,7 +115,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   - First version of ext pillar
   - Yamlet and Text renderer
 
-[Unreleased]: https://github.com/jgraichen/salt-tower/compare/v1.8.2...HEAD
+[unreleased]: https://github.com/jgraichen/salt-tower/compare/v1.8.2...HEAD
 [1.8.2]: https://github.com/jgraichen/salt-tower/compare/v1.8.1...v1.8.2
 [1.8.1]: https://github.com/jgraichen/salt-tower/compare/v1.8.0...v1.8.1
 [1.8.0]: https://github.com/jgraichen/salt-tower/compare/v1.7.0...v1.8.0

@@ -85,6 +85,38 @@ def test_missing_file_raises_wildcard_present(env):
     assert env.ext_pillar() == {"key": 1}
 
 
+def test_missing_file_raises_optional(env):
+    env.opts.update({"salt_tower.raise_on_missing_files": True})
+    env.setup(
+        {
+            "tower.sls": """
+            base:
+                - !optional common.sls
+                - "minion":
+                    - !optional common.sls
+            """,
+        }
+    )
+
+    assert env.ext_pillar() == {}
+
+
+def test_missing_file_raises_wildcard_optional(env):
+    env.opts.update({"salt_tower.raise_on_missing_files": True})
+    env.setup(
+        {
+            "tower.sls": """
+            base:
+                - !optional common/*
+                - "minion":
+                    - !optional common/*
+            """,
+        }
+    )
+
+    assert env.ext_pillar() == {}
+
+
 def test_jinja(env):
     env.setup(
         {

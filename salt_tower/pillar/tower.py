@@ -10,7 +10,6 @@ import errno
 import logging
 import os
 import string
-from copyreg import constructor
 from glob import glob
 from typing import TYPE_CHECKING, Any, Dict
 
@@ -18,6 +17,8 @@ import salt.loader
 import salt.minion
 import salt.template
 import salt.utils.context
+from yaml.constructor import ConstructorError
+from yaml.nodes import ScalarNode
 
 try:
     from salt.utils.data import traverse_dict_and_list
@@ -65,6 +66,23 @@ def ext_pillar(minion_id, pillar, *args, **_kwargs):
         tower.run(top)
 
     return dict(tower)
+
+
+class Optional:
+    def __init__(self, pattern):
+        self.pattern = pattern
+
+
+def _yamlet_construct_optional(_loader, node):
+    if isinstance(node, ScalarNode):
+        return Optional(node.value)
+
+    raise ConstructorError(
+        None,
+        None,
+        f"expected a scalar node, but found {node.id}",
+        node.start_mark,
+    )
 
 
 class Tower(dict):
@@ -129,16 +147,20 @@ class Tower(dict):
         base = os.path.dirname(top)
 
         for item in self._load_top(top, base):
-            if isinstance(item, str):
-                self._load_item(base, item)
-
-            elif isinstance(item, dict):
+            if isinstance(item, dict):
                 for tgt, items in item.items():
+                    if not isinstance(items, list):
+                        raise ValueError(
+                            f"tower.sls: include items must be a list but is {type(items).__name__}"
+                        )
+
                     if not self._match_minion(tgt):
                         continue
 
                     for itm in items:
                         self._load_item(base, itm)
+            else:
+                self._load_item(base, item)
 
     def _match_minion(self, tgt):
         try:
@@ -154,7 +176,11 @@ class Tower(dict):
             return False
 
     def _load_top(self, top, base):
-        data = self._compile(top, context={"basedir": base})
+        data = self._compile(
+            top,
+            context={"basedir": base},
+            _yamlet_constructors={"!optional": _yamlet_construct_optional},
+        )
 
         if not isinstance(data, dict):
             LOGGER.critical("Tower top must be a dict, but is %s.", type(data))
@@ -180,9 +206,12 @@ class Tower(dict):
     def _load_item(self, base, item):
         if isinstance(item, dict):
             self.update(item, merge=True)
-
         elif isinstance(item, str):
             self.load(item, base)
+        elif isinstance(item, Optional):
+            self.load(item.pattern, base, optional=True)
+        else:
+            raise ValueError(f"Invalid item type: {type(item).__name__}")
 
     def lookup(self, item, base=None, cwd=None):
         if cwd and (item.startswith("./") or item.startswith("../")):
@@ -223,10 +252,14 @@ class Tower(dict):
 
         return []
 
-    def load(self, item, base=None, cwd=None):
+    def load(self, item, base=None, cwd=None, optional=False):
         matches = self.lookup(item, base, cwd)
 
-        if not matches and __opts__.get("salt_tower.raise_on_missing_files"):
+        if (
+            not matches
+            and not optional
+            and __opts__.get("salt_tower.raise_on_missing_files")
+        ):
             raise FileNotFoundError(f"File not found: {item}")
 
         for file in matches:
@@ -317,7 +350,7 @@ class Tower(dict):
         kwargs["tower"] = ctx["tower"]
         kwargs["minion_id"] = ctx["minion_id"]
 
-        # Explicitly set `saltenv=None` to disable any special behavor
+        # Explicitly set `saltenv=None` to disable any special behavior
         # of some rendering engines (mostly JINJA) regarding rendering
         # states or pillars.
         #

@@ -91,6 +91,16 @@ The `all-sls` mode can be quite useful if you like to split up e.g. your roles, 
 
 Enabling the `salt_tower.raise_on_missing_files` flag will have salt tower raise an error if any included file from `tower.sls` or any `include` list cannot be found. If the include statement is a pattern, that does not match any files, an error will be raised too.
 
+Includes in the top `tower.sls` can be marked as optional using the special `!optional` YAML tag:
+
+```yaml title="tower.sls"
+base:
+  - common/*
+
+  # Optional minion-specific overrides
+  - !optional minion/{{ minion_id }}
+```
+
 ### salt_tower.unstable_enable_saltenv
 
 The `salt_tower.unstable_enable_saltenv` flag modifies some options passed to the salt rendering pipeline. The salt renderers behave differently if they think they are rendering a state file or a pillar file. Including a file, such as with JINJA `import_yaml` will look up files in either `file_roots` or `pillar_roots`. Unfortunately, this behavior cannot be customized by plugins.
