@@ -76,7 +76,7 @@ def _yamlet_construct_optional(_loader, node):
     if isinstance(node, ScalarNode):
         return Optional(node.value)
 
-    raise ConstructorError( #pylint: disable=duplicate-code
+    raise ConstructorError(  # pylint: disable=duplicate-code
         None,
         None,
         f"expected a scalar node, but found {node.id}",
