@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [1.9.0] - 2022-05-16
+
 ### Added
 
 - Enabling `salt_tower.raise_on_missing_files` will raise an error when an included file does not exist
@@ -115,7 +117,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   - First version of ext pillar
   - Yamlet and Text renderer
 
-[unreleased]: https://github.com/jgraichen/salt-tower/compare/v1.8.2...HEAD
+[unreleased]: https://github.com/jgraichen/salt-tower/compare/v1.9.0...HEAD
+[1.9.0]: https://github.com/jgraichen/salt-tower/compare/v1.8.2...v1.9.0
 [1.8.2]: https://github.com/jgraichen/salt-tower/compare/v1.8.1...v1.8.2
 [1.8.1]: https://github.com/jgraichen/salt-tower/compare/v1.8.0...v1.8.1
 [1.8.0]: https://github.com/jgraichen/salt-tower/compare/v1.7.0...v1.8.0
