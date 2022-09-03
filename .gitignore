@@ -10,6 +10,7 @@ __pypackages__/
 /.tox
 /.vscode
 /*.egg-info
+/*.lock
 /build
 /dist
 /site
