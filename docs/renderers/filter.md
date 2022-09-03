@@ -43,9 +43,7 @@ roles:
   - app
 ```
 
-
 ### Match a grain
-
 
 The renderer can use any grain to match top-level keys:
 
@@ -57,7 +55,6 @@ Debian:
 RedHat:
   repo_url: http://rpm.example.org
 ```
-
 
 ### Match a pillar key
 
@@ -113,7 +110,6 @@ site:
   customer: customer_a
 ```
 
-
 ### Default value
 
 If a grain or pillar doesn't exist, a default value can be given to match the top-level keys:
@@ -131,25 +127,44 @@ demo:
   worker_count: 1
 ```
 
+### Wrapping result in dictionary
+
+The result can be wrapping to a nested dictionary before being returned. It will be easier to customize a nested value for every minion, such as a user password:
+
+```yaml
+#!yaml | filter grain=id key=users:root:password
+
+minion-a: $2b$05$BvTnTGxuWrMJJwty0mk2D.MCRTnBz4P9M3hZAnkxr0Eo1V9y8CJJK
+minion-b: $2b$05$4EaM70ZUcK4Y.oJe2ZC9FOuCz53WttNhD.NuipNUrxCodjDb6Cfg.
+```
+
+The returned data will look like this:
+
+```yaml
+users:
+  root:
+    password: $2b$05$BvTnTGxuWrMJJwty0mk2D.MCRTnBz4P9M3hZAnkxr0Eo1V9y8CJJK
+```
+
 ## Technical details
 
 ### Arguments
 
 The `filter` renderer can take values from grains or the pillar, the key has to be specified on the shebang:
 
-```
+```text
 #!filter pillar=some:key
 ```
 
 or
 
-```
+```text
 #!filter grain=os_family
 ```
 
 A default value can be specified for both, if the grain or pillar key does not exist, the default value will be used for matching the top-level keys. The default value must be specified with quotes if it contains spaces.
 
-```
+```text
 #!filter pillar=some:key default=value
 #!filter grain=id default='value with space'
 ```

@@ -67,3 +67,13 @@ def test_render_default(render):
     """
 
     assert render(template) == {"match": True}
+
+
+def test_render_key(render):
+    template = """
+        #!yaml | filter grain=id key=sub:path
+        'test_master':
+          key: 2
+    """
+
+    assert render(template) == {"sub": {"path": {"key": 2}}}

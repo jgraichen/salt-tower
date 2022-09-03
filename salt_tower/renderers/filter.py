@@ -71,7 +71,8 @@ def render(  # pylint: disable=too-many-branches
 
     selector = "grain"
     default = None
-    key = "id"
+    lookup_key = "id"
+    wrap_key = False
 
     if argline:
         for arg in shlex.split(argline):
@@ -84,25 +85,30 @@ def render(  # pylint: disable=too-many-branches
                 if not value:
                     raise TemplateError(f"Selector {option!r} needs a value")
                 selector = option
-                key = value
+                lookup_key = value
 
             elif option == "default":
                 if not value:
                     raise TemplateError(f"Option {option!r} needs a value")
                 default = value
 
+            elif option == "key":
+                if not value:
+                    raise TemplateError(f"Option {option!r} needs a value")
+                wrap_key = value
+
             else:
                 raise TemplateError(f"Unknown option {option!r}")
 
     if selector == "grain":
-        value = traverse_dict_and_list(__grains__, key, default)
+        value = traverse_dict_and_list(__grains__, lookup_key, default)
 
     elif selector == "pillar":
         context = kwargs.get("context", {})
         if "pillar" in context:
-            value = traverse_dict_and_list(context["pillar"], key, default)
+            value = traverse_dict_and_list(context["pillar"], lookup_key, default)
         else:
-            value = traverse_dict_and_list(__pillar__, key, default)
+            value = traverse_dict_and_list(__pillar__, lookup_key, default)
 
     if not value:
         LOG.debug("Skipping blank filter value: %r", value)
@@ -111,10 +117,16 @@ def render(  # pylint: disable=too-many-branches
     # Matching only works on strings
     value = str(value)
 
+    result = {}
     for pattern in source:
         if fnmatch(value, pattern):
-            return source[pattern]
+            result = source[pattern]
+            break
+    else:
+        LOG.debug("No pattern matched value: %r", value)
 
-    LOG.debug("No pattern matched value: %r", value)
+    if wrap_key:
+        for k in reversed(wrap_key.split(":")):
+            result = {k: result}
 
-    return {}
+    return result
