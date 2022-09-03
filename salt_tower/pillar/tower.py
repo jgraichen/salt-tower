@@ -119,7 +119,7 @@ class Tower(dict):
             return self.merge(self, obj, **kwargs)
         return super().update(obj)
 
-    def merge(self, *args, **kwargs):
+    def merge(self, *args, **kwargs):  # pylint: disable=no-self-use
         return _merge(*args, **kwargs)
 
     def format(self, obj, *args, **kwargs):

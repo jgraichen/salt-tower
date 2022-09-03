@@ -30,14 +30,8 @@ jobs:
       - uses: pdm-project/setup-pdm@main
         with:
           python-version: ${{ matrix.python }}
-          enable-pep582: true
       - run: pdm install --dev --no-self --no-default
       - run: pdm run tox -e salt${{ matrix.salt }} -- -vv
-      - if: ${{ matrix.python != '3.6' }}
-        run:
-          pdm venv create
-          pdm venv activate
-          pylint salt_tower test
 
   black:
     runs-on: ubuntu-20.04
@@ -46,6 +40,5 @@ jobs:
       - uses: pdm-project/setup-pdm@main
         with:
           python-version: "3.10"
-          enable-pep582: true
       - run: pdm install --dev --no-self --no-default
       - run: pdm run black --check .
