@@ -9,7 +9,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.3.0, mkdocs-material-8.2.13">
+      <meta name="generator" content="mkdocs-1.3.1, mkdocs-material-8.2.13">
     
     
       
@@ -424,6 +424,13 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#wrapping-result-in-dictionary" class="md-nav__link">
+    Wrapping result in dictionary
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -557,6 +564,13 @@
           <li class="md-nav__item">
   <a href="#default-value" class="md-nav__link">
     Default value
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wrapping-result-in-dictionary" class="md-nav__link">
+    Wrapping result in dictionary
   </a>
   
 </li>
@@ -710,6 +724,18 @@
 <span class="nt">demo</span><span class="p">:</span><span class="w"></span>
 <span class="w">  </span><span class="nt">worker_count</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"></span>
 </code></pre></div>
+<h3 id="wrapping-result-in-dictionary">Wrapping result in dictionary<a class="headerlink" href="#wrapping-result-in-dictionary" title="Permanent link">&para;</a></h3>
+<p>The result can be wrapping to a nested dictionary before being returned. It will be easier to customize a nested value for every minion, such as a user password:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">#!yaml | filter grain=id key=users:root:password</span><span class="w"></span>
+
+<span class="nt">minion-a</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$2b$05$BvTnTGxuWrMJJwty0mk2D.MCRTnBz4P9M3hZAnkxr0Eo1V9y8CJJK</span><span class="w"></span>
+<span class="nt">minion-b</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$2b$05$4EaM70ZUcK4Y.oJe2ZC9FOuCz53WttNhD.NuipNUrxCodjDb6Cfg.</span><span class="w"></span>
+</code></pre></div>
+<p>The returned data will look like this:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">users</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="nt">root</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$2b$05$BvTnTGxuWrMJJwty0mk2D.MCRTnBz4P9M3hZAnkxr0Eo1V9y8CJJK</span><span class="w"></span>
+</code></pre></div>
 <h2 id="technical-details">Technical details<a class="headerlink" href="#technical-details" title="Permanent link">&para;</a></h2>
 <h3 id="arguments">Arguments<a class="headerlink" href="#arguments" title="Permanent link">&para;</a></h3>
 <p>The <code>filter</code> renderer can take values from grains or the pillar, the key has to be specified on the shebang:</p>
@@ -735,7 +761,7 @@
   <small>
     
       Last update:
-      2021-04-07
+      2022-09-03
     
   </small>
 </div>
