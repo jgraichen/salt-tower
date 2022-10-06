@@ -78,11 +78,17 @@ class YamletLoader(SaltYamlSafeLoader):  # pylint: disable=too-many-ancestors
     def _read(self, source):
         source = self._resolve(source)
 
+        if not os.path.isfile(source):
+            raise ValueError(f"File does not exist: {source}")
+
         with fopen(source, "rb") as file:
             return file.read()
 
     def _compile(self, source, default="jinja|yamlet", context=None):
         source = self._resolve(source)
+
+        if not os.path.isfile(source):
+            raise ValueError(f"Template does not exist: {source}")
 
         ctx = copy.copy(self.context)
 

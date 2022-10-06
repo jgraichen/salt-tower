@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Added
+
+- Raise error from yamlet renderer when an included file does not exist
+
 ## [1.10.0] - 2022-09-03
 
 ### Added

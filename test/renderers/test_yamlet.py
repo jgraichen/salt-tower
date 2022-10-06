@@ -6,6 +6,7 @@
 import os
 import textwrap
 
+import pytest
 from salt.utils.odict import OrderedDict
 
 
@@ -193,3 +194,33 @@ def test_include_does_not_mutate_context(env, render):
     render(template, default="yamlet", context=context)
 
     assert context == {"key": "abc"}
+
+
+def test_include_missing_file(render):
+    """
+    A missing template must raise an exception.
+    """
+
+    template = """
+      key: !include missing.sls
+    """
+
+    with pytest.raises(ValueError) as excinfo:
+        render(template, default="yamlet")
+
+    assert str(excinfo.value).startswith("Template does not exist:")
+
+
+def test_read_missing_file(render):
+    """
+    A missing file must raise an exception.
+    """
+
+    template = """
+      key: !read missing.sls
+    """
+
+    with pytest.raises(ValueError) as excinfo:
+        render(template, default="yamlet")
+
+    assert str(excinfo.value).startswith("File does not exist:")
