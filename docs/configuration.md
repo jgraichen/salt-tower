@@ -108,3 +108,45 @@ The `salt_tower.unstable_enable_saltenv` flag modifies some options passed to th
 By setting `salt_tower.unstable_enable_saltenv` to `True`, Salt Tower will pass additional flags to the rendering pipeline, indicating that pillars are rendered. Engines, such as JINJA, will now look up files in `pillar_roots`. This can work well, when you Salt Tower base directory is the same as the pillar root directory.
 
 See issue [#11](https://github.com/jgraichen/salt-tower/issues/11) for more details.
+
+### salt_tower.enable_inventory
+
+**Experimental feature**: Enables the `inventory` mode. All pillar data within the `inventory:` subtree will not be returned in the final result. Instead, an additional context module is passed to templates, easing access to minion-scoped variables.
+
+This _inventory_ can be used to provide specialized, independent variable values to other pillar files such as roles. See the following example:
+
+```yaml title="tower.sls"
+base:
+  - inventory/*
+  - 'web*'
+      - role/web
+```
+
+```yaml title="inventory/vars.sls"
+inventory:
+  web-0:
+    ip:
+      public: 203.0.113.100
+    nginx:
+      server_name: example.org
+
+  web-1:
+    ip:
+      public: 203.0.113.110
+    nginx:
+      server_name: example.com
+```
+
+```yaml title="role/web.sls"
+states:
+  - nginx
+
+nginx:
+  config: |
+    server {
+      listen {{ inventory.get('ip:public') }}:80;
+      server_name {{ inventory.get('nginx:server_name') }};
+    }
+```
+
+The inventory can provide custom variables to be used in larger pillar files, or used in multiple roles.

@@ -161,6 +161,10 @@ class Tower(dict):
             else:
                 self._load_item(base, item)
 
+        if __opts__.get("salt_tower.enable_inventory", False):
+            if "inventory" in self:
+                del self["inventory"]
+
     def _match_minion(self, tgt):
         try:
             if hasattr(__grains__, "value"):
@@ -328,6 +332,9 @@ class Tower(dict):
         ctx["tower"] = self
         ctx["env"] = self.env
 
+        if __opts__.get("salt_tower.enable_inventory", False):
+            ctx["inventory"] = Inventory(self)
+
         def render(path, context=None, renderer="text"):
             if isinstance(context, dict):
                 context = {**ctx, **context}
@@ -386,6 +393,16 @@ class Tower(dict):
             LOGGER.critical("Unable to render template `%s'", template)
             LOGGER.exception(err)
             raise err
+
+
+class Inventory:  # pylint: disable=too-few-public-methods
+    def __init__(self, tower):
+        self._tower = tower
+
+    def get(self, key, minion=None, require=True, **kwargs):
+        if not minion:
+            minion = self._tower.minion_id
+        return self._tower.get(f"inventory:{minion}:{key}", require=require, **kwargs)
 
 
 class Formatter(string.Formatter):

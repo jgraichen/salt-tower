@@ -707,3 +707,47 @@ def test_tower_jinja_import_roots(env):
     )
 
     assert env.ext_pillar() == {"foo": "pillar_root"}
+
+
+def test_tower_inventory_disabled(env):
+    env.setup(
+        {
+            "tower.sls": """
+            base:
+                - '*':
+                    - inventory.sls
+            """,
+            "inventory.sls": """
+            inventory:
+                test_master:
+                    key: 1
+            """,
+        }
+    )
+
+    assert env.ext_pillar() == {"inventory": {"test_master": {"key": 1}}}
+
+
+def test_tower_inventory_get(env):
+    env.opts.update({"salt_tower.enable_inventory": True})
+
+    env.setup(
+        {
+            "tower.sls": """
+            base:
+                - '*':
+                    - inventory.sls
+                    - init.sls
+            """,
+            "inventory.sls": """
+            inventory:
+                test_master:
+                    foo: 1
+            """,
+            "init.sls": """
+            bar: {{ inventory.get('foo') }}
+            """,
+        }
+    )
+
+    assert env.ext_pillar() == {"bar": 1}
