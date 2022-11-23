@@ -55,7 +55,7 @@ class Environment:
         self.opts["cachedir"] = os.path.join(tmpd, "cache")
 
         if os.getenv("USE_PACKAGE", "") == "":
-            self.opts["module_dirs"] = [ROOT]
+            self.opts["module_dirs"] = [os.path.join(ROOT, "test/fixtures/modules")]
 
         self.opts["pillar_roots"] = {
             "base": [os.path.join(ROOT, "test/fixtures/pillar")]
