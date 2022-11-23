@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [1.11.0] - 2022-11-23
+
 ### Added
 
 - Raise error from yamlet renderer when an included file does not exist
@@ -128,7 +130,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   - First version of ext pillar
   - Yamlet and Text renderer
 
-[unreleased]: https://github.com/jgraichen/salt-tower/compare/v1.10.0...HEAD
+[unreleased]: https://github.com/jgraichen/salt-tower/compare/v1.11.0...HEAD
+[1.11.0]: https://github.com/jgraichen/salt-tower/compare/v1.10.0...v1.11.0
 [1.10.0]: https://github.com/jgraichen/salt-tower/compare/v1.9.0...v1.10.0
 [1.9.0]: https://github.com/jgraichen/salt-tower/compare/v1.8.2...v1.9.0
 [1.8.2]: https://github.com/jgraichen/salt-tower/compare/v1.8.1...v1.8.2
