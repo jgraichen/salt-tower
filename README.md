@@ -22,7 +22,7 @@ Feel free to ask for help, discuss solutions or ideas there. Otherwise, you can 
 
 ## Installation
 
-#### GitFS
+### GitFS
 
 You can include this repository as a gitfs root and synchronize the extensions on the master:
 
@@ -34,7 +34,7 @@ gitfs_remotes:
 
 Sync all modules:
 
-```
+```session
 $ salt-run saltutil.sync_all
 pillar:
     - pillar.tower
@@ -46,13 +46,13 @@ renderers:
 
 Please note that *everything* in this repository would be merged with your other roots.
 
-#### pip
+### pip
 
-```
+```session
 $ pip install salt-tower
 ```
 
-#### Manual installation
+### Manual installation
 
 Install the extension files from the `salt_tower/{pillar,renderers}` directories into the `extension_modules` directory configured in salt.
 
@@ -69,7 +69,7 @@ ext_pillar:
 
 The `tower.sls` file is similar to the usual `top.sls` with some important differences.
 
-##### Ordered matchers
+#### Ordered matchers
 
 Pillar top items are ordered and processed in order of appearance. You can therefore define identical matchers multiple times.
 
@@ -83,7 +83,7 @@ base:
       - second
 ```
 
-##### Common includes
+#### Common includes
 
 You do not need to define a matcher at all, the files will be included for all minions. Furthermore, you also can use globs to match multiple files, e.g. include all files from `common/`.
 
@@ -92,7 +92,7 @@ base:
   - common/*
 ```
 
-##### Grains
+#### Grains
 
 The top file itself is rendered using the default renderer (`yaml|jinja`). Therefore, you can use e.g. `grains` to include specific files.
 
@@ -102,7 +102,7 @@ base:
   - dist/{{ grains['oscodename'] }}
 ```
 
-##### Embedded data
+#### Embedded data
 
 You can directly include pillar data into the top file simply be defining a `dict` item.
 
@@ -114,7 +114,7 @@ base:
           name: A Site
 ```
 
-##### Iterative pillar processing
+#### Iterative pillar processing
 
 All matchers are compound matchers by default. As items are processes in order of appearance, later items can patch on previously defined pillar values. The above example includes `application.sls` for any minion matching `*.a.example.org` simply because it defines a `site` pillar value.
 
@@ -127,7 +127,7 @@ base:
       - applications
 ```
 
-##### Late-bound variable replacement
+#### Late-bound variable replacement
 
 File includes are preprocessed by a string formatter to late-bind pillar values.
 
@@ -147,17 +147,17 @@ base:
 
 In the above example a minion `node0.a-staging.example.org` will include the following files:
 
-```
+```text
 site/default
 site/a
 site/a/staging/*
 ```
 
-##### File lookup
+#### File lookup
 
 File names will be matches to files and directories, e.g. when including `path/to/file` the first existing match will be used:
 
-```
+```text
 path/to/file
 path/to/file.sls
 path/to/file/init.sls
@@ -192,7 +192,7 @@ def run():
     return ret
 ```
 
-##### Includes
+#### Includes
 
 Pillar data files can include other pillar files similar to how states can be included:
 
@@ -231,7 +231,7 @@ nginx:
     my-app: !include ../files/site.conf
 ```
 
-```
+```jinja
 #!jinja | text strip
 server {
   listen {{ pillar.get('my-app:ip') }}:80;
@@ -279,7 +279,7 @@ nginx:
         listen_ip: 127.0.0.1
 ```
 
-```
+```jinja
 #!jinja | text strip
 server {
   listen {{ listen_ip }}:80;
@@ -291,7 +291,7 @@ server {
 
 The text renderer (used above) renders a file as plain text. It stripes the shebang and can optionally strip whitespace from the beginning and end.
 
-```
+```text
 #!text strip
 
 Hello World
@@ -299,7 +299,7 @@ Hello World
 
 This will return:
 
-```
+```text
 Hello World
 ```
 
@@ -309,7 +309,7 @@ The text renderer is mostly used for embedding rendered configuration files into
 
 The filter renderer returns only a subset of data that matches a given grain or pillar key value:
 
-```
+```yaml
 #!yamlet | filter grain=os_family default='Unknown OS'
 
 Debian:
@@ -324,7 +324,7 @@ Unknown OS:
 
 When this file is rendered, only the data from the matching top level key is returned. The renderer supports glob matches and uses the minion ID by default:
 
-```
+```yaml
 #!yamlet | filter
 
 minion-1:
@@ -376,7 +376,7 @@ The above example demonstrates different usages. The first example will only wor
 
 The `tower` pillar object is available in all rendering engines and can be used for low-level interaction with the ext_pillar engine. Some available functions are:
 
-##### tower.get(key, default=None, require=False)
+#### tower.get(key, default=None, require=False)
 
 Get a pillar value by given traverse path:
 
@@ -386,7 +386,7 @@ tower.get('my:pillar:key')
 
 If `require=True` is set, `default` will be ignored and a KeyError will be raised if the pillar key is not found.
 
-##### tower.update(dict)
+#### tower.update(dict)
 
 Merges given dictionary into the pillar data.
 
@@ -396,7 +396,7 @@ tower.update({'my': {'pillar': 'data'}})
 assert tower.get('my:pillar') == 'data'
 ```
 
-##### tower.merge(tgt, *objects)
+#### tower.merge(tgt, *objects)
 
 Merges given dictionaries or lists into the first one.
 
@@ -411,7 +411,7 @@ assert ret is tgt
 assert tgt['a'] == 1
 ```
 
-##### tower.format(obj, *args, **kwargs)
+#### tower.format(obj, *args, **kwargs)
 
 Performs recursive late-bind string formatting using tower pillar and given arguments ad keywords for resolving. Uses `string.Formatter` internally.
 
