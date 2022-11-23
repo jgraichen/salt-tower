@@ -646,7 +646,7 @@ def test_tower_jinja_import(env):
     The JINJA renderer will always lookup relative files (e.g. from
     import or include) using either the states roots or the pillar roots
     directories if a `saltenv` is set (which is the case when
-    renderering pillars).
+    rendering pillars).
 
     Unfortunately it is *not* possible to pass any customization to the
     renderer, e.g. passing an own function to resolve files therefore it
@@ -686,8 +686,8 @@ def test_tower_jinja_import_roots(env):
     flag.
 
     Some rendering engines will behave differently now and lookup files
-    in the salt masters pillar_roots instead of realtive to the current
-    file. The exact behavor depends on salt internals and cannot be
+    in the salt masters pillar_roots instead of relative to the current
+    file. The exact behavior depends on salt internals and cannot be
     customized.
     """
     env.opts.update({"salt_tower.unstable_enable_saltenv": True})
