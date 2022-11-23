@@ -49,7 +49,7 @@ Please note that *everything* in this repository would be merged with your other
 ### pip
 
 ```session
-$ pip install salt-tower
+pip install salt-tower
 ```
 
 ### Manual installation
