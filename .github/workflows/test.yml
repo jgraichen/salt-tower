@@ -20,12 +20,6 @@ jobs:
           - { salt: "3003", python: "3.8" }
           - { salt: "3002", python: "3.9" }
           - { salt: "3002", python: "3.8" }
-          - { salt: "3001", python: "3.8" }
-          - { salt: "3001", python: "3.7" }
-          - { salt: "3000", python: "3.6" }
-          - { salt: "2019", python: "3.6" }
-          - { salt: "2018", python: "3.6" }
-          - { salt: "2017", python: "3.6" }
 
     steps:
       - uses: actions/checkout@v3

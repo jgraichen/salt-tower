@@ -3,8 +3,8 @@ name = "salt-tower"
 version = "1.10.0"
 description = "A Flexible External Salt Pillar Module"
 authors = [{ name = "Jan Graichen", email = "jgraichen@altimos.de" }]
-dependencies = ["salt>=2017"]
-requires-python = ">=3.6.2,<4.0"
+dependencies = ["salt"]
+requires-python = ">=3.8.2,<4.0"
 readme = "README.md"
 license = { text = "MIT" }
 classifiers = [
@@ -24,13 +24,13 @@ pillar_dirs = "salt_tower.loader:pillar_dirs"
 render_dirs = "salt_tower.loader:renderers_dirs"
 
 [project.optional-dependencies]
-test = ["pylint==2.13.8", "pytest~=7.0.0"]
+test = ["pylint==2.15.6", "pytest~=7.0.0"]
 docs = [
-    "mike~=1.0.0; python_version > '3.8'",
-    "mkdocs-awesome-pages-plugin~=2.5.0; python_version > '3.8'",
-    "mkdocs-git-revision-date-plugin~=0.3.1; python_version > '3.8'",
-    'mkdocs-material==8.2.13; python_version >= "3.8"',
-    "setuptools",                                                     # required by mike
+    "mike~=1.0.0",
+    "mkdocs-awesome-pages-plugin~=2.5.0",
+    "mkdocs-git-revision-date-plugin~=0.3.1",
+    'mkdocs-material~=8.5.10',
+    "setuptools",                             # required by mike
 ]
 
 [build-system]
@@ -42,12 +42,11 @@ target_version = ["py36", "py37", "py38"]
 
 [tool.pdm.dev-dependencies]
 dev = [
-    "black~=22.3.0; python_version > '3.8'",
+    "black~=22.3.0",
     "mypy~=0.950",
-    "pylint==2.13.8",
+    "pylint==2.15.6",
     "pytest~=7.0.0",
     "tox~=3.23.0",
-    "jinja2<3.0",                            # not support by salt
 ]
 
 [tool.pytest.ini_options]

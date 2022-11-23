@@ -3,10 +3,6 @@
 [BASIC]
 good-names=log,f,k,v
 
-[MESSAGES CONTROL]
-# Handled by black
-disable=bad-continuation
-
 [VARIABLES]
 # List of additional names supposed to be defined in builtins. Remember that
 # you should avoid to define new builtins when possible.
