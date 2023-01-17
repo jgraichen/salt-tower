@@ -51,7 +51,7 @@ else:
 
 
 def ext_pillar(minion_id, pillar, *args, **_kwargs):
-    env = __opts__.get("environment", None)
+    env = __opts__.get("pillarenv", None)
 
     if env is None:
         env = "base"
