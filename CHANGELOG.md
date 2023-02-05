@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Added
+
+- Use `pillarenv` to load specific pillar data (by @zixo)
+
 ## [1.11.0] - 2022-11-23
 
 ### Added

@@ -51,7 +51,9 @@ else:
 
 
 def ext_pillar(minion_id, pillar, *args, **_kwargs):
-    env = __opts__.get("environment", None)
+    # `opts["pillarenv"]` usually is set, but to `None`. Therefore, we
+    # cannot use `__opts__.get("pillarenv", "base")`.
+    env = __opts__.get("pillarenv", None)
 
     if env is None:
         env = "base"

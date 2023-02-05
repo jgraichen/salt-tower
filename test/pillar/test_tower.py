@@ -618,6 +618,41 @@ def test_render_func_context(env):
     assert env.ext_pillar() == {"key": "Hello World!"}
 
 
+def test_tower_pillarenv_default(env):
+    env.setup(
+        {
+            "tower.sls": """
+            base:
+                - '*':
+                    - env: base
+            test:
+                - '*':
+                    - env: test
+            """,
+        }
+    )
+
+    assert env.ext_pillar() == {"env": "base"}
+
+
+def test_tower_pillarenv_set(env):
+    env.opts.update({"pillarenv": "test"})
+    env.setup(
+        {
+            "tower.sls": """
+            base:
+                - '*':
+                    - env: base
+            test:
+                - '*':
+                    - env: test
+            """,
+        }
+    )
+
+    assert env.ext_pillar() == {"env": "test"}
+
+
 def test_render_include_dir_mode_sls(env):
     env.opts.update({"salt_tower.include_directory_mode": "all-sls"})
     env.setup(
