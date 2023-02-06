@@ -8,6 +8,7 @@ __pypackages__/
 /.pdm.toml
 /.pytest_cache/
 /.tox
+/.venv
 /.vscode
 /*.egg-info
 /*.lock
