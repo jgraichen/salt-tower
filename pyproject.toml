@@ -47,6 +47,10 @@ dev = [
     "pylint==2.15.6",
     "pytest~=7.0.0",
     "tox~=3.23.0",
+
+    # packaging >22 breaks on salts old pyzmq dependency markers when
+    # used by PDM and PEP 582 being enabled globally.
+    "packaging<22",
 ]
 
 [tool.pytest.ini_options]
