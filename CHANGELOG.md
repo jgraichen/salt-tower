@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [1.12.0] - 2023-02-12
+
 ### Added
 
 - Use `pillarenv` to load specific pillar data (by @zixo)
@@ -134,7 +136,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   - First version of ext pillar
   - Yamlet and Text renderer
 
-[unreleased]: https://github.com/jgraichen/salt-tower/compare/v1.11.0...HEAD
+[unreleased]: https://github.com/jgraichen/salt-tower/compare/v1.12.0...HEAD
+[1.12.0]: https://github.com/jgraichen/salt-tower/compare/v1.11.0...v1.12.0
 [1.11.0]: https://github.com/jgraichen/salt-tower/compare/v1.10.0...v1.11.0
 [1.10.0]: https://github.com/jgraichen/salt-tower/compare/v1.9.0...v1.10.0
 [1.9.0]: https://github.com/jgraichen/salt-tower/compare/v1.8.2...v1.9.0

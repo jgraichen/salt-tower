@@ -1,6 +1,6 @@
 [project]
 name = "salt-tower"
-version = "1.11.0"
+version = "1.12.0"
 description = "A Flexible External Salt Pillar Module"
 authors = [{ name = "Jan Graichen", email = "jgraichen@altimos.de" }]
 dependencies = ["salt"]

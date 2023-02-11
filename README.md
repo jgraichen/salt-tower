@@ -29,7 +29,7 @@ You can include this repository as a gitfs root and synchronize the extensions o
 ```yaml
 gitfs_remotes:
 - https://github.com/jgraichen/salt-tower.git:
-  - base: v1.8.2
+  - base: v1.12.0
 ```
 
 Sync all modules:
