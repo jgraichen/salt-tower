@@ -29,7 +29,7 @@ docs = [
     "mike~=1.1.2",
     "mkdocs-awesome-pages-plugin~=2.8.0",
     "mkdocs-git-revision-date-plugin~=0.3.2",
-    'mkdocs-material~=9.0.12',
+    'mkdocs-material~=9.1.14',
     "setuptools",                             # required by mike
 ]
 
