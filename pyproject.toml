@@ -44,7 +44,7 @@ target_version = ["py36", "py37", "py38"]
 dev = [
     "black~=23.1.0",
     "mypy~=0.991",
-    "pylint~=2.16.1",
+    "pylint~=2.17.4",
     "pytest~=7.2.1",
     "tox~=4.5.2",
 ]
