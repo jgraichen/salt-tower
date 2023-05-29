@@ -5,7 +5,7 @@ __pypackages__/
 /.eggs/
 /.env
 /.mypy_cache/
-/.pdm.toml
+/.pdm-python
 /.pytest_cache/
 /.tox
 /.venv
