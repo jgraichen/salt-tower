@@ -27,7 +27,7 @@ jobs:
         with:
           python-version: ${{ matrix.python }}
       - run: pdm install --dev --no-self --no-default
-      - run: pdm run tox -e salt${{ matrix.salt }} -- -vv
+      - run: pdm run tox -e py3-salt${{ matrix.salt }} -- -vv
 
   black:
     runs-on: ubuntu-22.04
