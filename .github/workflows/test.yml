@@ -23,7 +23,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      - uses: pdm-project/setup-pdm@v3
+      - uses: pdm-project/setup-pdm@v4
         with:
           python-version: ${{ matrix.python }}
       - run: pdm install --dev --no-self --no-default
@@ -33,7 +33,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
-      - uses: pdm-project/setup-pdm@v3
+      - uses: pdm-project/setup-pdm@v4
         with:
           python-version: "3.11"
       - run: pdm install --dev --no-self --no-default
