@@ -17,11 +17,11 @@ jobs:
           fetch-depth: 0
       - uses: pdm-project/setup-pdm@main
         with:
-          python-version: "3.10"
+          python-version: "3.12"
       - run: pdm install --prod --group docs --no-self --no-default
       - run: |
           git config --global user.name "$(git --no-pager log --format=format:'%an' -n 1)"
           git config --global user.email "$(git --no-pager log --format=format:'%ae' -n 1)"
           git fetch origin gh-pages:gh-pages
       - run: echo "TAG=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
-      - run: pdm run mike deploy --push --rebase ${TAG:-latest}
+      - run: pdm run mike deploy --push ${TAG:-latest}
