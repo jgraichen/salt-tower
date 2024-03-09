@@ -8,9 +8,14 @@
     ],
     packageRules: [
         {
-            matchFiles: ["pyproject.toml"],
-            matchDepTypes: ["*"],
-            groupName: "{{ packageName }}",
+            matchUpdateTypes: [
+                "minor",
+                "patch",
+                "pin",
+                "digest",
+                "lockFileMaintenance",
+            ],
+            automerge: true,
         },
     ],
 }
