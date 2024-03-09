@@ -6,4 +6,11 @@
         "github>jgraichen/renovate-config",
         ":preserveSemverRanges",
     ],
+    packageRules: [
+        {
+            matchFiles: ["pyproject.toml"],
+            matchDepTypes: ["*"],
+            groupName: "{{ packageName }}",
+        },
+    ],
 }
