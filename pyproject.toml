@@ -37,17 +37,21 @@ docs = [
 requires = ["pdm-pep517>=1.0"]
 build-backend = "pdm.pep517.api"
 
-[tool.black]
-target_version = ["py36", "py37", "py38"]
-
 [tool.pdm.dev-dependencies]
 dev = [
-    "black==24.3.0",
     "mypy==1.9.0",
     "pylint==3.1.0",
+    "pyright>=1.1.356",
     "pytest==8.1.1",
+    "ruff==0.3.4",
     "tox==4.14.2",
 ]
 
 [tool.pytest.ini_options]
 testpaths = ["test"]
+
+[tool.ruff]
+builtins = ["__grains__", "__opts__", "__pillar__", "__salt__"]
+
+[tool.ruff.format]
+docstring-code-format = true

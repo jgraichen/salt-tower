@@ -11,6 +11,7 @@ Special extensions are added to
 * include plain or binary files at arbitrary positions
 
 """
+
 from __future__ import absolute_import
 
 import copy

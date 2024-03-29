@@ -42,7 +42,7 @@ This will return the following python dict:
 
 .. code-block:: python
 
-    {'path': {'to': {'blob': 'A short text message'}}}
+    {"path": {"to": {"blob": "A short text message"}}}
 
 """
 

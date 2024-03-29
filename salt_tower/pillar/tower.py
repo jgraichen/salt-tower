@@ -3,6 +3,7 @@
 """
 salt-tower ext_pillar module
 """
+
 from __future__ import absolute_import
 
 import copy
