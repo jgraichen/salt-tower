@@ -12,7 +12,7 @@ import logging
 import os
 import string
 from glob import glob
-from typing import TYPE_CHECKING, Any, Dict, NamedTuple
+from typing import NamedTuple
 
 import salt.loader
 import salt.minion
@@ -23,12 +23,6 @@ from yaml.constructor import ConstructorError
 from yaml.nodes import ScalarNode
 
 LOGGER = logging.getLogger(__name__)
-
-
-if TYPE_CHECKING:
-    __grains__: salt.utils.context.NamespacedDictWrapper
-    __opts__: Dict[str, Any]
-    __salt__: salt.loader.LazyLoader
 
 
 def _match_minion_impl(tgt, opts):

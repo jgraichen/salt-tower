@@ -47,6 +47,10 @@ dev = [
     "tox==4.14.2",
 ]
 
+[tool.pyright]
+include = ["salt_tower", "test"]
+exclude = ["test/fixtures"]
+
 [tool.pytest.ini_options]
 testpaths = ["test"]
 
