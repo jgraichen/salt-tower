@@ -20,14 +20,9 @@ import os
 
 import salt.loader
 import salt.template
+from salt.utils.files import fopen
 from salt.utils.odict import OrderedDict
 from salt.utils.yamlloader import SaltYamlSafeLoader, load
-
-try:
-    from salt.utils.files import fopen
-except ImportError:
-    from salt.utils import fopen
-
 from yaml.constructor import ConstructorError
 from yaml.nodes import MappingNode, ScalarNode
 

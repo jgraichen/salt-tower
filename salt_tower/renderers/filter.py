@@ -48,16 +48,8 @@ import logging
 import shlex
 from fnmatch import fnmatch
 
-try:
-    from salt.exceptions import TemplateError
-except ImportError:
-    from salt.exceptions import SaltException as TemplateError
-
-try:
-    from salt.utils.data import traverse_dict_and_list
-except ImportError:
-    from salt.utils import traverse_dict_and_list
-
+from salt.exceptions import TemplateError
+from salt.utils.data import traverse_dict_and_list
 
 VALID_SELECTORS = ("grain", "pillar")
 LOG = logging.getLogger(__name__)

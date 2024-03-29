@@ -18,13 +18,9 @@ import salt.loader
 import salt.minion
 import salt.template
 import salt.utils.context
+from salt.utils.data import traverse_dict_and_list
 from yaml.constructor import ConstructorError
 from yaml.nodes import ScalarNode
-
-try:
-    from salt.utils.data import traverse_dict_and_list
-except ImportError:
-    from salt.utils import traverse_dict_and_list
 
 LOGGER = logging.getLogger(__name__)
 
@@ -35,20 +31,9 @@ if TYPE_CHECKING:
     __salt__: salt.loader.LazyLoader
 
 
-if hasattr(salt.loader, "matchers"):
-    # Available since salt 2019.2
-    def _match_minion_impl(tgt, opts):
-        matchers = salt.loader.matchers(  # pylint: disable=no-member
-            dict(__opts__, **opts)
-        )
-        return matchers["compound_match.match"](tgt)
-
-else:
-
-    def _match_minion_impl(tgt, opts):
-        return salt.minion.Matcher(  # pylint: disable=no-member
-            opts, __salt__
-        ).compound_match(tgt)
+def _match_minion_impl(tgt, opts):
+    matchers = salt.loader.matchers(dict(__opts__, **opts))  # pylint: disable=no-member
+    return matchers["compound_match.match"](tgt)
 
 
 def ext_pillar(minion_id, pillar, *args, **_kwargs):
