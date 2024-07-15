@@ -44,7 +44,7 @@ dev = [
     "pyright>=1.1.356",
     "pytest==8.2.2",
     "ruff==0.5.2",
-    "tox==4.15.1",
+    "tox==4.16.0",
 ]
 
 [tool.pyright]
