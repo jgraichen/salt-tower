@@ -27,7 +27,7 @@ render_dirs = "salt_tower.loader:renderers_dirs"
 test = ["pylint==3.2.6", "pytest==8.2.2"]
 docs = [
     "mike==2.1.2",
-    "mkdocs-awesome-pages-plugin==2.9.2",
+    "mkdocs-awesome-pages-plugin==2.9.3",
     "mkdocs-git-revision-date-plugin==0.3.2",
     'mkdocs-material==9.5.29',
     "setuptools",                             # required by mike
