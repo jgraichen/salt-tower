@@ -39,7 +39,7 @@ build-backend = "pdm.pep517.api"
 
 [tool.pdm.dev-dependencies]
 dev = [
-    "mypy==1.11.0",
+    "mypy==1.11.1",
     "pylint==3.2.6",
     "pyright>=1.1.356",
     "pytest==8.2.2",
