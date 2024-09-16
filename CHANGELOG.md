@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 
 - Remove support for very old salt versions (< 3000)
+- Remove testing for salt<3006 and py<3.10 due to many bugs and locked constraints
 
 ## [1.12.0] - 2023-02-12
 

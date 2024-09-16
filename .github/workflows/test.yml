@@ -14,13 +14,6 @@ jobs:
         include:
           - { salt: "3007", python: "3.10" }
           - { salt: "3006", python: "3.10" }
-          - { salt: "3005", python: "3.9" }
-          - { salt: "3004", python: "3.9" }
-          - { salt: "3004", python: "3.8" }
-          - { salt: "3003", python: "3.9" }
-          - { salt: "3003", python: "3.8" }
-          - { salt: "3002", python: "3.9" }
-          - { salt: "3002", python: "3.8" }
 
     steps:
       - uses: actions/checkout@v4

@@ -4,7 +4,7 @@ version = "1.12.0"
 description = "A Flexible External Salt Pillar Module"
 authors = [{ name = "Jan Graichen", email = "jgraichen@altimos.de" }]
 dependencies = ["salt"]
-requires-python = ">=3.8.2,<4.0"
+requires-python = ">=3.10,<4.0"
 readme = "README.md"
 license = { text = "MIT" }
 classifiers = [
@@ -46,6 +46,9 @@ dev = [
     "ruff==0.6.5",
     "tox==4.18.1",
 ]
+
+[tool.pdm.resolution.overrides]
+pyzmq = "~=25.1" # 25.0.2 does not compile on 24.04 anymore
 
 [tool.pyright]
 include = ["salt_tower", "test"]
