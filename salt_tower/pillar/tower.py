@@ -290,7 +290,7 @@ class Tower(dict):
 
         self.update(data, merge=True)
 
-    def _compile(  # pylint: disable=too-many-arguments
+    def _compile(  # pylint: disable=too-many-arguments,too-many-positional-arguments
         self,
         template,
         default=None,
