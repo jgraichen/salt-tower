@@ -17,28 +17,37 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      - uses: pdm-project/setup-pdm@v4
+      - uses: astral-sh/setup-uv@v2
+        with:
+          enable-cache: True
+      - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python }}
-      - run: pdm install --dev --no-self --no-default
-      - run: pdm run tox -e py3-salt${{ matrix.salt }} -- -vv
+      - run: uv sync --all-extras --dev
+      - run: uv run tox -e py3-salt${{ matrix.salt }} -- -vv
 
   ruff-check:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
-      - uses: pdm-project/setup-pdm@v4
+      - uses: astral-sh/setup-uv@v2
+        with:
+          enable-cache: True
+      - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - run: pdm install --dev --no-self --no-default
-      - run: pdm run ruff check --no-fix --diff
+      - run: uv sync --dev
+      - run: uv run ruff check --no-fix --diff
 
   ruff-format:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
-      - uses: pdm-project/setup-pdm@v4
+      - uses: astral-sh/setup-uv@v2
+        with:
+          enable-cache: True
+      - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - run: pdm install --dev --no-self --no-default
-      - run: pdm run ruff format --diff --check
+      - run: uv sync --dev
+      - run: uv run ruff format --diff --check
