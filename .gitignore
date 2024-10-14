@@ -11,7 +11,6 @@ __pypackages__/
 /.venv
 /.vscode
 /*.egg-info
-/*.lock
 /build
 /dist
 /site
