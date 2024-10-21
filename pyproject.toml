@@ -55,7 +55,7 @@ extend-select = ["I"]
 
 [tool.uv]
 dev-dependencies = [
-    "mypy==1.11.2",
+    "mypy==1.12.1",
     "pylint==3.3.1",
     "pyright>=1.1.356",
     "pytest==8.3.3",
