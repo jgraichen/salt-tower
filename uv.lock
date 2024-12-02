@@ -1347,7 +1347,7 @@ wheels = [
 
 [[package]]
 name = "pylint"
-version = "3.3.1"
+version = "3.3.2"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "astroid" },
@@ -1359,9 +1359,9 @@ dependencies = [
     { name = "tomli", marker = "python_full_version < '3.11'" },
     { name = "tomlkit" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/63/3a/13e90e29777e695d90f422cf4fadb81c999e4755a9089838561bd0590cac/pylint-3.3.1.tar.gz", hash = "sha256:9f3dcc87b1203e612b78d91a896407787e708b3f189b5fa0b307712d49ff0c6e", size = 1516703 }
+sdist = { url = "https://files.pythonhosted.org/packages/81/d8/4471b2cb4ad18b4af717918c468209bd2bd5a02c52f60be5ee8a71b5af2c/pylint-3.3.2.tar.gz", hash = "sha256:9ec054ec992cd05ad30a6df1676229739a73f8feeabf3912c995d17601052b01", size = 1516485 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/4d/11/4a3f814eee14593f3cfcf7046bc765bf1646d5c88132c08c45310fc7d85f/pylint-3.3.1-py3-none-any.whl", hash = "sha256:2f846a466dd023513240bc140ad2dd73bfc080a5d85a710afdb728c420a5a2b9", size = 521768 },
+    { url = "https://files.pythonhosted.org/packages/61/55/5eaf6c415f6ddb09b9b039278823a8e27fb81ea7a34ec80c6d9223b17f2e/pylint-3.3.2-py3-none-any.whl", hash = "sha256:77f068c287d49b8683cd7c6e624243c74f92890f767f106ffa1ddf3c0a54cb7a", size = 521873 },
 ]
 
 [[package]]
@@ -1837,7 +1837,7 @@ requires-dist = [
     { name = "mkdocs-awesome-pages-plugin", marker = "extra == 'docs'", specifier = "==2.9.3" },
     { name = "mkdocs-git-revision-date-plugin", marker = "extra == 'docs'", specifier = "==0.3.2" },
     { name = "mkdocs-material", marker = "extra == 'docs'", specifier = "==9.5.45" },
-    { name = "pylint", marker = "extra == 'test'", specifier = "==3.3.1" },
+    { name = "pylint", marker = "extra == 'test'", specifier = "==3.3.2" },
     { name = "pytest", marker = "extra == 'test'", specifier = "==8.3.3" },
     { name = "salt" },
     { name = "setuptools", marker = "extra == 'docs'" },
@@ -1846,7 +1846,7 @@ requires-dist = [
 [package.metadata.requires-dev]
 dev = [
     { name = "mypy", specifier = "==1.13.0" },
-    { name = "pylint", specifier = "==3.3.1" },
+    { name = "pylint", specifier = "==3.3.2" },
     { name = "pyright", specifier = ">=1.1.356" },
     { name = "pytest", specifier = "==8.3.3" },
     { name = "ruff", specifier = "==0.8.0" },
