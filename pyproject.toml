@@ -24,7 +24,7 @@ pillar_dirs = "salt_tower.loader:pillar_dirs"
 render_dirs = "salt_tower.loader:renderers_dirs"
 
 [project.optional-dependencies]
-test = ["pylint==3.3.2", "pytest==8.3.4"]
+test = ["pylint==3.3.3", "pytest==8.3.4"]
 docs = [
     "mike==2.1.3",
     "mkdocs-awesome-pages-plugin==2.9.3",
@@ -56,7 +56,7 @@ extend-select = ["I"]
 [tool.uv]
 dev-dependencies = [
     "mypy==1.13.0",
-    "pylint==3.3.2",
+    "pylint==3.3.3",
     "pyright>=1.1.356",
     "pytest==8.3.4",
     "ruff==0.8.4",
