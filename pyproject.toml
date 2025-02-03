@@ -59,6 +59,6 @@ dev-dependencies = [
     "pylint==3.3.3",
     "pyright>=1.1.356",
     "pytest==8.3.4",
-    "ruff==0.9.3",
+    "ruff==0.9.4",
     "tox==4.24.1",
 ]
