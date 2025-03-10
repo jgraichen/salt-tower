@@ -1359,7 +1359,7 @@ wheels = [
 
 [[package]]
 name = "pylint"
-version = "3.3.4"
+version = "3.3.5"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "astroid" },
@@ -1371,9 +1371,9 @@ dependencies = [
     { name = "tomli", marker = "python_full_version < '3.11'" },
     { name = "tomlkit" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/ab/b9/50be49afc91469f832c4bf12318ab4abe56ee9aa3700a89aad5359ad195f/pylint-3.3.4.tar.gz", hash = "sha256:74ae7a38b177e69a9b525d0794bd8183820bfa7eb68cc1bee6e8ed22a42be4ce", size = 1518905 }
+sdist = { url = "https://files.pythonhosted.org/packages/d5/e7/3616e8caa61f918c4864db075800a6bd7422621618045c188fd45c3f7a2b/pylint-3.3.5.tar.gz", hash = "sha256:38d0f784644ed493d91f76b5333a0e370a1c1bc97c22068a77523b4bf1e82c31", size = 1519168 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/0d/8b/eef15df5f4e7aa393de31feb96ca9a3d6639669bd59d589d0685d5ef4e62/pylint-3.3.4-py3-none-any.whl", hash = "sha256:289e6a1eb27b453b08436478391a48cd53bb0efb824873f949e709350f3de018", size = 522280 },
+    { url = "https://files.pythonhosted.org/packages/99/62/42199570fc199cc0f6825d746ddb0183b30739b334dc6d85edeaa8a2073c/pylint-3.3.5-py3-none-any.whl", hash = "sha256:7cb170929a371238530b2eeea09f5f28236d106b70308c3d46a9c0cf11634633", size = 522215 },
 ]
 
 [[package]]
@@ -1783,7 +1783,7 @@ requires-dist = [
     { name = "mkdocs-awesome-pages-plugin", marker = "extra == 'docs'", specifier = "==2.10.1" },
     { name = "mkdocs-git-revision-date-plugin", marker = "extra == 'docs'", specifier = "==0.3.2" },
     { name = "mkdocs-material", marker = "extra == 'docs'", specifier = "==9.6.7" },
-    { name = "pylint", marker = "extra == 'test'", specifier = "==3.3.4" },
+    { name = "pylint", marker = "extra == 'test'", specifier = "==3.3.5" },
     { name = "pytest", marker = "extra == 'test'", specifier = "==8.3.4" },
     { name = "salt" },
     { name = "setuptools", marker = "extra == 'docs'" },
@@ -1793,7 +1793,7 @@ provides-extras = ["test", "docs"]
 [package.metadata.requires-dev]
 dev = [
     { name = "mypy", specifier = "==1.15.0" },
-    { name = "pylint", specifier = "==3.3.4" },
+    { name = "pylint", specifier = "==3.3.5" },
     { name = "pyright", specifier = ">=1.1.356" },
     { name = "pytest", specifier = "==8.3.4" },
     { name = "ruff", specifier = "==0.9.9" },
