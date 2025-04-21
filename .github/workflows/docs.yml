@@ -7,21 +7,21 @@ on:
       - main
     tags:
       - v*
+  workflow_dispatch:
 
 jobs:
   docs:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
         with:
-          fetch-depth: 0
-      - uses: pdm-project/setup-pdm@main
-        with:
-          python-version: "3.12"
-      - run: pdm install --prod --group docs --no-self --no-default
+          enable-cache: True
+      - uses: actions/setup-python@v5
+      - run: uv sync --all-extras --dev
       - run: |
           git config --global user.name "$(git --no-pager log --format=format:'%an' -n 1)"
           git config --global user.email "$(git --no-pager log --format=format:'%ae' -n 1)"
           git fetch origin gh-pages:gh-pages
       - run: echo "TAG=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
-      - run: pdm run mike deploy --push ${TAG:-latest}
+      - run: uv run mike deploy --push ${TAG:-latest}
