@@ -4,6 +4,7 @@
 
 from __future__ import absolute_import
 
+import logging
 import os
 import textwrap
 
@@ -45,6 +46,18 @@ def setup_features(features):
 @pytest.fixture
 def render(env):
     return env.render
+
+
+@pytest.fixture(scope="session", autouse=True)
+def disable_logging_exceptions():
+    try:
+        yield
+    finally:
+        # pytest captures logging but closes the streams when tests are
+        # finished. salt still tries to log e.g. at some atexit
+        # handlers, which would raise logging exception due to the
+        # stream being closed. See pytest-dev/pytest#5577.
+        logging.raiseExceptions = False
 
 
 class Environment:
