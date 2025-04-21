@@ -34,8 +34,8 @@ docs = [
 ]
 
 [build-system]
-requires = ["pdm-backend"]
-build-backend = "pdm.backend"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
 
 [tool.pyright]
 include = ["salt_tower", "test"]
