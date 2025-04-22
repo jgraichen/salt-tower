@@ -6,6 +6,10 @@ on:
   pull_request:
   workflow_dispatch:
 
+env:
+  PY_COLORS: "1"
+  FORCE_COLOR: true
+
 jobs:
   test:
     runs-on: ubuntu-24.04
@@ -15,8 +19,6 @@ jobs:
         include:
           - { salt: "3007", python: "3.10" }
           - { salt: "3006", python: "3.10" }
-    env:
-      PY_COLORS: "1"
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v5
