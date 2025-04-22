@@ -26,7 +26,7 @@ jobs:
         with:
           python-version: ${{ matrix.python }}
       - run: uv sync --all-extras --dev
-      - run: uv run tox -vvvv -e py3-salt${{ matrix.salt }} -- -vv
+      - run: uv run tox -e py3-salt${{ matrix.salt }} -- -vv
 
   ruff-check:
     runs-on: ubuntu-24.04
