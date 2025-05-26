@@ -861,7 +861,7 @@ dev = [
     { name = "pyright", specifier = ">=1.1.356" },
     { name = "pytest", specifier = "==8.3.5" },
     { name = "ruff", specifier = "==0.11.11" },
-    { name = "tox", specifier = "==4.25.0" },
+    { name = "tox", specifier = "==4.26.0" },
     { name = "tox-uv", specifier = ">=1.25.0" },
     { name = "uv", specifier = "<0.6.0" },
 ]
@@ -943,7 +943,7 @@ wheels = [
 
 [[package]]
 name = "tox"
-version = "4.25.0"
+version = "4.26.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "cachetools" },
@@ -958,9 +958,9 @@ dependencies = [
     { name = "typing-extensions", marker = "python_full_version < '3.11'" },
     { name = "virtualenv" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/fe/87/692478f0a194f1cad64803692642bd88c12c5b64eee16bf178e4a32e979c/tox-4.25.0.tar.gz", hash = "sha256:dd67f030317b80722cf52b246ff42aafd3ed27ddf331c415612d084304cf5e52", size = 196255, upload-time = "2025-03-27T15:13:37.519Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/fd/3c/dcec0c00321a107f7f697fd00754c5112572ea6dcacb40b16d8c3eea7c37/tox-4.26.0.tar.gz", hash = "sha256:a83b3b67b0159fa58e44e646505079e35a43317a62d2ae94725e0586266faeca", size = 197260, upload-time = "2025-05-13T15:04:28.481Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/f9/38/33348de6fc4b1afb3d76d8485c8aecbdabcfb3af8da53d40c792332e2b37/tox-4.25.0-py3-none-any.whl", hash = "sha256:4dfdc7ba2cc6fdc6688dde1b21e7b46ff6c41795fb54586c91a3533317b5255c", size = 172420, upload-time = "2025-03-27T15:13:35.703Z" },
+    { url = "https://files.pythonhosted.org/packages/de/14/f58b4087cf248b18c795b5c838c7a8d1428dfb07cb468dad3ec7f54041ab/tox-4.26.0-py3-none-any.whl", hash = "sha256:75f17aaf09face9b97bd41645028d9f722301e912be8b4c65a3f938024560224", size = 172761, upload-time = "2025-05-13T15:04:26.207Z" },
 ]
 
 [[package]]
@@ -1031,16 +1031,16 @@ wheels = [
 
 [[package]]
 name = "virtualenv"
-version = "20.30.0"
+version = "20.31.2"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "distlib" },
     { name = "filelock" },
     { name = "platformdirs" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/38/e0/633e369b91bbc664df47dcb5454b6c7cf441e8f5b9d0c250ce9f0546401e/virtualenv-20.30.0.tar.gz", hash = "sha256:800863162bcaa5450a6e4d721049730e7f2dae07720e0902b0e4040bd6f9ada8", size = 4346945, upload-time = "2025-03-31T16:33:29.185Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/56/2c/444f465fb2c65f40c3a104fd0c495184c4f2336d65baf398e3c75d72ea94/virtualenv-20.31.2.tar.gz", hash = "sha256:e10c0a9d02835e592521be48b332b6caee6887f332c111aa79a09b9e79efc2af", size = 6076316, upload-time = "2025-05-08T17:58:23.811Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/4c/ed/3cfeb48175f0671ec430ede81f628f9fb2b1084c9064ca67ebe8c0ed6a05/virtualenv-20.30.0-py3-none-any.whl", hash = "sha256:e34302959180fca3af42d1800df014b35019490b119eba981af27f2fa486e5d6", size = 4329461, upload-time = "2025-03-31T16:33:26.758Z" },
+    { url = "https://files.pythonhosted.org/packages/f3/40/b1c265d4b2b62b58576588510fc4d1fe60a86319c8de99fd8e9fec617d2c/virtualenv-20.31.2-py3-none-any.whl", hash = "sha256:36efd0d9650ee985f0cad72065001e66d49a6f24eb44d98980f630686243cf11", size = 6057982, upload-time = "2025-05-08T17:58:21.15Z" },
 ]
 
 [[package]]
