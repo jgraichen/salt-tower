@@ -33,6 +33,17 @@ docs = [
     "setuptools",                             # required by mike
 ]
 
+[dependency-groups]
+dev = [
+    "mypy==1.18.2",
+    "pylint==3.3.8",
+    "pyright~=1.1.356",
+    "pytest==8.4.2",
+    "ruff==0.12.12",
+    "tox==4.27.0",
+    "tox-uv~=1.25.0",
+]
+
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
@@ -54,16 +65,6 @@ docstring-code-format = true
 extend-select = ["I"]
 
 [tool.uv]
-dev-dependencies = [
-    "mypy==1.18.2",
-    "pylint==3.3.8",
-    "pyright>=1.1.356",
-    "pytest==8.4.2",
-    "ruff==0.12.12",
-    "tox==4.27.0",
-    "tox-uv>=1.25.0",
-]
-
 # Salt's legacy setup.py requires old setuptools. Since uv 0.6.0, it
 # does not fall back to reading requirements from egg-info.
 build-constraint-dependencies = ["setuptools<75.6"]

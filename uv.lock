@@ -1965,11 +1965,11 @@ provides-extras = ["test", "docs"]
 dev = [
     { name = "mypy", specifier = "==1.18.2" },
     { name = "pylint", specifier = "==3.3.8" },
-    { name = "pyright", specifier = ">=1.1.356" },
+    { name = "pyright", specifier = "~=1.1.356" },
     { name = "pytest", specifier = "==8.4.2" },
     { name = "ruff", specifier = "==0.12.12" },
     { name = "tox", specifier = "==4.27.0" },
-    { name = "tox-uv", specifier = ">=1.25.0" },
+    { name = "tox-uv", specifier = "~=1.25.0" },
 ]
 
 [[package]]
