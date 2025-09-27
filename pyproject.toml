@@ -62,5 +62,8 @@ dev-dependencies = [
     "ruff==0.12.12",
     "tox==4.27.0",
     "tox-uv>=1.25.0",
-    "uv<0.6.0",
 ]
+
+# Salt's legacy setup.py requires old setuptools. Since uv 0.6.0, it
+# does not fall back to reading requirements from egg-info.
+build-constraint-dependencies = ["setuptools<75.6"]
