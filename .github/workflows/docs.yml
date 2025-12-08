@@ -17,7 +17,7 @@ jobs:
       - uses: astral-sh/setup-uv@v5
         with:
           enable-cache: True
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
       - run: uv sync --all-extras --dev
       - run: |
           git config --global user.name "$(git --no-pager log --format=format:'%an' -n 1)"
