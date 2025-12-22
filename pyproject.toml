@@ -35,7 +35,7 @@ docs = [
 
 [dependency-groups]
 dev = [
-    "mypy==1.19.0",
+    "mypy==1.19.1",
     "pylint==3.3.9",
     "pyright~=1.1.356",
     "pytest==8.4.2",
