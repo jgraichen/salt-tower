@@ -1,19 +1,18 @@
-// vim: ft=json5
 {
-    $schema: "https://docs.renovatebot.com/renovate-schema.json",
+    $schema: 'https://docs.renovatebot.com/renovate-schema.json',
     extends: [
-        "config:base",
-        "github>jgraichen/renovate-config",
-        ":preserveSemverRanges",
+        'config:recommended',
+        'github>jgraichen/renovate-config',
+        ':preserveSemverRanges',
     ],
     packageRules: [
         {
             matchUpdateTypes: [
-                "minor",
-                "patch",
-                "pin",
-                "digest",
-                "lockFileMaintenance",
+                'minor',
+                'patch',
+                'pin',
+                'digest',
+                'lockFileMaintenance',
             ],
             automerge: true,
         },
