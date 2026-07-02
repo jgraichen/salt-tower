@@ -1039,7 +1039,7 @@ sdist = { url = "https://files.pythonhosted.org/packages/60/8f/b276b25721003eb29
 
 [[package]]
 name = "salt-tower"
-version = "1.12.0"
+version = "1.13.0"
 source = { editable = "." }
 dependencies = [
     { name = "salt" },
