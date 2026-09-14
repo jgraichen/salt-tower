@@ -1031,7 +1031,7 @@
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>The resulting data structure will include file content as binary string, not a Unicode string as everything else, e.g.:</p>
-<div class="highlight"><pre><span></span><code><span class="n">pillar</span><span class="p">[</span><span class="s1">&#39;key&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="sa">b</span><span class="s2">&quot;jd</span><span class="se">\x81\xed\xa2</span><span class="s2">~*</span><span class="se">\xca</span><span class="s2">6</span><span class="se">\xd8</span><span class="s2">8,</span><span class="se">\x15</span><span class="s2">zr</span><span class="se">\xb6</span><span class="s2">&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="n">pillar</span><span class="p">[</span><span class="s2">&quot;key&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="sa">b</span><span class="s2">&quot;jd</span><span class="se">\x81\xed\xa2</span><span class="s2">~*</span><span class="se">\xca</span><span class="s2">6</span><span class="se">\xd8</span><span class="s2">8,</span><span class="se">\x15</span><span class="s2">zr</span><span class="se">\xb6</span><span class="s2">&quot;</span>
 </code></pre></div>
 <p>Salt internal and most states (e.g. <code>file.managed</code>) should have not problem with that, but custom code might need adjustments if it e.g. processes the content and did not expect a binary string.</p>
 </div>
