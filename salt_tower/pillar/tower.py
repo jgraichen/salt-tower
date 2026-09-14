@@ -1,10 +1,7 @@
-# -*- coding: utf-8 -*-
 # pylint: disable=missing-docstring
 """
 salt-tower ext_pillar module
 """
-
-from __future__ import absolute_import
 
 import copy
 import errno
@@ -143,9 +140,8 @@ class Tower(dict):
             else:
                 self._load_item(base, item)
 
-        if __opts__.get("salt_tower.enable_inventory", False):
-            if "inventory" in self:
-                del self["inventory"]
+        if __opts__.get("salt_tower.enable_inventory", False) and "inventory" in self:
+            del self["inventory"]
 
     def _match_minion(self, tgt):
         try:
@@ -156,8 +152,8 @@ class Tower(dict):
             return _match_minion_impl(
                 tgt, {"grains": grains, "pillar": dict(self), "id": self.minion_id}
             )
-        except Exception as err:  # pylint: disable=broad-except
-            LOGGER.exception(err)
+        except Exception:  # pylint: disable=broad-except
+            LOGGER.exception("Unable to match target `%s'", tgt)
             return False
 
     def _load_top(self, top, base):
@@ -199,7 +195,7 @@ class Tower(dict):
             raise ValueError(f"Invalid item type: {type(item).__name__}")
 
     def lookup(self, item, base=None, cwd=None):
-        if cwd and (item.startswith("./") or item.startswith("../")):
+        if cwd and item.startswith(("./", "../")):
             path = os.path.join(cwd, self.format(item))
         elif base:
             path = os.path.join(base, self.format(item))
@@ -216,19 +212,18 @@ class Tower(dict):
             return sorted(match)
 
         mode = __opts__.get("salt_tower.include_directory_mode")
-        if mode == "all-sls":
-            # This mode first checks if the given path is a directory. If yes,
-            # all `*.sls` files inside the directory will be returned, ordered
-            # by filename.
-            if os.path.isdir(path):
-                LOGGER.debug("Found directory match: %s", path)
-                return sorted(
-                    [
-                        file
-                        for file in glob(os.path.join(path, "*.sls"))
-                        if os.path.isfile(file)
-                    ]
-                )
+        # This mode first checks if the given path is a directory. If
+        # yes, all `*.sls` files inside the directory will be returned,
+        # ordered by filename.
+        if mode == "all-sls" and os.path.isdir(path):
+            LOGGER.debug("Found directory match: %s", path)
+            return sorted(
+                [
+                    file
+                    for file in glob(os.path.join(path, "*.sls"))
+                    if os.path.isfile(file)
+                ]
+            )
 
         for match in [path, f"{path}.sls", f"{path}/init.sls"]:
             if os.path.isfile(match):
@@ -371,10 +366,9 @@ class Tower(dict):
                 context=ctx,
                 **kwargs,
             )
-        except Exception as err:
-            LOGGER.critical("Unable to render template `%s'", template)
-            LOGGER.exception(err)
-            raise err
+        except Exception:
+            LOGGER.critical("Unable to render template `%s'", template, exc_info=True)
+            raise
 
 
 class Inventory:  # pylint: disable=too-few-public-methods

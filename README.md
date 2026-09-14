@@ -181,13 +181,12 @@ Tower data files can be [any supported template format](https://docs.saltstack.c
 ```py
 #!py
 
-def run():
-    ret = {'databases': []}
 
-    for app in __pillar__['application']:
-        ret['databases'].append({
-            'name': '{0}-{1}'.format(app['name'], app['env'])
-        })
+def run():
+    ret = {"databases": []}
+
+    for app in __pillar__["application"]:
+        ret["databases"].append({"name": "{0}-{1}".format(app["name"], app["env"])})
 
     return ret
 ```
@@ -347,9 +346,10 @@ The pillar object passed to the python template engine is the actual mutable dic
 
 import copy
 
+
 def run():
-    databases = __pillar__['databases']
-    default = databases.pop('default') # Deletes from actual pillar
+    databases = __pillar__["databases"]
+    default = databases.pop("default")  # Deletes from actual pillar
 
     for name, config in databases.items():
         databases[name] = dict(default, **config)
@@ -364,11 +364,12 @@ def run():
 ```py
 #!py
 
+
 def run():
     return {
-        'wrong': __pilar__.get('tenant:name'),
-        'python': __pillar__['tenant']['name'],
-        'alternative': tower.get('tenant:name')
+        "wrong": __pilar__.get("tenant:name"),
+        "python": __pillar__["tenant"]["name"],
+        "alternative": tower.get("tenant:name"),
     }
 ```
 
@@ -381,7 +382,7 @@ The `tower` pillar object is available in all rendering engines and can be used 
 Get a pillar value by given traverse path:
 
 ```python
-tower.get('my:pillar:key')
+tower.get("my:pillar:key")
 ```
 
 If `require=True` is set, `default` will be ignored and a KeyError will be raised if the pillar key is not found.
@@ -391,9 +392,9 @@ If `require=True` is set, `default` will be ignored and a KeyError will be raise
 Merges given dictionary into the pillar data.
 
 ```python
-tower.update({'my': {'pillar': 'data'}})
+tower.update({"my": {"pillar": "data"}})
 
-assert tower.get('my:pillar') == 'data'
+assert tower.get("my:pillar") == "data"
 ```
 
 #### tower.merge(tgt, *objects)
@@ -405,10 +406,10 @@ Note: The first given dictionary or list is *mutated* and returned.
 ```python
 tgt = {}
 
-ret = tower.merge(tgt, {'a': 1})
+ret = tower.merge(tgt, {"a": 1})
 
 assert ret is tgt
-assert tgt['a'] == 1
+assert tgt["a"] == 1
 ```
 
 #### tower.format(obj, *args, **kwargs)
@@ -416,15 +417,11 @@ assert tgt['a'] == 1
 Performs recursive late-bind string formatting using tower pillar and given arguments ad keywords for resolving. Uses `string.Formatter` internally.
 
 ```python
-tower.update({
-    'database': {
-        'password': 'secret'
-    }
-})
+tower.update({"database": {"password": "secret"}})
 
-ret = tower.format('postgres://user@{database.password}/db')
+ret = tower.format("postgres://user@{database.password}/db")
 
-assert ret == 'postgres://user@secret/db'
+assert ret == "postgres://user@secret/db"
 ```
 
 Format accept dictionaries and list as well and can therefore be used to format full or partial pillar data, this can be used to e.g. format defaults with extra variables:
@@ -432,15 +429,16 @@ Format accept dictionaries and list as well and can therefore be used to format 
 ```python
 #!py
 
+
 def run():
     returns = {}
-    defaults = __pillar__['default_app_config']
+    defaults = __pillar__["default_app_config"]
     # e.g. {
     #        'database': 'sqlite:///opt/{name}.sqlite'
     #        'listen': '0.0.0.0:{app.port}'
     # }
 
-    for name, conf in __pillar__['applications'].items():
+    for name, conf in __pillar__["applications"].items():
         # Merge defaults with conf into new dictionary
         conf = tower.merge({}, defaults, conf)
 
@@ -449,5 +447,5 @@ def run():
 
         returns[name] = conf
 
-    return {'applications': returns}
+    return {"applications": returns}
 ```

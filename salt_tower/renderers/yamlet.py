@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # pylint: disable=missing-docstring
 """
 Extended YAML renderer for salt.
@@ -11,8 +10,6 @@ Special extensions are added to
 * include plain or binary files at arbitrary positions
 
 """
-
-from __future__ import absolute_import
 
 import copy
 import io

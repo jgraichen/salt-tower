@@ -1,8 +1,6 @@
-# -*- coding: utf-8 -*-
 # pylint: disable=missing-docstring
 # pylint: disable=redefined-outer-name
 
-from __future__ import absolute_import
 
 import logging
 import os

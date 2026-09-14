@@ -203,7 +203,7 @@ The `license.bin` file can be any kind of file, even a binary file. The Yamlet r
     The resulting data structure will include file content as binary string, not a Unicode string as everything else, e.g.:
 
     ```python
-    pillar['key'] == b"jd\x81\xed\xa2~*\xca6\xd88,\x15zr\xb6"
+    pillar["key"] == b"jd\x81\xed\xa2~*\xca6\xd88,\x15zr\xb6"
     ```
 
     Salt internal and most states (e.g. `file.managed`) should have not problem with that, but custom code might need adjustments if it e.g. processes the content and did not expect a binary string.
