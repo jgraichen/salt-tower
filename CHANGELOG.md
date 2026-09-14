@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Changed
+
+- Remove testing for Salt 3007: It is non-LTS, EOL, and cannot be installed
+  anymore.
+
 ## [1.13.0] - 2026-07-02
 
 ### Changed
